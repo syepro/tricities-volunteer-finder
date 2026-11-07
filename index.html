@@ -339,6 +339,111 @@
   .faq { gap: 0; border-top: 1px solid var(--line); margin-top: 22px; }
   .faq details { background: none; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 14px 2px; }
 
+  /* ---------- Roomier spacing (pages are separate now) ---------- */
+  section.block { padding-top: 72px; }
+  .sec-head { margin-bottom: 26px; }
+  .sec-head h2 { font-size: clamp(28px, 4.4vw, 40px); }
+  .sec-head p { font-size: 16.5px; margin-top: 8px; max-width: 620px; }
+  .page-head h2 { font-size: clamp(36px, 6.5vw, 60px); line-height: 1; }
+  .page-head p { font-size: clamp(16.5px, 2vw, 19px); }
+  .eyebrow { display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+  #find, #guide { padding-top: 56px; }
+  #future { padding-top: 64px; padding-bottom: 72px; }
+  .stats { margin-top: -80px; }
+  .stat { padding: 12px 16px; }
+  .stat b { font-size: 28px; }
+  .stat span { font-size: 13px; }
+
+  .tiles { gap: 22px; padding: 8px 2px 14px; }
+  .tile { width: 112px; gap: 10px; }
+  .tile .ico { width: 86px; height: 86px; }
+  .tile .ico svg { width: 34px; height: 34px; }
+  .tile b { font-size: 14.5px; }
+  .tile small { font-size: 12.5px; }
+
+  .timeline { padding-top: 8px; }
+  .tl { flex: 0 0 250px; padding: 36px 26px 0 0; }
+  .tl::after { width: 16px; height: 16px; top: 2px; }
+  .tl .d { font-size: 13px; margin-bottom: 6px; }
+  .tl b { font-size: 17.5px; margin-bottom: 6px; }
+  .tl span { font-size: 14.5px; }
+
+  .home-next { margin-top: 72px; }
+  .next-link { padding: 34px 4px; }
+  .next-link + .next-link { padding-left: 34px; }
+  .next-link b { font-size: 26px; margin-bottom: 4px; }
+  .next-link span { font-size: 15.5px; }
+
+  .finder { padding: 24px; gap: 20px; border-radius: 22px; }
+  .toolbar { margin: 30px 2px 18px; }
+  .count { font-size: 17px; }
+  .grid { gap: 22px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .card { border-radius: 22px; }
+  .card-top { padding: 14px 18px; }
+  .card-body { padding: 20px 22px 22px; gap: 12px; }
+  .card h3 { font-size: 22px; }
+  .card p { font-size: 15.5px; line-height: 1.6; }
+  .pill { font-size: 13px; padding: 5px 11px; }
+
+  .paths { gap: 14px; }
+  .path { padding: 12px 22px 12px 12px; gap: 14px; }
+  .path .ico { width: 44px; height: 44px; }
+  .path .ico svg { width: 22px; height: 22px; }
+  .path b { font-size: 16.5px; }
+  .path .n { min-width: 26px; height: 26px; font-size: 12.5px; margin-left: 8px; }
+  .path-panel { margin-top: 26px; padding: 28px; border-radius: 22px; }
+  .path-panel h3 { font-size: 30px; }
+  .path-panel .majors { font-size: 15.5px; margin-bottom: 18px; }
+  .pp-grid { gap: 16px; }
+  .pp-grid div { padding: 18px; font-size: 15.5px; line-height: 1.55; border-radius: 16px; }
+  .count-tips { padding-top: 40px; }
+  .count-tips b { font-family: "Bricolage Grotesque", sans-serif; font-size: 22px; }
+  .count-tips ul { gap: 16px 32px; margin-top: 16px; }
+  .count-tips li { font-size: 15.5px; line-height: 1.55; padding-left: 26px; }
+
+  .steps { margin-top: 8px; }
+  .step::before { width: 42px; height: 42px; font-size: 18px; margin-bottom: 14px; }
+  .step::after { top: 20px; left: 54px; }
+  .step b { font-size: 19px; margin-bottom: 6px; }
+  .step span { font-size: 15.5px; line-height: 1.6; }
+  .faq { margin-top: 48px; }
+  .faq details { padding: 22px 4px; }
+  .faq summary { font-size: 17.5px; }
+  .faq p { font-size: 15.5px; line-height: 1.65; margin-top: 10px; max-width: 760px; }
+  #suggest { padding-top: 72px; }
+  .suggest { padding: 32px; gap: 36px; border-radius: 22px; }
+  .suggest h2 { font-size: 34px; }
+  .suggest p { font-size: 16px; line-height: 1.6; }
+  .form-grid { gap: 16px; }
+  footer { margin-top: 96px; }
+
+  @media (max-width: 640px) {
+    section.block { padding-top: 52px; }
+    #find, #guide { padding-top: 36px; }
+    #future { padding-top: 40px; padding-bottom: 52px; }
+    .stats { margin-top: -64px; }
+    .stat { padding: 8px 4px; } .stat b { font-size: 21px; } .stat span { font-size: 11px; }
+    .tile { width: 96px; } .tile .ico { width: 74px; height: 74px; } .tile .ico svg { width: 30px; height: 30px; }
+    .tl { flex-basis: 230px; }
+    .home-next { margin-top: 52px; }
+    .next-link { padding: 26px 4px; } .next-link + .next-link { padding-left: 4px; } .next-link b { font-size: 22px; }
+    .finder { padding: 18px; }
+    .grid { gap: 16px; grid-template-columns: 1fr; }
+    .card-body { padding: 18px; }
+    .path { padding: 10px 16px 10px 10px; } .path .ico { width: 38px; height: 38px; } .path b { font-size: 15px; }
+    .path-panel { padding: 20px; } .path-panel h3 { font-size: 24px; }
+    .steps { gap: 28px 0; }
+    .step { padding-left: 56px; } .step::before { position: absolute; left: 0; top: 0; margin: 0; }
+    .step::after { display: none; }
+    .suggest { padding: 22px; } .suggest h2 { font-size: 28px; }
+  }
+
+  @media (min-width: 980px) {
+    .tiles { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; overflow: visible; }
+    .tile { width: auto; }
+  }
+  .timeline { mask-image: linear-gradient(90deg, #000 88%, transparent); -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); }
+
   /* ---------- Motion ---------- */
   .blob { position: absolute; border-radius: 50%; filter: blur(40px); opacity: .45; z-index: 0; pointer-events: none; }
   .blob.a { width: 320px; height: 320px; background: #ffd27a; top: -80px; right: 8%; animation: drift 14s ease-in-out infinite alternate; }
@@ -471,7 +576,7 @@
     </section>
 
     <section class="block reveal" id="future" aria-labelledby="h-future" data-view="future">
-      <div class="sec-head"><div><h2 id="h-future">Build toward your future</h2><p>Planning for university or a career? Pick a path to see volunteering that fits it.</p></div></div>
+      <div class="sec-head page-head"><div><span class="eyebrow">Your future</span><h2 id="h-future">Build toward your future</h2><p>Planning for university or a career? Pick a path to see volunteering that fits it.</p></div></div>
       <div class="paths" id="paths"></div>
       <div class="path-panel" id="pathPanel" hidden></div>
       <div class="count-tips">
@@ -486,7 +591,7 @@
     </section>
 
     <section class="block" id="find" aria-labelledby="h-find" data-view="find">
-      <div class="sec-head"><div><h2 id="h-find">All opportunities</h2><p>Filter by your age, city and interests.</p></div></div>
+      <div class="sec-head page-head"><div><span class="eyebrow">Opportunities</span><h2 id="h-find">All opportunities</h2><p>Filter by your age, city and interests.</p></div></div>
       <div class="finder">
         <div class="row">
           <div>
@@ -521,7 +626,7 @@
     </section>
 
     <section class="block reveal" id="guide" aria-labelledby="h-guide" data-view="guide">
-      <div class="sec-head"><div><h2 id="h-guide">First time volunteering?</h2><p>How it usually works, from finding a spot to logging your hours.</p></div></div>
+      <div class="sec-head page-head"><div><span class="eyebrow">How it works</span><h2 id="h-guide">First time volunteering?</h2><p>How it usually works, from finding a spot to logging your hours.</p></div></div>
       <div class="steps">
         <div class="step"><b>Pick two or three</b><span>Save a few that match your age and interests. Applying to more than one helps, since popular programs fill up.</span></div>
         <div class="step"><b>Read the requirements</b><span>Check the minimum age, time commitment and dates. Some programs only take new volunteers at certain times of year.</span></div>
