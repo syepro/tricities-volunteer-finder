@@ -176,6 +176,35 @@
   .empty { text-align: center; padding: 48px 20px; color: var(--muted); background: var(--card); border: 1px dashed var(--line); border-radius: var(--radius); grid-column: 1 / -1; }
   .empty b { display: block; color: var(--ink); font-size: 18px; margin-bottom: 4px; }
 
+  /* Future paths */
+  .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  @media (max-width: 820px) { .paths { grid-template-columns: repeat(2, 1fr); } }
+  .path { display: flex; gap: 12px; align-items: flex-start; text-align: left; padding: 14px; border-radius: 16px; background: var(--card);
+    border: 1px solid var(--line); cursor: pointer; transition: transform .15s, box-shadow .15s, border-color .15s; }
+  .path:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .path[aria-pressed="true"] { border-color: var(--c); box-shadow: 0 0 0 2px var(--c) inset; }
+  .path b { display: block; font-size: 15px; line-height: 1.25; }
+  .path small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  .path .n { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 700; color: var(--c); }
+  @media (max-width: 520px) { .path small { display: none; } .path { padding: 12px; gap: 10px; } }
+  .path-panel { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--c); border-radius: 16px;
+    padding: 18px; box-shadow: var(--shadow); animation: up .4s cubic-bezier(.2,.8,.2,1); }
+  .path-panel h3 { margin: 0 0 4px; font-size: 22px; }
+  .path-panel .majors { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+  .pp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 760px) { .pp-grid { grid-template-columns: 1fr; } }
+  .pp-grid div { background: var(--field); border-radius: 12px; padding: 12px; font-size: 14px; }
+  .pp-grid b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--c); margin-bottom: 4px; }
+  .path-panel .btn { margin-top: 14px; background: var(--c); color: #fff; }
+  .count-tips { margin-top: 14px; background: var(--card); border: 1px dashed var(--line); border-radius: 16px; padding: 16px 18px; }
+  .count-tips ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; }
+  @media (max-width: 640px) { .count-tips ul { grid-template-columns: 1fr; } }
+  .count-tips li { font-size: 14px; color: var(--muted); padding-left: 22px; position: relative; }
+  .count-tips li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 800; }
+  .count-tips li span { color: var(--ink); font-weight: 600; }
+  .count-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .chip.active-path { background: var(--c, var(--green)); border-color: var(--c, var(--green)); color: #fff; font-weight: 600; }
+
   /* Guide */
   .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; counter-reset: s; }
   @media (max-width: 820px) { .steps { grid-template-columns: repeat(2, 1fr); } }
@@ -320,6 +349,21 @@
       <div class="timeline" id="timeline"></div>
     </section>
 
+    <section class="block reveal" id="future" aria-labelledby="h-future">
+      <div class="sec-head"><div><h2 id="h-future">Build toward your future</h2><p>Planning for university or a career? Pick a path to see volunteering that fits it.</p></div></div>
+      <div class="paths" id="paths"></div>
+      <div class="path-panel" id="pathPanel" hidden></div>
+      <div class="count-tips">
+        <b>Make it count on applications</b>
+        <ul>
+          <li><span>Go deep.</span> One role you stick with for months says more than ten one-time shifts.</li>
+          <li><span>Take on responsibility.</span> Ask to train new volunteers, lead an activity or plan an event.</li>
+          <li><span>Keep a log and notes.</span> Write down hours and a line about what you did, so you remember specifics later.</li>
+          <li><span>Ask for a reference.</span> Before you finish, ask your supervisor for a reference letter.</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="block" id="find" aria-labelledby="h-find">
       <div class="sec-head"><div><h2 id="h-find">All opportunities</h2><p>Filter by your age, city and interests.</p></div></div>
       <div class="finder">
@@ -341,7 +385,7 @@
       </div>
 
       <div class="toolbar">
-        <div class="count" id="count" aria-live="polite"></div>
+        <div class="count-wrap"><div class="count" id="count" aria-live="polite"></div><button class="chip active-path" type="button" id="pathChip" hidden></button></div>
         <div class="toggles">
           <button class="chip" type="button" id="openOnly" aria-pressed="false">Accepting now</button>
           <button class="chip" type="button" id="savedOnly" aria-pressed="false">★ Saved (0)</button>
@@ -434,6 +478,8 @@ const CATS = {
     svg: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15H5.5A1.5 1.5 0 0 0 4 20.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v15h5.5a1.5 1.5 0 0 1 1.5 1.5z"/>' },
   "Leadership & councils": { c: "#9a6a00", cs: "#fbefcc", d: "Youth councils & committees",
     svg: '<path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>' },
+  "Science & tech":        { c: "#2a5bd7", cs: "#dfe8fc", d: "STEM camps & science centres",
+    svg: '<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/>' },
   "Recreation & events":   { c: "#0f7a6c", cs: "#d5f0ea", d: "Camps, sports, city events",
     svg: '<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.9 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/>' }
 };
@@ -450,28 +496,33 @@ const icon = (cat) => `<svg viewBox="0 0 24 24" aria-hidden="true">${CATS[cat].s
 const LISTINGS = [
   // ---------- City of Coquitlam ----------
   { title: "Recreation & community volunteering", org: "City of Coquitlam", city: "Coquitlam",
+    paths: ["edu", "sport", "biz"],
     category: "Recreation & events", minAge: 13, who: "13+",
     desc: "Help with swimming and skating lessons, festivals, day camps, and sports or arts programs at community centres like Maillardville, Pinetree and Poirier.",
     how: "Create a profile on the city's volunteer portal. You'll need two references, a free police information check and an orientation.",
     status: "open", url: "https://www.coquitlam.ca/415/Volunteer-Opportunities", checked: "2026-11-07" },
   { title: "Park Spark youth teams", org: "City of Coquitlam", city: "Coquitlam",
+    paths: ["env", "sport"],
     category: "Environment", minAge: null, who: "Youth (age not listed)",
     desc: "Grow food with the YOUth Urban Garden team at Town Centre Park's Inspiration Garden, or help with park clean-ups and invasive plant removal. The city also runs a Youth Activity Committee and an Outdoor Youth Sport Committee.",
     when: "Garden team meets Friday evenings, 4–7 pm.",
     how: "Email parkspark@coquitlam.ca (or call 604-927-6329) and say which team or park you're interested in.",
     status: "open", url: "https://coquitlam.ca/734/Park-Spark", checked: "2026-11-07" },
   { title: "Coquitlam Youth Council", org: "City of Coquitlam", city: "Coquitlam",
+    paths: ["law"],
     category: "Leadership & councils", minAge: 15, who: "Going into Grades 10–12, Coquitlam residents",
     desc: "Give the city feedback on programs and youth issues, and lead your own community volunteer projects. Meets every second Wednesday, 4–5 pm, September to June.",
     pause: "This year's intake has closed. Applications open again next summer (2026 intake ran July 6 – Aug 17).",
     how: "Apply with the online form on the city's website during the summer intake.",
     status: "paused", url: "https://www.coquitlam.ca/420/Coquitlam-Youth-Council-CYC", checked: "2026-11-07" },
   { title: "Community Police Station volunteer", org: "Coquitlam RCMP", city: "Coquitlam",
+    paths: ["law"],
     category: "Leadership & councils", minAge: 16, who: "16+, Canadian citizen or PR, 5+ years in Canada",
     desc: "Bike and foot patrols, Speed Watch, taking non-emergency reports and public safety outreach at community events.",
     how: "Submit the volunteer application form. Under-19s also submit RCMP Form 5272. Includes security screening and an interview.",
     status: "open", url: "https://www.coquitlam.ca/441/Volunteer-in-Community-Police-Stations", checked: "2026-11-07" },
   { title: "Museum programs & collections", org: "Mackin House Museum (Coquitlam Heritage)", city: "Coquitlam",
+    paths: ["arts", "edu"],
     category: "Arts & culture", minAge: null, who: "Age not listed",
     desc: "Help run events and kids' crafts, greet visitors and give casual tours, or work behind the scenes researching and photographing artifacts in a 1909 heritage house.",
     how: "Fill in the Programming Volunteer or Collections Volunteer form on their Get Involved page. Questions: 604-516-6151.",
@@ -479,12 +530,14 @@ const LISTINGS = [
 
   // ---------- City of Port Coquitlam ----------
   { title: "Recreation & events volunteering", org: "City of Port Coquitlam", city: "Port Coquitlam",
+    paths: ["edu", "sport"],
     category: "Recreation & events", minAge: 14, who: "14+ for events; 15+ for camps & kids' programs",
     desc: "Face painting and games at city events, helping with skating and bike lessons (14+ and in Grade 9), and supporting preschool, after-school and day camp programs (15+).",
     when: "Recruitment is seasonal. Skating & bike recruitment opens May 2027.",
     how: "Apply through the 'Learn More & Apply' links (BetterImpact portal). Questions: 604-927-7953.",
     status: "seasonal", url: "https://www.portcoquitlam.ca/explore-poco/volunteering/volunteer-recreation", checked: "2026-11-07" },
   { title: "PoCo Youth Leadership Group", org: "City of Port Coquitlam", city: "Port Coquitlam",
+    paths: ["law", "biz"],
     category: "Leadership & councils", minAge: 13, who: "Ages 13–18",
     desc: "A youth-led team that meets weekly to plan community events and projects like Pink Shirt Day and Youth Week. Members can earn volunteer hours toward graduation.",
     how: "Fill in an application on the PYLG volunteer page. Questions: 604-927-7953.",
@@ -492,12 +545,14 @@ const LISTINGS = [
 
   // ---------- City of Port Moody ----------
   { title: "Recreation & community events", org: "City of Port Moody", city: "Port Moody",
+    paths: ["biz", "sport", "edu"],
     category: "Recreation & events", minAge: 14, who: "14+ (under 16 needs parent consent)",
     desc: "Help at day camps, recreation programs and big events like Canada Day, Car Free Day and Cheer at the Pier: setup, greeting people, leading games and cleanup.",
     when: "Applications reopened Oct 15, 2026.",
     how: "Email volunteers@portmoody.ca. You'll do a police information check, create an account and attend an orientation.",
     status: "open", url: "https://www.portmoody.ca/parks-recreation-and-environment/volunteering/", checked: "2026-11-07" },
   { title: "Youth Seat on a city committee", org: "City of Port Moody", city: "Port Moody",
+    paths: ["law", "eng", "env"],
     category: "Leadership & councils", minAge: 15, who: "Ages 15–25",
     desc: "Most of Port Moody's civic committees, including Climate Action, Parks and Environment, Arts and Transportation, have a Youth Seat to advise City Council.",
     when: "Recruitment usually happens in the fall (last deadline: Nov 12, 2025).",
@@ -506,45 +561,53 @@ const LISTINGS = [
 
   // ---------- Libraries ----------
   { title: "Reading Buddies", org: "Coquitlam Public Library", city: "Coquitlam",
+    paths: ["edu"],
     category: "Kids & tutoring", minAge: 14, who: "14+ and in Grades 9–12",
     desc: "Help a young reader in Grades 1–4 practise reading at the Poirier or City Centre branch. Hours count toward community service hours.",
     pause: "Teen spots for the fall session are full. Ask the library about the next session.",
     how: "Email librarian Chris Miller at cmiller@coqlibrary.ca to ask about the next session. New volunteers need a criminal record check.",
     status: "paused", url: "https://coqlibrary.ca/reading-buddies/", checked: "2026-11-07" },
   { title: "Homework Help Club", org: "Coquitlam Public Library", city: "Coquitlam",
+    paths: ["edu"],
     category: "Kids & tutoring", minAge: 13, who: "Grades 8–12",
     desc: "Be a Big Buddy and help students in Grades 1–6 with homework at the Poirier branch. Hours count toward community service hours.",
     pause: "Teen spots for the fall session (Fridays, Nov 13 – Dec 18) are full.",
     how: "Email cmiller@coqlibrary.ca to ask about the next session.",
     status: "paused", url: "https://coqlibrary.ca/homework-help-club/", checked: "2026-11-07" },
   { title: "Parlez-Nous en Français", org: "Coquitlam Public Library", city: "Coquitlam",
+    paths: ["edu"],
     category: "Kids & tutoring", minAge: 13, who: "Grades 8–12, fluent in French",
     desc: "Help French Immersion and Francophone kids in Grades 1–6 with homework and French conversation at the Poirier branch.",
     when: "Next session: Fridays 3:45–4:30 pm, Jan 8 – Feb 19.",
     how: "Fill in the teen application form on the program page.",
     status: "open", url: "https://coqlibrary.ca/parlez-nous-en-francais/", checked: "2026-11-07" },
   { title: "Teen Advisory Council", org: "Coquitlam Public Library", city: "Coquitlam",
+    paths: ["law", "biz"],
     category: "Leadership & councils", minAge: 11, who: "Grades 6–12",
     desc: "Plan and run programs for youth and advise the library, all on Zoom. New members are always welcome, and you earn community service hours.",
     when: "Next meetings: Nov 18, Dec 16, Jan 20 (4:15–5:15 pm).",
     how: "Fill in the online application on the Teen Advisory Council page.",
     status: "open", url: "https://coqlibrary.ca/teen-advisory-council/", checked: "2026-11-07" },
   { title: "Book Buddies", org: "Port Moody Public Library", city: "Port Moody",
+    paths: ["edu"],
     category: "Kids & tutoring", minAge: 13, who: "13+",
     desc: "Read and share books with kids to help them build reading skills. You get a reference letter listing your hours.",
     how: "Apply online, then an interview, police information check and training.",
     status: "seasonal", url: "https://www.portmoodylibrary.ca/en/programs-and-events/teen-volunteer-programs.aspx", checked: "2026-11-07" },
   { title: "Tutoring for Kids", org: "Port Moody Public Library", city: "Port Moody",
+    paths: ["edu"],
     category: "Kids & tutoring", minAge: 14, who: "14+",
     desc: "Help kids with their homework and get tutoring experience. You get a reference letter listing your hours.",
     how: "Apply online, then an interview, police information check and training.",
     status: "seasonal", url: "https://www.portmoodylibrary.ca/en/programs-and-events/teen-volunteer-programs.aspx", checked: "2026-11-07" },
   { title: "Teen Advisory Group", org: "Port Moody Public Library", city: "Port Moody",
+    paths: ["law", "biz"],
     category: "Leadership & councils", minAge: 13, who: "Grades 8–12",
     desc: "Share ideas for library displays, events and books, and meet other teens. You get a reference letter listing your hours.",
     how: "Apply with the Tween and Teen Advisory Group form on the library's site.",
     status: "open", url: "https://www.portmoodylibrary.ca/en/programs-and-events/teen-volunteer-programs.aspx", checked: "2026-11-07" },
   { title: "Teen Advisory Group (TAG)", org: "Terry Fox Library (FVRL)", city: "Port Coquitlam",
+    paths: ["eng", "law"],
     category: "Leadership & councils", minAge: 14, who: "Grades 9–12",
     desc: "Help with library programs, including STEAM activities, and earn volunteer hours.",
     when: "New members start with an orientation (the last one was Sept 12, 2026).",
@@ -553,39 +616,46 @@ const LISTINGS = [
 
   // ---------- Arts & culture ----------
   { title: "Arts centre & camp volunteer", org: "Place des Arts", city: "Coquitlam",
+    paths: ["arts", "edu"],
     category: "Arts & culture", minAge: 13, who: "Over 13",
     desc: "Supervise kids and help teachers at art camps on Pro-D days, Spring Break and summer, plus other roles around the arts centre.",
     when: "Applications have reopened.",
     how: "Apply online. Includes an interview, references and a criminal record check. Phone: 604-664-1636.",
     status: "open", url: "https://placedesarts.ca/volunteer/", checked: "2026-11-07" },
   { title: "Youth Arts Council", org: "Place des Arts", city: "Coquitlam",
+    paths: ["arts", "law"],
     category: "Arts & culture", also: ["Leadership & councils"], minAge: 14, who: "Grades 9–12 (per SD43 directory)",
     desc: "A council that gets local teens involved in the arts community and organizes youth arts events.",
     pause: "Not accepting applicants for the 2026/2027 council.",
     how: "Check the volunteer page for the next council's application.",
     status: "paused", url: "https://placedesarts.ca/volunteer/", checked: "2026-11-07" },
   { title: "Youth Actors – Summer Theatre Troupe", org: "Place des Arts", city: "Coquitlam",
+    paths: ["arts"],
     category: "Arts & culture", minAge: 13, who: "Ages 13–17 (audition)",
     desc: "A volunteer acting role in a summer theatre troupe, with a $500 honorarium when you finish.",
     how: "Watch the volunteer page for audition details.",
     status: "seasonal", url: "https://placedesarts.ca/volunteer/", checked: "2026-11-07" },
   { title: "Theatre, gallery & camp volunteer", org: "Evergreen Cultural Centre", city: "Coquitlam",
+    paths: ["arts", "biz", "edu"],
     category: "Arts & culture", minAge: 15, who: "15+",
     desc: "Usher, run concessions or coat check at shows, help in the gallery, join the AGE Youth Committee, or be an arts camp counsellor (minimum one week).",
     when: "Apply any time. For camps, apply in January (Spring Break) or April (July).",
     how: "Apply online, then an interview, a free criminal record check and orientation. Contact volunteer@evergreenculturalcentre.ca.",
     status: "open", url: "https://evergreenculturalcentre.ca/get-involved/volunteer-opportunities/", checked: "2026-11-07" },
   { title: "Youth arts volunteer", org: "PoMoArts", city: "Port Moody",
+    paths: ["arts", "biz"],
     category: "Arts & culture", minAge: 14, who: "14+",
     desc: "Help with kids' art camps, the ceramics studio, gallery openings, recitals and the Art Out Side Festival. Youth with 30+ hours can apply for an arts scholarship.",
     how: "Fill in the Youth Volunteer Application on the PoMoArts website.",
     status: "open", url: "https://www.pomoarts.ca/get-involved/volunteer", checked: "2026-11-07" },
   { title: "Museum volunteer", org: "POMO Museum", city: "Port Moody",
+    paths: ["arts"],
     category: "Arts & culture", minAge: null, who: "Students welcome (age not listed)",
     desc: "Work with the collection, transcribe historical documents, help in the garden, help make videos, or help at events.",
     how: "Fill in the application on the museum's site. They keep it for a year and contact you when something fits.",
     status: "open", url: "https://www.pomo.museum/volunteers", checked: "2026-11-07" },
   { title: "Festival du Bois volunteer", org: "Société francophone de Maillardville", city: "Coquitlam",
+    paths: ["biz", "arts"],
     category: "Arts & culture", minAge: null, who: "Age not listed",
     desc: "Help run BC's biggest francophone festival in Mackin Park. Good if you speak French or want to practise.",
     when: "The festival runs each March (2026 was March 6–8).",
@@ -594,39 +664,46 @@ const LISTINGS = [
 
   // ---------- Community ----------
   { title: "Holiday programs: Gift Wrap & Toy Bank", org: "SHARE Family & Community Services", city: "Tri-Cities wide",
+    paths: ["biz", "law"],
     category: "Community & food", minAge: 12, who: "Ages 12–17 (youth form)",
     desc: "Help with SHARE's holiday programs: Gift Wrap, Toy Bank and the Enchanted Elevator.",
     when: "Opens November 9.",
     how: "Apply through Better Impact using the Youth (12–17) form.",
     status: "seasonal", url: "https://sharesociety.ca/volunteer-for-share", checked: "2026-11-07" },
   { title: "Community events & fundraisers", org: "SHARE Family & Community Services", city: "Tri-Cities wide",
+    paths: ["biz", "law"],
     category: "Community & food", minAge: null, who: "Age not listed",
     desc: "Collect food and cash donations at events, help out with SHARE Bear, or tell people about SHARE. You choose when.",
     how: "Email community@sharesociety.ca.",
     status: "open", url: "https://sharesociety.ca/volunteer-for-share", checked: "2026-11-07" },
   { title: "Pride festival volunteer", org: "Tri-Cities Pride Society", city: "Tri-Cities wide",
+    paths: ["law", "biz"],
     category: "Community & food", minAge: 16, who: "16+ (per SD43 directory)",
     desc: "Help run Pride events in Port Moody, Coquitlam and Port Coquitlam each summer. You don't need to be a member or part of the 2S/LGBTQIA+ community.",
     when: "Festivals run June–July.",
     how: "Join the general volunteer list using the form on their volunteer page.",
     status: "seasonal", url: "https://tricitiespride.ca/volunteer/", checked: "2026-11-07" },
   { title: "Volunteer roles", org: "Low Entropy Foundation", city: "Tri-Cities wide",
+    paths: ["arts", "biz"],
     category: "Community & food", minAge: 15, who: "15+ (per SD43 directory)",
     desc: "Community programs and personal-growth projects, plus blog and magazine writing.",
     how: "See open roles through the application link on their volunteer page.",
     status: "open", url: "https://lowentropy.org/get-involved/volunteer-opportunities/", checked: "2026-11-07" },
   { title: "Food bank volunteer", org: "PoCo People's Pantry", city: "Port Coquitlam",
+    paths: ["law"],
     category: "Community & food", minAge: 15, who: "Grade 10+ (per SD43 directory)",
     desc: "Assemble food hampers, sort donations, and help pick up and deliver food for families in Port Coquitlam.",
     pause: "Not accepting new volunteers right now.",
     how: "Check their volunteer page or contact them to ask when intake reopens.",
     status: "paused", url: "https://thepeoplespantry.ca/volunteer/", checked: "2026-11-07" },
   { title: "Farmers market volunteer", org: "Coquitlam & Port Moody Farmers Markets", city: "Tri-Cities wide",
+    paths: ["biz", "env"],
     category: "Community & food", minAge: null, who: "Age not listed",
     desc: "Set up and take down the market, help vendors and visitors, and help with crafts and events. Training on site.",
     how: "Sign up online through the market's volunteer link.",
     status: "seasonal", url: "https://makebakegrow.com/get-involved-at-the-market/", checked: "2026-11-07" },
   { title: "Constituency Youth Council", org: "Office of MP Zoe Royer", city: "Tri-Cities wide",
+    paths: ["law"],
     category: "Leadership & councils", minAge: 15, who: "Ages 15–18",
     desc: "A non-partisan youth council in the Port Moody–Coquitlam riding. Members discuss national issues like climate change and youth employment and take on community projects.",
     pause: "The current council runs until March 2027. The last intake closed March 1, 2026, so watch for the next one early in the year.",
@@ -635,16 +712,19 @@ const LISTINGS = [
 
   // ---------- Health & care ----------
   { title: "Gift shop & thrift shop volunteer", org: "Eagle Ridge Hospital Auxiliary", city: "Tri-Cities wide",
+    paths: ["health", "biz"],
     category: "Health & care", minAge: null, who: "All ages (separate under-19 form)",
     desc: "Help at the hospital gift shop in Port Moody or the thrift shop in Port Coquitlam: sorting, pricing, stocking and serving customers.",
     how: "Download the under-19 application and email it to erha1976@gmail.com.",
     status: "open", url: "https://erha.ca/volunteer/", checked: "2026-11-07" },
   { title: "Hospital & care home volunteer", org: "Eagle Ridge Hospital & Manor", city: "Port Moody",
+    paths: ["health"],
     category: "Health & care", minAge: 17, who: "17+, Tri-Cities residents",
     desc: "Support patients and residents at Eagle Ridge Hospital and Manor. One 2–4 hour shift a week for at least 16 weeks.",
     how: "Apply online, then a criminal record check, interview, two references and training.",
     status: "open", url: "https://www.fraserhealth.ca/about-us/volunteer-opportunities/volunteer-opportunities-eagle-ridge-hospital-and-manor", checked: "2026-11-07" },
   { title: "Sport program volunteer", org: "Special Olympics BC – Coquitlam", city: "Tri-Cities wide",
+    paths: ["health", "sport", "edu"],
     category: "Health & care", minAge: null, who: "Age not listed (16+ need a record check)",
     desc: "Help coach or support athletes with intellectual disabilities in sports like swimming, basketball, bowling, soccer and skating. No sport background needed.",
     how: "Register on the Coquitlam local page and search open roles. Questions: 604-525-2208.",
@@ -652,24 +732,28 @@ const LISTINGS = [
 
   // ---------- Animals ----------
   { title: "Youth animal volunteer", org: "BC SPCA", city: "Tri-Cities wide",
+    paths: ["vet"],
     category: "Animals", minAge: 12, who: "12–15 with a parent; 16–18 alone in some roles",
     desc: "Help care for animals at the SPCA. Ages 12–15 volunteer alongside a parent or guardian. Not every location takes under-16s.",
     how: "Click Apply Now and pick the nearest location. Tri-Cities contact: tricitiesvolunteers@spca.bc.ca.",
     status: "open", url: "https://spca.bc.ca/ways-to-help/volunteer/youth-volunteers/", checked: "2026-11-07" },
 
   { title: "Wildlife hospital volunteer", org: "Wildlife Rescue Association of BC", city: "Nearby & online",
+    paths: ["vet", "env", "health"],
     category: "Animals", minAge: 14, who: "14–15: Welcome Volunteer only; 16+ for other roles",
     desc: "Help injured and orphaned wild animals at the wildlife hospital by Burnaby Lake, just next to the Tri-Cities. Roles include animal care, rescue, transport, the helpline and photography.",
     when: "Minimum 100 hours. Recruitment is busiest early in the year.",
     how: "Apply through their BetterImpact page and watch the recorded info session. Animal Care roles also have a virtual group interview, usually in spring.",
     status: "open", url: "https://www.wildliferescue.ca/get-involved/volunteer", checked: "2026-11-07" },
   { title: "Student Ambassador", org: "Elephanatics", city: "Nearby & online",
+    paths: ["vet", "law"],
     category: "Animals", minAge: null, who: "Students (age not listed)",
     desc: "Spread the word about elephant poaching at your school: recruit other students, run outreach and fundraising, or read Elephanatics' books to younger classes. A Vancouver-based nonprofit you can volunteer with from your own school.",
     how: "Contact Elephanatics through the volunteer page on their website.",
     status: "open", url: "https://elephanatics.org/volunteer/", checked: "2026-11-07" },
 
   { title: "Animal shelter volunteer", org: "Coquitlam Animal Shelter", city: "Coquitlam",
+    paths: ["vet"],
     category: "Animals", minAge: null, who: "Age not listed",
     desc: "The city-run shelter that cares for stray animals from Coquitlam, Port Coquitlam and Port Moody.",
     pause: "No volunteer opportunities right now, because there are few dogs available for walking.",
@@ -678,34 +762,81 @@ const LISTINGS = [
 
   // ---------- Environment ----------
   { title: "Noons Creek Hatchery volunteer", org: "Port Moody Ecological Society", city: "Port Moody",
+    paths: ["env", "vet", "eng"],
     category: "Environment", also: ["Animals"], minAge: 16, who: "16+ (per SD43 directory)",
     desc: "Help raise coho and chum salmon, test water quality, remove invasive plants and help at the Fingerling Festival.",
     when: "New volunteers can drop in Saturdays, 9–11 am, at 300 Ioco Road.",
     how: "Drop in on a Saturday morning, or email portmoodyecologicalsociety@hotmail.com.",
     status: "open", url: "https://www.noonscreek.org/", checked: "2026-11-07" },
   { title: "Hyde Creek hatchery volunteer", org: "Hyde Creek Watershed Society", city: "Port Coquitlam",
+    paths: ["env", "vet", "edu"],
     category: "Environment", also: ["Animals"], minAge: null, who: "All ages welcome",
     desc: "Guide hatchery tours and classes, help plan events like the Fish Release, and help with day-to-day hatchery work. You pick your own days.",
     how: "Email hcws.info@gmail.com.",
     status: "open", url: "https://www.hydecreek.org/volunteer", checked: "2026-11-07" },
   { title: "Camp volunteer", org: "Camp Sasamat", city: "Anmore / Belcarra",
+    paths: ["edu", "sport"],
     category: "Recreation & events", minAge: 17, who: "17+ (or turning 17 this year)",
     desc: "Assist camp counsellors with kids' programs, or help the kitchen or maintenance team at the camp in Belcarra.",
     how: "Apply through the camp's online staff portal. Needs a criminal record check with vulnerable sector search.",
     status: "open", url: "https://www.sasamat.org/get-involved", checked: "2026-11-07" },
 
   { title: "Adaptive Soccer volunteer", org: "Port Moody Soccer Club", city: "Port Moody",
+    paths: ["sport", "health", "edu"],
     category: "Recreation & events", also: ["Health & care"], minAge: 15, who: "15+",
     desc: "Help kids and teens with disabilities play soccer in the club's Adaptive Soccer Program at Trasolini Field. No soccer experience needed, and they give volunteer letters for graduation hours.",
     when: "Runs three sessions a year: fall, winter and spring.",
     how: "Email the Adaptive Soccer Program through the club's website.",
     status: "seasonal", url: "https://portmoodysoccer.com/club-chat/pmscs-adaptive-program-is-now-recruiting-volunteers-age-15/", checked: "2026-11-07" },
   { title: "Outdoor camp volunteer", org: "Rainforest Adventure Camps", city: "Tri-Cities wide",
+    paths: ["edu", "sport"],
     category: "Recreation & events", minAge: 13, who: "13+ (police check needed)",
     desc: "Help lead games and outdoor adventures for kids at White Pine Beach, the Coquitlam River and local pools. Run by a Tri-Cities nonprofit, with flexible hours.",
     when: "Spring Break and summer camps (summer 2026 ran June 26 – Sept 4).",
     how: "Apply on the camp's volunteer page. You'll need a police information check and orientation.",
     status: "seasonal", url: "https://www.rfcamps.com/Volunteer/", checked: "2026-11-07" },
+
+  // ---------- Science, tech & older-teen programs ----------
+  { title: "Junior Instructor", org: "Geering Up (UBC Engineering)", city: "Nearby & online",
+    paths: ["eng", "edu"],
+    category: "Science & tech", also: ["Kids & tutoring"], minAge: 15, who: "Grade 10+",
+    desc: "Help UBC's engineering outreach team run STEM summer camps, weekly clubs and one-day events for kids. Geering Up runs camps in several cities, including Port Coquitlam.",
+    how: "Check the Junior Instructor program page for timing, or email geering.up@ubc.ca.",
+    status: "seasonal", url: "https://geeringup.apsc.ubc.ca/join-us/general-information/volunteering/", checked: "2026-11-07" },
+  { title: "STEM Leadership Program", org: "Geering Up (UBC Engineering)", city: "Nearby & online",
+    paths: ["eng", "edu"],
+    category: "Science & tech", also: ["Leadership & councils"], minAge: 15, who: "Grades 10–12",
+    desc: "A year-long program that trains high school students as STEM leaders, followed by volunteering with Geering Up. You can continue as a STEM Ambassador.",
+    when: "Applications have usually been in May–June (per SD43 directory).",
+    how: "Check the STEM Leadership program page on Geering Up's site, or email geering.up@ubc.ca.",
+    status: "seasonal", url: "https://geeringup.apsc.ubc.ca/join-us/general-information/volunteering/", checked: "2026-11-07" },
+  { title: "Summer Academy volunteer", org: "Science Alive (SFU)", city: "Nearby & online",
+    paths: ["eng", "edu", "env"],
+    category: "Science & tech", also: ["Kids & tutoring"], minAge: 15, who: "Grades 10–12, interested in STEAM",
+    desc: "Support SFU's summer STEAM programs for kids. Useful skills include coding, robotics, engineering and explaining science.",
+    pause: "This year's application window has closed. Watch for the next call in spring.",
+    how: "Apply with the online form on their volunteer page when it reopens. Questions: sciencealive@sfu.ca.",
+    status: "paused", url: "https://sciencealive.ca/volunteer-with-us", checked: "2026-11-07" },
+  { title: "Core volunteer", org: "Science World", city: "Nearby & online",
+    paths: ["eng", "env", "edu"],
+    category: "Science & tech", minAge: 16, who: "16+, 100-hour minimum",
+    desc: "Volunteer at Science World in Vancouver with one 2–3 hour shift a week. Grade 11–12 students can also be nominated by a teacher for High School Work Experience.",
+    pause: "Volunteer intake is closed right now. Intake and training happen once a year.",
+    how: "Check their volunteer page for the next intake.",
+    status: "paused", url: "https://www.scienceworld.ca/volunteer/", checked: "2026-11-07" },
+  { title: "Junior medical volunteer", org: "Odyssey Medical", city: "Nearby & online",
+    paths: ["health"],
+    category: "Health & care", minAge: 15, who: "Grades 10–12, valid first aid certificate",
+    desc: "Work with a supervised medical team in a field hospital at music festivals, races and sports events: do first aid and talk with patients. You get reference letters and volunteer-hour sign-off.",
+    how: "Apply with the 'Apply to Join Odyssey's Crew' link. You need parent permission and a current first aid certificate.",
+    status: "open", url: "https://odysseymedical.ca/crew/whoisodysseycrew/", checked: "2026-11-07" },
+  { title: "Fraser Youth Parliament", org: "BC Youth Parliament", city: "Tri-Cities wide",
+    paths: ["law"],
+    category: "Leadership & councils", minAge: 14, who: "Ages 14–18, nominated by a youth organization",
+    desc: "Debate local and world issues in a real parliamentary session held at Coquitlam City Hall, then join the group's service and fundraising events. Registration is $50.",
+    pause: "Applications for the 2026 session have closed. The session runs each spring, so watch for the next call.",
+    how: "When applications open, get a school or club to nominate you (with five signatures), then apply online. Questions: fyp@bcyp.org.",
+    status: "paused", url: "https://bcyp.org/fyp", checked: "2026-11-07" },
 
   // ---------- More listings ----------
   { title: "Search more local listings", org: "Community Volunteer Connections", city: "Tri-Cities wide",
@@ -714,6 +845,57 @@ const LISTINGS = [
     how: "Use their 'Search for Volunteer Positions' page.",
     status: "open", url: "https://volunteerconnections.ca/find-volunteer-opportunities/", checked: "2026-11-07" }
 ];
+
+// =====================================================================
+//  FUTURE PATHS: link volunteering to university majors and careers
+// =====================================================================
+const PATHS = {
+  eng:    { t: "Engineering & Tech", c: "#2a5bd7", cs: "#dfe8fc", icon: "Science & tech",
+            majors: "Engineering, Computer Science, Applied Science, Physics",
+            why: "Programs that value hands-on problem solving like to see you teaching STEM, building things or working on technical problems in the community.",
+            skills: "Explaining technical ideas simply, teamwork on projects, problem solving, leading activities for kids",
+            tip: "Building a tool for a real problem (like a website for a local cause) counts too. Describe the problem, what you built and who it helped." },
+  health: { t: "Health & Medicine", c: "#1f6f8b", cs: "#d9edf4", icon: "Health & care",
+            majors: "Nursing, Pre-med, Kinesiology, Pharmacy, Health Sciences",
+            why: "Time around patients, care settings and first aid shows you understand what health work is really like, not just the science.",
+            skills: "Empathy, communication with patients and families, staying calm, following procedures",
+            tip: "Talk about a specific moment with a patient or participant and what it taught you about care." },
+  vet:    { t: "Animals & Vet Science", c: "#b4580f", cs: "#fbe6d3", icon: "Animals",
+            majors: "Animal Biology, Pre-vet, Zoology, Wildlife Management",
+            why: "Hands-on animal care and conservation work is close to essential for vet and animal-science paths.",
+            skills: "Animal handling, responsibility and routine, observation, working under supervision",
+            tip: "Long-term roles (like 100+ hours at one place) show more commitment than many one-off days." },
+  env:    { t: "Environment & Life Sciences", c: "#2f7d3f", cs: "#dcefdc", icon: "Environment",
+            majors: "Environmental Science, Biology, Forestry, Geography",
+            why: "Hatcheries, restoration and science outreach give you real field and lab experience early.",
+            skills: "Field work, data collection, water testing, public education",
+            tip: "Mention measurable results, like salmon released, plants removed or data you helped collect." },
+  edu:    { t: "Education & Working with Kids", c: "#6a4bc4", cs: "#e7e0fb", icon: "Kids & tutoring",
+            majors: "Education, Psychology, Child & Youth Care, Speech Sciences",
+            why: "Tutoring, camps and reading programs show patience and the ability to help someone else learn.",
+            skills: "Teaching, patience, planning activities, supervising groups",
+            tip: "Describe how you adapted when a kid was struggling. That shows real teaching skill." },
+  law:    { t: "Politics, Law & Social Change", c: "#9a6a00", cs: "#fbefcc", icon: "Leadership & councils",
+            majors: "Political Science, Law (later), Sociology, International Relations",
+            why: "Youth councils, committees and advocacy show you can represent others and work inside real institutions.",
+            skills: "Public speaking, debate, research, advocacy, working with officials",
+            tip: "Name one idea you pushed for and what happened to it, even if it didn't pass." },
+  biz:    { t: "Business, Marketing & Events", c: "#c0392b", cs: "#fbe0dc", icon: "Community & food",
+            majors: "Commerce, Marketing, Economics, Tourism & Hospitality",
+            why: "Running events, retail shifts and fundraisers is practical business experience: customers, money, logistics and promotion.",
+            skills: "Customer service, organization, sales and fundraising, promotion",
+            tip: "Use numbers where you can, like money raised, people served or event attendance." },
+  arts:   { t: "Arts, Media & Design", c: "#a3367a", cs: "#f8dfee", icon: "Arts & culture",
+            majors: "Fine Arts, Design, Media Studies, Theatre, History",
+            why: "Galleries, theatres and museums let you work behind the scenes in creative fields and build a portfolio.",
+            skills: "Creativity, audience experience, collections and research, event production",
+            tip: "Keep photos or examples of work you helped with to show in a portfolio later." },
+  sport:  { t: "Sport & Kinesiology", c: "#0f7a6c", cs: "#d5f0ea", icon: "Recreation & events",
+            majors: "Kinesiology, Physical Education, Recreation Management",
+            why: "Coaching and adaptive sport show leadership and an understanding of how people move and learn skills.",
+            skills: "Coaching, inclusion, safety awareness, motivating others",
+            tip: "Adaptive programs (like Special Olympics or adaptive soccer) stand out because they take extra skill and care." }
+};
 
 // =====================================================================
 //  COMING UP: dated items. Past dates hide themselves.
@@ -736,7 +918,7 @@ const CITIES = ["All", "Coquitlam", "Port Coquitlam", "Port Moody", "Anmore / Be
 const inCat = (l, c) => l.category === c || (l.also || []).includes(c);
 const CAT_NAMES = Object.keys(CATS);
 const STATUS = { open: "Accepting now", seasonal: "Seasonal", paused: "Temporarily not accepting" };
-const state = { q: "", age: null, city: "All", cat: "All", openOnly: false, savedOnly: false, sort: "az" };
+const state = { q: "", age: null, city: "All", cat: "All", path: null, openOnly: false, savedOnly: false, sort: "az" };
 const $ = (id) => document.getElementById(id);
 
 // Saved listings (kept in this browser only)
@@ -774,6 +956,28 @@ function tiles() {
   });
 }
 
+function paths() {
+  const ids = Object.keys(PATHS);
+  $("paths").innerHTML = ids.map(id => {
+    const P = PATHS[id], n = LISTINGS.filter(l => (l.paths || []).includes(id)).length;
+    return `<button class="path" type="button" data-id="${id}" aria-pressed="${state.path === id}" style="--c:${P.c};--cs:${P.cs}">
+      <span class="ico">${icon(P.icon)}</span><span><b>${esc(P.t)}</b><small>${esc(P.majors)}</small><span class="n">${n} opportunities</span></span></button>`;
+  }).join("");
+  $("paths").querySelectorAll(".path").forEach(b => b.onclick = () => {
+    state.path = state.path === b.dataset.id ? null : b.dataset.id;
+    paths(); render();
+    if (state.path) { const r = $("pathPanel").getBoundingClientRect(); if (r.top > window.innerHeight - 120) $("pathPanel").scrollIntoView({ behavior: "smooth", block: "center" }); }
+  });
+  const panel = $("pathPanel");
+  if (!state.path) { panel.hidden = true; return; }
+  const P = PATHS[state.path], n = LISTINGS.filter(l => (l.paths || []).includes(state.path)).length;
+  panel.hidden = false; panel.style.setProperty("--c", P.c);
+  panel.innerHTML = `<h3>${esc(P.t)}</h3><div class="majors">Good for: ${esc(P.majors)}</div>
+    <div class="pp-grid"><div><b>Why it helps</b>${esc(P.why)}</div><div><b>Skills you'll build</b>${esc(P.skills)}</div><div><b>On your application</b>${esc(P.tip)}</div></div>
+    <button class="btn" type="button" id="seePath">See ${n} matching opportunities ↓</button>`;
+  $("seePath").onclick = () => $("find").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function timeline() {
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const items = TIMELINE.filter(t => new Date(t.date + "T23:59:59") >= today);
@@ -797,6 +1001,7 @@ function syncChips() { chipRow($("cities"), CITIES, "city"); chipRow($("cats"), 
 function matches(l) {
   if (state.city !== "All" && l.city !== state.city && !(l.city === "Tri-Cities wide" && state.city !== "Nearby & online")) return false;
   if (state.cat !== "All" && !inCat(l, state.cat)) return false;
+  if (state.path && !(l.paths || []).includes(state.path)) return false;
   if (state.age && l.minAge && state.age < l.minAge) return false;
   if (state.openOnly && l.status !== "open") return false;
   if (state.savedOnly && !saved.has(idOf(l))) return false;
@@ -827,6 +1032,9 @@ function render() {
   const shown = sorted(LISTINGS.filter(matches));
   $("count").innerHTML = `${shown.length} ${shown.length === 1 ? "opportunity" : "opportunities"} <small>of ${LISTINGS.length}</small>`;
   $("savedOnly").textContent = "★ Saved (" + saved.size + ")";
+  const pc = $("pathChip");
+  if (state.path) { const P = PATHS[state.path]; pc.hidden = false; pc.textContent = "Path: " + P.t + "  ✕"; pc.style.setProperty("--c", P.c); }
+  else pc.hidden = true;
   $("savedOnly").setAttribute("aria-pressed", state.savedOnly);
   if (!shown.length) {
     list.innerHTML = `<div class="empty"><b>${state.savedOnly && !saved.size ? "Nothing saved yet" : "No matches"}</b>` +
@@ -876,7 +1084,8 @@ function render() {
 }
 
 function reset() {
-  Object.assign(state, { q: "", age: null, city: "All", cat: "All", openOnly: false, savedOnly: false });
+  Object.assign(state, { q: "", age: null, city: "All", cat: "All", path: null, openOnly: false, savedOnly: false });
+  paths();
   $("q").value = ""; $("age").value = "";
   $("openOnly").setAttribute("aria-pressed", "false");
   syncChips(); tiles(); render();
@@ -910,7 +1119,8 @@ $("sCopy").onclick = async () => {
   catch (err) { $("sNote").textContent = "Couldn't copy automatically. Select the text above and copy it."; }
 };
 
-stats(); tiles(); timeline(); syncChips(); render(); motion();
+stats(); tiles(); paths(); timeline(); syncChips(); render(); motion();
+$("pathChip").onclick = () => { state.path = null; paths(); render(); };
 
 // =====================================================================
 //  MOTION (all skipped if the viewer prefers reduced motion)
