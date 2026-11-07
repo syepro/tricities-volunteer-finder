@@ -146,10 +146,15 @@
   .pill.unknown { background: var(--bg-2); color: var(--muted); }
   .pill.open { background: #d8f0e0; color: #135c34; }
   .pill.seasonal { background: #e6e4fb; color: #3e3796; }
-  .pill.full { background: #fbe1dc; color: #8a2b19; }
+  .pill.paused { background: #eceae4; color: #6b6458; }
+  .card.is-paused .card-top { filter: grayscale(.7); }
+  .card.is-paused h3, .card.is-paused p { opacity: .75; }
+  .pausemsg { display: flex; gap: 8px; align-items: flex-start; font-size: 13.5px; font-weight: 500; color: #8a2b19; background: #fdecea; border: 1px dashed #f0b9b0; padding: 8px 10px; border-radius: 10px; }
+  .pausemsg svg { flex: none; width: 16px; height: 16px; margin-top: 2px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; }
   @media (prefers-color-scheme: dark) {
     .pill.age { background: #3a2f12; color: #f6d48a; } .pill.open { background: #173a27; color: #8fe0b2; }
-    .pill.seasonal { background: #26244a; color: #b9b4ff; } .pill.full { background: #3d1d17; color: #ffb1a1; }
+    .pill.seasonal { background: #26244a; color: #b9b4ff; } .pill.paused { background: #2a2a26; color: #c9c2b4; }
+    .pausemsg { background: #3a1d18; color: #ffb9ab; border-color: #6a3329; }
   }
   .pill.city { display: inline-flex; align-items: center; gap: 4px; }
   .pill.city svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.2; }
@@ -453,9 +458,9 @@ const LISTINGS = [
   { title: "Coquitlam Youth Council", org: "City of Coquitlam", city: "Coquitlam",
     category: "Leadership & councils", minAge: 15, who: "Going into Grades 10–12, Coquitlam residents",
     desc: "Give the city feedback on programs and youth issues, and lead your own community volunteer projects. Meets every second Wednesday, 4–5 pm, September to June.",
-    when: "Applications open each summer (2026 intake ran July 6 – Aug 17).",
+    pause: "This year's intake has closed. Applications open again next summer (2026 intake ran July 6 – Aug 17).",
     how: "Apply with the online form on the city's website during the summer intake.",
-    status: "seasonal", url: "https://www.coquitlam.ca/420/Coquitlam-Youth-Council-CYC", checked: "2026-11-07" },
+    status: "paused", url: "https://www.coquitlam.ca/420/Coquitlam-Youth-Council-CYC", checked: "2026-11-07" },
   { title: "Community Police Station volunteer", org: "Coquitlam RCMP", city: "Coquitlam",
     category: "Leadership & councils", minAge: 16, who: "16+, Canadian citizen or PR, 5+ years in Canada",
     desc: "Bike and foot patrols, Speed Watch, taking non-emergency reports and public safety outreach at community events.",
@@ -498,15 +503,15 @@ const LISTINGS = [
   { title: "Reading Buddies", org: "Coquitlam Public Library", city: "Coquitlam",
     category: "Kids & tutoring", minAge: 14, who: "14+ and in Grades 9–12",
     desc: "Help a young reader in Grades 1–4 practise reading at the Poirier or City Centre branch. Hours count toward community service hours.",
-    when: "Fall session is full. Watch for the next session.",
+    pause: "Teen spots for the fall session are full. Ask the library about the next session.",
     how: "Email librarian Chris Miller at cmiller@coqlibrary.ca to ask about the next session. New volunteers need a criminal record check.",
-    status: "full", url: "https://coqlibrary.ca/reading-buddies/", checked: "2026-11-07" },
+    status: "paused", url: "https://coqlibrary.ca/reading-buddies/", checked: "2026-11-07" },
   { title: "Homework Help Club", org: "Coquitlam Public Library", city: "Coquitlam",
     category: "Kids & tutoring", minAge: 13, who: "Grades 8–12",
     desc: "Be a Big Buddy and help students in Grades 1–6 with homework at the Poirier branch. Hours count toward community service hours.",
-    when: "Fall session (Fridays, Nov 13 – Dec 18) is full.",
+    pause: "Teen spots for the fall session (Fridays, Nov 13 – Dec 18) are full.",
     how: "Email cmiller@coqlibrary.ca to ask about the next session.",
-    status: "full", url: "https://coqlibrary.ca/homework-help-club/", checked: "2026-11-07" },
+    status: "paused", url: "https://coqlibrary.ca/homework-help-club/", checked: "2026-11-07" },
   { title: "Parlez-Nous en Français", org: "Coquitlam Public Library", city: "Coquitlam",
     category: "Kids & tutoring", minAge: 13, who: "Grades 8–12, fluent in French",
     desc: "Help French Immersion and Francophone kids in Grades 1–6 with homework and French conversation at the Poirier branch.",
@@ -548,6 +553,12 @@ const LISTINGS = [
     when: "Applications have reopened.",
     how: "Apply online. Includes an interview, references and a criminal record check. Phone: 604-664-1636.",
     status: "open", url: "https://placedesarts.ca/volunteer/", checked: "2026-11-07" },
+  { title: "Youth Arts Council", org: "Place des Arts", city: "Coquitlam",
+    category: "Arts & culture", also: ["Leadership & councils"], minAge: 14, who: "Grades 9–12 (per SD43 directory)",
+    desc: "A council that gets local teens involved in the arts community and organizes youth arts events.",
+    pause: "Not accepting applicants for the 2026/2027 council.",
+    how: "Check the volunteer page for the next council's application.",
+    status: "paused", url: "https://placedesarts.ca/volunteer/", checked: "2026-11-07" },
   { title: "Youth Actors – Summer Theatre Troupe", org: "Place des Arts", city: "Coquitlam",
     category: "Arts & culture", minAge: 13, who: "Ages 13–17 (audition)",
     desc: "A volunteer acting role in a summer theatre troupe, with a $500 honorarium when you finish.",
@@ -599,6 +610,12 @@ const LISTINGS = [
     desc: "Community programs and personal-growth projects, plus blog and magazine writing.",
     how: "See open roles through the application link on their volunteer page.",
     status: "open", url: "https://lowentropy.org/get-involved/volunteer-opportunities/", checked: "2026-11-07" },
+  { title: "Food bank volunteer", org: "PoCo People's Pantry", city: "Port Coquitlam",
+    category: "Community & food", minAge: 15, who: "Grade 10+ (per SD43 directory)",
+    desc: "Assemble food hampers, sort donations, and help pick up and deliver food for families in Port Coquitlam.",
+    pause: "Not accepting new volunteers right now.",
+    how: "Check their volunteer page or contact them to ask when intake reopens.",
+    status: "paused", url: "https://thepeoplespantry.ca/volunteer/", checked: "2026-11-07" },
   { title: "Farmers market volunteer", org: "Coquitlam & Port Moody Farmers Markets", city: "Tri-Cities wide",
     category: "Community & food", minAge: null, who: "Age not listed",
     desc: "Set up and take down the market, help vendors and visitors, and help with crafts and events. Training on site.",
@@ -607,9 +624,9 @@ const LISTINGS = [
   { title: "Constituency Youth Council", org: "Office of MP Zoe Royer", city: "Tri-Cities wide",
     category: "Leadership & councils", minAge: 15, who: "Ages 15–18",
     desc: "A non-partisan youth council in the Port Moody–Coquitlam riding. Members discuss national issues like climate change and youth employment and take on community projects.",
-    when: "Last intake closed March 1, 2026 for an April–March term.",
+    pause: "The current council runs until March 2027. The last intake closed March 1, 2026, so watch for the next one early in the year.",
     how: "Apply with the online form when the next intake opens. Questions: 778-786-2595.",
-    status: "seasonal", url: "https://zoeroyer.libparl.ca/tag/news/", checked: "2026-11-07" },
+    status: "paused", url: "https://zoeroyer.libparl.ca/tag/news/", checked: "2026-11-07" },
 
   // ---------- Health & care ----------
   { title: "Gift shop & thrift shop volunteer", org: "Eagle Ridge Hospital Auxiliary", city: "Tri-Cities wide",
@@ -646,6 +663,13 @@ const LISTINGS = [
     desc: "Spread the word about elephant poaching at your school: recruit other students, run outreach and fundraising, or read Elephanatics' books to younger classes. A Vancouver-based nonprofit you can volunteer with from your own school.",
     how: "Contact Elephanatics through the volunteer page on their website.",
     status: "open", url: "https://elephanatics.org/volunteer/", checked: "2026-11-07" },
+
+  { title: "Animal shelter volunteer", org: "Coquitlam Animal Shelter", city: "Coquitlam",
+    category: "Animals", minAge: null, who: "Age not listed",
+    desc: "The city-run shelter that cares for stray animals from Coquitlam, Port Coquitlam and Port Moody.",
+    pause: "No volunteer opportunities right now, because there are few dogs available for walking.",
+    how: "Check the shelter's volunteer page for when spots reopen.",
+    status: "paused", url: "https://coquitlam.ca/470/Volunteer-Opportunities", checked: "2026-11-07" },
 
   // ---------- Environment ----------
   { title: "Noons Creek Hatchery volunteer", org: "Port Moody Ecological Society", city: "Port Moody",
@@ -706,7 +730,7 @@ const TIMELINE = [
 const CITIES = ["All", "Coquitlam", "Port Coquitlam", "Port Moody", "Anmore / Belcarra", "Tri-Cities wide", "Nearby & online"];
 const inCat = (l, c) => l.category === c || (l.also || []).includes(c);
 const CAT_NAMES = Object.keys(CATS);
-const STATUS = { open: "Accepting now", seasonal: "Seasonal", full: "Full right now" };
+const STATUS = { open: "Accepting now", seasonal: "Seasonal", paused: "Temporarily not accepting" };
 const state = { q: "", age: null, city: "All", cat: "All", openOnly: false, savedOnly: false, sort: "az" };
 const $ = (id) => document.getElementById(id);
 
@@ -772,7 +796,7 @@ function matches(l) {
   if (state.openOnly && l.status !== "open") return false;
   if (state.savedOnly && !saved.has(idOf(l))) return false;
   if (state.q) {
-    const hay = [l.title, l.org, l.desc, l.category, l.city, l.who, l.when || ""].join(" ").toLowerCase();
+    const hay = [l.title, l.org, l.desc, l.category, l.city, l.who, l.when || "", l.pause || ""].join(" ").toLowerCase();
     if (!state.q.split(/\s+/).every(w => hay.includes(w))) return false;
   }
   return true;
@@ -780,15 +804,17 @@ function matches(l) {
 
 function sorted(arr) {
   const a = arr.slice();
+  const p = x => x.status === "paused" ? 1 : 0;
   if (state.sort === "age") a.sort((x, y) => (x.minAge ?? 99) - (y.minAge ?? 99) || x.title.localeCompare(y.title));
   else if (state.sort === "city") a.sort((x, y) => x.city.localeCompare(y.city) || x.org.localeCompare(y.org));
   else a.sort((x, y) => x.org.localeCompare(y.org) || x.title.localeCompare(y.title));
-  return a;
+  return a.sort((x, y) => p(x) - p(y));
 }
 
 const STAR = '<svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.9 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>';
 const PIN = '<svg viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg>';
 const CHECK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const PAUSE = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></svg>';
 const ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg>';
 
 function render() {
@@ -807,7 +833,7 @@ function render() {
   list.innerHTML = shown.map((l, i) => {
     const id = idOf(l), on = saved.has(id), k = CATS[l.category];
     return `
-    <article class="card" style="--c:${k.c};--cs:${k.cs};animation-delay:${Math.min(i, 12) * 25}ms">
+    <article class="card${l.status === "paused" ? " is-paused" : ""}" style="--c:${k.c};--cs:${k.cs};animation-delay:${Math.min(i, 12) * 25}ms">
       <div class="card-top">
         <span class="ico">${icon(l.category)}</span>
         <span class="cat">${esc(l.category)}</span>
@@ -822,10 +848,11 @@ function render() {
           <span class="pill ${l.status}"><span class="dot"></span>${STATUS[l.status]}</span>
           <span class="pill city">${PIN}${esc(l.city)}</span>
         </div>
+        ${l.status === "paused" ? `<div class="pausemsg">${PAUSE}<span><b>Temporarily not accepting volunteers.</b> ${esc(l.pause || "Check back later.")}</span></div>` : ""}
         ${l.when ? `<div class="when">${esc(l.when)}</div>` : ""}
         <details class="how"><summary>How to apply</summary><div>${esc(l.how)}</div></details>
         <div class="foot">
-          <a class="go" href="${esc(l.url)}" target="_blank" rel="noopener">View &amp; apply ${ARROW}</a>
+          <a class="go" href="${esc(l.url)}" target="_blank" rel="noopener">${l.status === "paused" ? "View details" : "View &amp; apply"} ${ARROW}</a>
           <span class="checked">${CHECK}Checked ${fmtDate(l.checked)}</span>
         </div>
       </div>
