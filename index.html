@@ -445,6 +445,26 @@
   }
   .timeline { mask-image: linear-gradient(90deg, #000 88%, transparent); -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); }
 
+  /* Topics: line list (overrides earlier bubble styles) */
+  .tiles, .tiles:is(*) { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 0 36px; overflow: visible; padding: 0;
+    border-top: 1px solid var(--line); mask-image: none; }
+  .tile { width: auto !important; flex-direction: row; align-items: center; gap: 14px; padding: 18px 6px !important; border: 0;
+    border-bottom: 1px solid var(--line); border-radius: 0; background: none; text-align: left; transition: background .2s, padding .2s; }
+  .tile .ico { width: auto !important; height: auto !important; background: none !important; border-radius: 0; box-shadow: none !important; color: var(--c); }
+  .tile .ico svg { width: 26px !important; height: 26px !important; }
+  .tile .tname { flex: 1; }
+  .tile b { font-family: "Bricolage Grotesque", sans-serif; font-size: 20px !important; font-weight: 700; line-height: 1.15; }
+  .tile small { display: block; font-size: 13px !important; color: var(--muted); margin-top: 2px; }
+  .tarrow { font-size: 20px; color: var(--muted); transition: transform .2s, color .2s; }
+  .tile:hover { background: linear-gradient(90deg, var(--cs), transparent); padding-left: 14px !important; transform: none; }
+  .tile:hover .ico { transform: none; }
+  .tile:hover .tarrow { transform: translateX(4px); color: var(--c); }
+  .tile:hover b { color: var(--c); }
+  .tile[aria-pressed="true"] b { color: var(--c); }
+  @media (prefers-color-scheme: dark) { .tile:hover { background: linear-gradient(90deg, rgba(255,255,255,.05), transparent); } }
+  @media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .tiles { grid-template-columns: 1fr; } .tile { padding: 15px 4px !important; } .tile b { font-size: 18px !important; } }
+
   /* ---------- Motion ---------- */
   .blob { position: absolute; border-radius: 50%; filter: blur(40px); opacity: .45; z-index: 0; pointer-events: none; }
   .blob.a { width: 320px; height: 320px; background: #ffd27a; top: -80px; right: 8%; animation: drift 14s ease-in-out infinite alternate; }
@@ -1174,7 +1194,7 @@ function tiles() {
   $("tiles").innerHTML = CAT_NAMES.map(n => {
     const k = CATS[n], count = LISTINGS.filter(l => inCat(l, n)).length;
     return `<button class="tile" type="button" data-cat="${esc(n)}" aria-pressed="${state.cat === n}" style="--c:${k.c};--cs:${k.cs}">
-      <span class="ico">${icon(n)}</span><span><b>${esc(n)}</b><small>${count}</small></span></button>`;
+      <span class="ico">${icon(n)}</span><span class="tname"><b>${esc(n)}</b><small>${count} ${count === 1 ? "opportunity" : "opportunities"}</small></span><span class="tarrow" aria-hidden="true">→</span></button>`;
   }).join("");
   $("tiles").querySelectorAll(".tile").forEach(b => b.onclick = () => {
     state.cat = state.cat === b.dataset.cat ? "All" : b.dataset.cat; state.path = null; paths();
