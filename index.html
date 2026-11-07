@@ -559,7 +559,7 @@
   </div>
   <div class="hero-art" aria-hidden="true">
     <svg viewBox="0 0 1200 230" preserveAspectRatio="xMidYMax slice">
-      <g class="sun"><circle cx="930" cy="112" r="52" fill="#f2b33d" opacity=".18"/><circle cx="930" cy="112" r="34" fill="#f2b33d" opacity=".9"/></g>
+      <g class="sunwrap"><g class="sun"><circle cx="930" cy="112" r="52" fill="#f2b33d" opacity=".18"/><circle cx="930" cy="112" r="34" fill="#f2b33d" opacity=".9"/></g></g>
       <g class="birds" fill="none" stroke="#2b3d34" stroke-width="2" stroke-linecap="round" opacity=".55">
         <path class="bird b1" d="M0 0 q6 -6 12 0 q6 -6 12 0"/><path class="bird b2" d="M0 0 q5 -5 10 0 q5 -5 10 0"/><path class="bird b3" d="M0 0 q4 -4 8 0 q4 -4 8 0"/>
       </g>
@@ -1436,10 +1436,10 @@ function motion() {
   });
 
   // Mountain parallax
-  const far = document.querySelector(".hero-art .far"), near = document.querySelector(".hero-art .near");
+  const far = document.querySelector(".hero-art .far"), near = document.querySelector(".hero-art .near"), sun = document.querySelector(".hero-art .sunwrap");
   window.addEventListener("scroll", () => {
     const y = Math.min(window.scrollY, 600);
-    far.style.transform = `translateY(${y * .12}px)`; near.style.transform = `translateY(${y * .06}px)`;
+    sun.style.transform = `translateY(${y * .18}px)`; far.style.transform = `translateY(${y * .12}px)`; near.style.transform = `translateY(${y * .06}px)`;
   }, { passive: true });
 
   // Gentle card tilt on desktop
