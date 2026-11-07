@@ -1142,7 +1142,8 @@ function paths() {
   }).join("");
   $("paths").querySelectorAll(".path").forEach(b => b.onclick = () => {
     state.path = state.path === b.dataset.id ? null : b.dataset.id;
-    paths(); render();
+    if (state.path) state.cat = "All";   // a path replaces any topic filter
+    syncChips(); tiles(); paths(); render();
     if (state.path) { const r = $("pathPanel").getBoundingClientRect(); if (r.top > window.innerHeight - 120) $("pathPanel").scrollIntoView({ behavior: "smooth", block: "center" }); }
   });
   const panel = $("pathPanel");
