@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<!--
+  =====================================================================
+  TRI-CITIES TEEN VOLUNTEER FINDER   (tricitiesvolunteer.ca)
+  The whole website is this one file. It has three parts:
+
+  1. <style>   How everything looks: colours, sizes, layout.
+               Colours are at the very top of the style section.
+  2. <body>    The page content: header, the four pages
+               (Home, Opportunities, Your future, How it works) and footer.
+  3. <script>  The data and what the page does:
+               - LISTINGS  the volunteer opportunities  <- edit these most often
+               - TIMELINE  dates shown in "Coming up"
+               - PATHS     the career paths on "Your future"
+               - CATS      topic names, colours and icons
+
+  TO UPDATE A LISTING: search this file for its title, change the text,
+  set status to "open", "seasonal" or "paused", and update "checked"
+  to today's date. Then save and upload to GitHub.
+  =====================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tri-Cities Teen Volunteer Finder</title>
+<meta name="description" content="Youth volunteer opportunities in Coquitlam, Port Coquitlam and Port Moody, all in one place and checked against each organization's website.">
+<meta name="theme-color" content="#1f6b4a">
+
+<!-- Tab icon (favicon) and home-screen icon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f6b4a'/%3E%3Cpath d='M5 23l7-9 4 5 3-4 8 8z' fill='%239fe0bd'/%3E%3Ccircle cx='23' cy='10' r='3' fill='%23f2b33d'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Link preview (what shows when the link is shared in a chat or on social media) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tricitiesvolunteer.ca/beyond">
+<meta property="og:title" content="Tri-Cities Teen Volunteer Finder">
+<meta property="og:description" content="Find youth volunteer opportunities in Coquitlam, Port Coquitlam and Port Moody, all in one place.">
+<meta property="og:image" content="https://tricitiesvolunteer.ca/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tri-Cities Teen Volunteer Finder">
+<meta name="twitter:description" content="Find youth volunteer opportunities in Coquitlam, Port Coquitlam and Port Moody, all in one place.">
+<meta name="twitter:image" content="https://tricitiesvolunteer.ca/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* =====================================================================
+     STYLES
+     Colours and sizes used everywhere are set as variables in :root below.
+     Change a colour there and it updates the whole site.
+     ===================================================================== */
+
+  /* ---------- 1. Colours (light mode, then dark mode) ---------- */
+  :root {
+    --bg: #f5f1e8;        /* page background (cream) */
+    --bg-2: #ece6d8;      /* slightly darker background */
+    --card: #ffffff;      /* cards and panels */
+    --ink: #17241e;       /* main text */
+    --muted: #5a6862;     /* secondary text */
+    --line: #e1dacb;      /* borders and dividers */
+    --field: #faf8f3;     /* input boxes */
+    --green: #1f6b4a;     /* main brand colour */
+    --green-2: #2f8a61;   /* brand colour on hover */
+    --green-soft: #dcefe4;
+    --sun: #f2b33d;       /* yellow accent */
+    --sun-ink: #3a2a05;
+    --radius: 18px;
+    --shadow: 0 1px 2px rgba(23,36,30,.04), 0 6px 20px -10px rgba(23,36,30,.18);
+    --shadow-hover: 0 2px 4px rgba(23,36,30,.06), 0 16px 32px -14px rgba(23,36,30,.28);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1613; --bg-2: #141d19; --card: #18231e; --ink: #ecf1ee; --muted: #9fb0a8;
+      --line: #273630; --field: #121a16; --green: #5fc591; --green-2: #7fd6a8; --green-soft: #1d3a2c;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px -10px rgba(0,0,0,.6);
+      --shadow-hover: 0 2px 4px rgba(0,0,0,.35), 0 16px 32px -14px rgba(0,0,0,.7);
+    }
+  }
+
+  /* ---------- 2. Basics ---------- */
+  * { box-sizing: border-box; }
+  html, body { overflow-x: clip; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--ink); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  button { font: inherit; color: inherit; }
+  a { color: var(--green); }
+  h1, h2, h3 { font-family: "Bricolage Grotesque", sans-serif; letter-spacing: -0.02em; }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  main { min-height: 60vh; }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: 0; background: var(--green); color: #fff; padding: 12px 20px;
+    border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 15px; text-decoration: none; transition: transform .15s, background .15s; }
+  .btn:hover { transform: translateY(-1px); background: var(--green-2); }
+  .btn.ghost { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+  .btn.small { padding: 8px 14px; font-size: 14px; }
+  .btn .arrow { transition: transform .2s; }
+  .btn:hover .arrow { transform: translateX(3px); }
+  @media (prefers-color-scheme: dark) { .btn { color: #0f1613; } }
+
+  /* Small coloured icon square used by topics, cards and paths */
+  .ico { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--cs); color: var(--c); }
+  .ico svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---------- 3. Header (top bar) ---------- */
+  .skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; }
+  .skip:focus { top: 12px; }
+  main:focus { outline: none; }
+  .topbar { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg) 96%, transparent); border-bottom: 1px solid var(--line); }
+  .topbar-inner { display: flex; align-items: center; gap: 18px; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); margin-right: auto; }
+  .brand svg { width: 34px; height: 34px; flex: none; }
+  .brand span { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 17px; line-height: 1.05; letter-spacing: -0.01em; }
+  .brand small { display: block; font-family: "Inter", sans-serif; font-weight: 600; font-size: 11px; color: var(--muted); letter-spacing: .02em; }
+  .navlinks { display: flex; gap: 4px; }
+  .navlinks a { text-decoration: none; color: var(--muted); font-weight: 600; font-size: 14.5px; padding: 8px 12px; border-radius: 999px; transition: background .15s, color .15s; }
+  .navlinks a:hover { color: var(--ink); background: var(--bg-2); }
+  .navlinks a.on { color: var(--ink); background: var(--card); box-shadow: var(--shadow); }
+  .nav-cta { display: none; }
+  .menu-btn { display: none; width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); cursor: pointer;
+    flex-direction: column; justify-content: center; align-items: center; gap: 4px; }
+  .menu-btn span { width: 18px; height: 2px; background: var(--ink); border-radius: 2px; transition: transform .2s, opacity .2s; }
+  .menu-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .menu-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .menu-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  @media (max-width: 760px) {   /* phone: links fold into the ☰ menu */
+    .topbar-inner { gap: 8px; height: 58px; }
+    .nav-cta { display: inline-flex; }
+    .menu-btn { display: flex; }
+    .navlinks { position: absolute; top: 58px; left: 0; right: 0; flex-direction: column; gap: 2px; padding: 10px 16px 16px;
+      background: var(--bg); border-bottom: 1px solid var(--line); box-shadow: 0 14px 24px -16px rgba(0,0,0,.3); }
+    .navlinks:not(.open) { display: none; }
+    .navlinks a { font-size: 16px; padding: 12px 14px; }
+  }
+
+  /* ---------- 4. Hero (big intro at the top of Home) ---------- */
+  .hero { position: relative; overflow: hidden; background: linear-gradient(180deg, #fbe7bd 0%, #f6efe0 55%, var(--bg) 100%); }
+  .hero-inner { position: relative; z-index: 2; padding: 44px 20px calc(max(170px, 19.2vw) + 24px); display: grid; gap: 18px; }
+  .tag { justify-self: start; display: inline-flex; gap: 8px; align-items: center; background: var(--card); color: var(--ink);
+    font-weight: 600; font-size: 13px; padding: 6px 12px 6px 8px; border-radius: 999px; box-shadow: var(--shadow); }
+  .tag i { width: 8px; height: 8px; border-radius: 50%; background: #2f8a61; box-shadow: 0 0 0 4px rgba(47,138,97,.18); }
+  h1 { font-weight: 800; font-size: clamp(38px, 8vw, 72px); line-height: .98; margin: 0; max-width: 760px; }
+  h1 em { font-style: normal; color: var(--green); position: relative; white-space: nowrap; }
+  .lede { color: var(--muted); font-size: clamp(16px, 2.2vw, 19px); max-width: 600px; margin: 0; }
+  .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  /* Rotating headline word and its yellow underline */
+  h1 em.rot { display: inline-block; min-height: 1em; }
+  h1 em.rot::after { content: ""; position: absolute; left: 0; width: var(--uw, 100%); bottom: .06em; height: .18em; background: var(--sun); opacity: .55;
+    z-index: -1; border-radius: 4px; transform-origin: left center; transition: transform .45s cubic-bezier(.65,0,.35,1), width .45s cubic-bezier(.65,0,.35,1); }
+  h1 em.rot.swap::after { transform: scaleX(0); transition-duration: .3s; }
+  h1 em.rot span { display: inline-block; transition: transform .35s ease, opacity .35s ease; }
+  h1 em.rot span.rot-out { transform: translateY(-40%); opacity: 0; }
+  h1 em.rot span.rot-in { transform: translateY(40%); opacity: 0; transition: none; }
+  /* Mountain illustration */
+  .hero-art { position: absolute; inset: auto 0 0 0; z-index: 1; width: 100%; height: max(170px, 19.2vw); }
+  .hero-art svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  /* Soft colour blobs behind the hero text */
+  .blob { position: absolute; border-radius: 50%; opacity: .45; will-change: transform; z-index: 0; pointer-events: none; }
+  .blob.a { width: 320px; height: 320px; background: radial-gradient(closest-side, #ffd27a, rgba(255,210,122,.5) 55%, rgba(255,210,122,0)); top: -80px; right: 8%; animation: drift 14s ease-in-out infinite alternate; }
+  .blob.b { width: 260px; height: 260px; background: radial-gradient(closest-side, #9fe0bd, rgba(159,224,189,.5) 55%, rgba(159,224,189,0)); top: 120px; left: -60px; animation: drift 18s ease-in-out infinite alternate-reverse; }
+  @media (prefers-color-scheme: dark) {
+    .hero { background: linear-gradient(180deg, #1b2a3a 0%, #142019 60%, var(--bg) 100%); }
+    .hero-art { opacity: .75; }
+    .blob { opacity: .18; }
+  }
+
+  /* Stats strip under the hero */
+  .stats { display: flex; background: var(--card); border-radius: 999px; box-shadow: var(--shadow); padding: 6px; margin-top: -80px; position: relative; z-index: 3; }
+  .stat { flex: 1; padding: 12px 16px; text-align: center; position: relative; }
+  .stat + .stat::before { content: ""; position: absolute; left: 0; top: 22%; bottom: 22%; width: 1px; background: var(--line); }
+  .stat b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 28px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .stat span { font-size: 13px; color: var(--muted); }
+  @media (max-width: 640px) {
+    .stats { border-radius: 20px; margin-top: -64px; }
+    .stat { padding: 8px 4px; }
+    .stat b { font-size: 21px; }
+    .stat span { font-size: 11px; display: block; line-height: 1.2; }
+  }
+
+  /* ---------- 5. Sections and headings ---------- */
+  section.block { padding: 72px 0 0; }
+  section[id] { scroll-margin-top: 72px; }
+  .sec-head { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 26px; flex-wrap: wrap; }
+  .sec-head h2 { font-size: clamp(28px, 4.4vw, 40px); margin: 0; }
+  .sec-head p { margin: 8px 0 0; color: var(--muted); font-size: 16.5px; max-width: 620px; }
+  .page-head h2 { font-size: clamp(36px, 6.5vw, 60px); line-height: 1; }
+  .page-head p { font-size: clamp(16.5px, 2vw, 19px); }
+  .eyebrow { display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+  #find, #guide { padding-top: 56px; }
+  #suggest { padding-top: 72px; }
+  @media (max-width: 640px) {
+    section.block { padding-top: 52px; }
+    #find, #guide { padding-top: 36px; }
+  }
+
+  /* ---------- 6. Home page ---------- */
+  /* Topic list ("What are you into?") */
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 36px; border-top: 1px solid var(--line); }
+  .tile { display: flex; align-items: center; gap: 14px; padding: 18px 6px; border: 0; border-bottom: 1px solid var(--line); background: none;
+    text-align: left; cursor: pointer; transition: background .2s, padding .2s; }
+  .tile .ico { width: auto; height: auto; background: none; border-radius: 0; transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+  .tile .ico svg { width: 26px; height: 26px; }
+  .tile .tname { flex: 1; }
+  .tile b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 20px; font-weight: 700; line-height: 1.15; }
+  .tile small { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .tarrow { font-size: 20px; color: var(--muted); transition: transform .2s, color .2s; }
+  .tile:hover { background: linear-gradient(90deg, var(--cs), transparent); padding-left: 14px; }
+  .tile:hover .ico { transform: rotate(-10deg) scale(1.12); }
+  .tile:hover .tarrow { transform: translateX(4px); color: var(--c); }
+  .tile:hover b { color: var(--c); }
+  @media (prefers-color-scheme: dark) { .tile:hover { background: linear-gradient(90deg, rgba(255,255,255,.05), transparent); } }
+  @media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .tiles { grid-template-columns: 1fr; } .tile { padding: 15px 4px; } .tile b { font-size: 18px; } }
+
+  .far-hint { display: inline-block; margin: -8px 0 18px; color: var(--green); font-weight: 600; text-underline-offset: 3px; }
+  .far-hint[hidden] { display: none; }
+  .pp-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .pp-far { color: var(--green); font-weight: 600; text-underline-offset: 3px; }
+
+  /* Nearby cities page */
+  .beyond-jump { margin: -4px 0 8px; }
+  .beyond-jump small { opacity: .6; margin-left: 4px; font-weight: 700; }
+  .bgroup { margin-top: 44px; scroll-margin-top: 84px; }
+  .bcity { display: flex; align-items: center; gap: 8px; font-size: clamp(22px, 3vw, 28px); margin: 0 0 18px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .bcity svg { width: 20px; height: 20px; fill: none; stroke: var(--green); stroke-width: 2; }
+  .bcity small { font-size: 15px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+  .beyond-cta { display: block; margin-top: 40px; padding: 26px 4px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); font-size: 17px; }
+  .beyond-cta b { font-family: "Bricolage Grotesque", sans-serif; font-size: 22px; margin-right: 6px; }
+  .beyond-cta > span { color: var(--green); font-weight: 600; }
+  .beyond-cta:hover > span { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* "Coming up" timeline */
+  .timeline { display: flex; overflow-x: auto; padding: 8px 2px 14px; position: relative; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    scrollbar-width: none; --fl: 0%; --fr: 12%;
+    mask-image: linear-gradient(90deg, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent); }
+  .timeline::-webkit-scrollbar { display: none; }
+  .timeline.at-start { --fl: 0%; } .timeline:not(.at-start) { --fl: 8%; } .timeline.at-end { --fr: 0%; }
+  .tl-nav { display: flex; gap: 8px; align-self: flex-end; }
+  .tl-nav button { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--line); background: transparent; color: var(--ink);
+    font: inherit; font-size: 18px; cursor: pointer; transition: background .2s, border-color .2s, transform .2s, opacity .2s; }
+  .tl-nav button:hover:not(:disabled) { border-color: var(--ink); transform: scale(1.06); }
+  .tl-nav button:disabled { opacity: .3; cursor: default; }
+  .tl-nav.none { display: none; }
+  @media (max-width: 640px), (hover: none) { .tl-nav { display: none; } }
+  .tl { flex: 0 0 250px; scroll-snap-align: start; padding: 36px 26px 0 0; position: relative; transition: transform .2s;
+    display: flex; flex-direction: column; align-items: flex-start; color: inherit; text-decoration: none; border-radius: 6px; }
+  .tl:hover { transform: translateY(-4px) rotate(-.6deg); }
+  .tl:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+  .tl b i { font-style: normal; font-size: .8em; color: var(--muted); opacity: 0; display: inline-block; transition: opacity .2s, transform .2s; }
+  .tl:hover b i, .tl:focus-visible b i { opacity: 1; transform: translate(2px,-2px); }
+  @media (hover: none) { .tl b i { opacity: .7; } }
+  .tl::before { content: ""; position: absolute; left: 0; right: 0; top: 9px; height: 2px; background: var(--line); }
+  .tl::after { content: ""; position: absolute; left: 0; top: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--sun); box-shadow: 0 0 0 4px var(--bg); }
+  .tl .d { display: inline-block; font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); margin-bottom: 6px; }
+  .tl b { display: block; font-size: 17.5px; line-height: 1.3; margin-bottom: 6px; }
+  .tl .n { display: block; font-size: 14.5px; color: var(--muted); }
+  @media (prefers-color-scheme: dark) { .tl .d { color: var(--sun); } }
+  @media (max-width: 640px) { .tl { flex-basis: 230px; } }
+
+  /* The links at the bottom of Home */
+  .home-next { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); margin-top: 72px; }
+  .next-link { display: block; padding: 34px 4px; text-decoration: none; color: var(--ink); border-bottom: 1px solid var(--line); }
+  .next-link + .next-link { padding-left: 30px; border-left: 1px solid var(--line); }
+  .next-link { padding-right: 24px; }
+  .next-link span span { color: inherit; font: inherit; }
+  .next-link b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 26px; margin-bottom: 4px; }
+  .next-link span { color: var(--green); font-weight: 600; font-size: 15.5px; }
+  .next-link:hover b { color: var(--green); }
+  @media (max-width: 640px) {
+    .home-next { grid-template-columns: 1fr; margin-top: 52px; }
+    .next-link { padding: 26px 4px; }
+    .next-link + .next-link { padding-left: 4px; border-left: 0; }
+    .next-link b { font-size: 22px; }
+  }
+
+  /* ---------- 7. Opportunities page ---------- */
+  /* Search and filters box */
+  .finder { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 24px; box-shadow: var(--shadow); display: grid; gap: 20px; }
+  .row { display: grid; grid-template-columns: 1fr 150px; gap: 12px; }
+  .lbl { display: block; font-size: 12.5px; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+  .field { position: relative; }
+  .field svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 2; }
+  input[type="search"], input[type="number"], input[type="text"], input[type="url"], select, textarea {
+    width: 100%; font: inherit; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--field); color: var(--ink); }
+  .field input { padding-left: 40px; }
+  textarea { min-height: 80px; resize: vertical; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-size: 14px; border: 1px solid var(--line); background: var(--field); padding: 7px 13px; border-radius: 999px; cursor: pointer; transition: background .15s; }
+  .chip:hover { border-color: var(--green); }
+  .chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #fff; }
+  .chip.active-path { background: var(--c, var(--green)); border-color: var(--c, var(--green)); color: #fff; font-weight: 600; }
+  @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #0f1613; } }
+  @media (max-width: 640px) { .finder { padding: 18px; } }
+  .focus-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: -6px 0 6px; }
+  .focus-bar .back { font-weight: 700; }
+  .focus-bar[hidden], .finder[hidden] { display: none; }
+  .finder.opening { animation: rise .35s ease both; }
+  .view-in { animation: viewin .45s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes viewin { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr 104px; } }
+
+  /* Results count, toggles and sort */
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin: 30px 2px 18px; }
+  .count-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .count { font-size: 17px; font-weight: 600; }
+  .count small { color: var(--muted); font-weight: 400; }
+  .toggles { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .toggles select { width: auto; padding: 7px 12px; font-size: 14px; border-radius: 999px; }
+
+  /* Listing cards */
+  .grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: var(--shadow); transition: transform .18s, box-shadow .18s; animation: rise .35s ease both; }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+  .card-top { display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: var(--cs); }
+  .card-top .ico { width: 34px; height: 34px; border-radius: 10px; background: var(--card); transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+  .card-top .ico svg { width: 18px; height: 18px; }
+  .card:hover .card-top .ico { transform: rotate(8deg) scale(1.1); }
+  .card-top .cat { font-size: 12.5px; font-weight: 700; color: var(--c); text-transform: uppercase; letter-spacing: .05em; flex: 1; }
+  .star { width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--card); cursor: pointer; display: grid; place-items: center; color: var(--muted); }
+  .star svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+  .star[aria-pressed="true"] { color: #d99a12; }
+  .star[aria-pressed="true"] svg { fill: currentColor; }
+  .card-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .card h3 { font-size: 22px; font-weight: 700; margin: 0; line-height: 1.2; }
+  .org { font-size: 13.5px; color: var(--muted); margin-top: -5px; }
+  .card p { margin: 0; font-size: 15.5px; line-height: 1.6; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .when { font-size: 13.5px; color: var(--ink); background: var(--field); border-left: 3px solid var(--sun); padding: 7px 10px; border-radius: 6px; }
+  @media (prefers-color-scheme: dark) {
+    .pp-grid b, .tile:hover b { color: color-mix(in srgb, var(--c) 45%, #fff); }
+  }
+  details.how { border-top: 1px dashed var(--line); padding-top: 8px; font-size: 13.5px; color: var(--muted); }
+  details.how summary { cursor: pointer; min-height: 40px; padding: 4px 0; font-weight: 600; color: var(--ink); list-style: none; display: flex; align-items: center; gap: 6px; }
+  details.how summary::-webkit-details-marker { display: none; }
+  details.how summary::before { content: "+"; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--bg-2); font-size: 13px; }
+  details.how[open] summary::before { content: "–"; }
+  details.how div { margin-top: 6px; }
+  .foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 4px; gap: 8px; }
+  .go { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-weight: 700; font-size: 14px; color: var(--green);
+    background: var(--green-soft); padding: 8px 14px; border-radius: 999px; transition: background .15s; }
+  .go:hover { background: var(--green); color: #fff; }
+  .go svg { transition: transform .2s; }
+  .go:hover svg { transform: translate(2px,-2px); }
+  .checked { font-size: 12px; color: var(--muted); display: inline-flex; align-items: center; gap: 4px; }
+  .checked svg { width: 13px; height: 13px; stroke: #2f8a61; fill: none; stroke-width: 2.5; }
+  .empty { text-align: center; padding: 48px 20px; color: var(--muted); background: var(--card); border: 1px dashed var(--line); border-radius: var(--radius); grid-column: 1 / -1; }
+  .empty b { display: block; color: var(--ink); font-size: 18px; margin-bottom: 4px; }
+  @media (max-width: 640px) { .grid { gap: 16px; grid-template-columns: 1fr; } .card-body { padding: 18px; } }
+
+  /* Little labels on cards (age, status, city) */
+  .pill { font-size: 13px; font-weight: 600; padding: 5px 11px; border-radius: 999px; background: var(--bg-2); color: var(--ink); }
+  .pill.age { background: #fdf0d3; color: #7a5404; }
+  .pill.unknown { background: var(--bg-2); color: var(--muted); }
+  .pill.open { background: #d8f0e0; color: #135c34; }
+  .pill.seasonal { background: #e6e4fb; color: #3e3796; }
+  .pill.paused { background: #eceae4; color: #6b6458; }
+  .pill.city { display: inline-flex; align-items: center; gap: 4px; }
+  .pill.city svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+  .pill .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: currentColor; margin-right: 5px; vertical-align: 1px; }
+  /* "Temporarily not accepting" listings */
+  .card.is-paused .card-top { filter: grayscale(.7); }
+  .card.is-paused h3, .card.is-paused p { opacity: .75; }
+  .pausemsg { display: flex; gap: 8px; align-items: flex-start; font-size: 13.5px; font-weight: 500; color: #8a2b19; background: #fdecea; border: 1px dashed #f0b9b0; padding: 8px 10px; border-radius: 10px; }
+  .pausemsg svg { flex: none; width: 16px; height: 16px; margin-top: 2px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; }
+  @media (prefers-color-scheme: dark) {
+    .pill.age { background: #3a2f12; color: #f6d48a; } .pill.open { background: #173a27; color: #8fe0b2; }
+    .pill.seasonal { background: #26244a; color: #b9b4ff; } .pill.paused { background: #2a2a26; color: #c9c2b4; }
+    .pausemsg { background: #3a1d18; color: #ffb9ab; border-color: #6a3329; }
+  }
+
+  /* ---------- 8. "Your future" page ---------- */
+  #future { position: relative; padding: 64px 0 72px; --band: #ebf3ec; background: var(--band); box-shadow: 0 0 0 100vmax var(--band); clip-path: inset(0 -100vmax); }
+  .paths { display: flex; flex-wrap: wrap; gap: 14px; }
+  .path { display: flex; gap: 14px; align-items: center; text-align: left; padding: 12px 22px 12px 12px; border-radius: 999px; background: var(--card);
+    border: 1px solid var(--line); cursor: pointer; transition: transform .15s, box-shadow .15s, border-color .15s; }
+  .path:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .path .ico { width: 44px; height: 44px; border-radius: 50%; }
+  .path .ico svg { width: 22px; height: 22px; }
+  .path b { font-size: 16.5px; line-height: 1.25; }
+  .path .n { display: inline-grid; place-items: center; margin-left: 8px; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px;
+    background: var(--cs); font-size: 12.5px; font-weight: 700; color: var(--c); }
+  .path[aria-pressed="true"] { background: var(--c); border-color: var(--c); box-shadow: none; }
+  .path[aria-pressed="true"] b { color: #fff; }
+  .path[aria-pressed="true"] .ico { background: rgba(255,255,255,.9); }
+  .path-panel { margin-top: 26px; background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--c); border-radius: 22px;
+    padding: 28px; box-shadow: var(--shadow); animation: up .4s cubic-bezier(.2,.8,.2,1); }
+  .path-panel h3 { margin: 0 0 4px; font-size: 30px; }
+  .path-panel .majors { color: var(--muted); font-size: 15.5px; margin-bottom: 18px; }
+  .path-panel .btn { margin-top: 14px; background: var(--c); color: #fff; }
+  .pp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .pp-grid div { background: var(--field); border-radius: 16px; padding: 18px; font-size: 15.5px; line-height: 1.55; }
+  .pp-grid b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--c); margin-bottom: 4px; }
+  .count-tips { margin-top: 14px; padding-top: 40px; }
+  .count-tips b { font-family: "Bricolage Grotesque", sans-serif; font-size: 22px; }
+  .count-tips ul { margin: 16px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; }
+  .count-tips li { font-size: 15.5px; line-height: 1.55; color: var(--muted); padding-left: 26px; position: relative; }
+  .count-tips li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 800; }
+  .count-tips li span { color: var(--ink); font-weight: 600; }
+  @media (prefers-color-scheme: dark) { #future { --band: #13211b; } }
+  @media (max-width: 760px) { .pp-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) {
+    #future { padding-top: 40px; padding-bottom: 52px; }
+    .path { padding: 10px 16px 10px 10px; }
+    .path .ico { width: 38px; height: 38px; }
+    .path b { font-size: 15px; }
+    .path-panel { padding: 20px; }
+    .path-panel h3 { font-size: 24px; }
+    .count-tips ul { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- 9. "How it works" page ---------- */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 8px; counter-reset: s; }
+  .step { padding: 0 18px 0 0; position: relative; counter-increment: s; transition: transform .25s, box-shadow .25s; }
+  .step:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+  .step::before { content: counter(s); display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--green); color: #fff;
+    font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; font-size: 18px; margin-bottom: 14px; }
+  .step::after { content: ""; position: absolute; left: 54px; right: 10px; top: 20px; height: 2px; background: var(--line); }
+  .step:last-child::after { display: none; }
+  .step b { display: block; font-size: 19px; margin-bottom: 6px; }
+  .step span { font-size: 15.5px; line-height: 1.6; color: var(--muted); }
+  @media (prefers-color-scheme: dark) { .step::before { color: #0f1613; } }
+  @media (max-width: 820px) { .steps { grid-template-columns: repeat(2, 1fr); gap: 18px 0; } .step:nth-child(2)::after { display: none; } }
+  @media (max-width: 640px) {
+    .steps { gap: 28px 0; }
+    .step { padding-left: 56px; }
+    .step::before { position: absolute; left: 0; top: 0; margin: 0; }
+    .step::after { display: none; }
+  }
+  @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } .step { padding: 0 0 0 56px; } }
+
+  /* FAQ */
+  .faq { margin-top: 48px; display: grid; border-top: 1px solid var(--line); }
+  .faq details { border-bottom: 1px solid var(--line); padding: 22px 4px; }
+  .faq summary { cursor: pointer; font-weight: 600; font-size: 17.5px; list-style: none; display: flex; justify-content: space-between; gap: 10px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--green); font-weight: 700; }
+  .faq details[open] summary::after { content: "–"; }
+  .faq p { margin: 10px 0 0; color: var(--muted); font-size: 15.5px; line-height: 1.65; max-width: 760px; }
+
+  /* "Know one we're missing?" form */
+  .suggest { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 32px; box-shadow: var(--shadow);
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 36px; }
+  .suggest h2 { font-size: 34px; margin: 0 0 6px; }
+  .suggest p { color: var(--muted); margin: 0; font-size: 16px; line-height: 1.6; }
+  .form-grid { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .out { display: none; margin-top: 12px; background: var(--field); border: 1px solid var(--line); border-radius: 12px; padding: 12px; font-size: 13.5px; white-space: pre-wrap; }
+  .note { font-size: 13.5px; color: var(--muted); margin-top: 8px; }
+  @media (max-width: 760px) { .suggest { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .suggest { padding: 22px; } .suggest h2 { font-size: 28px; } }
+  @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- 10. Footer and pop-up message ---------- */
+  footer { margin-top: 96px; padding: 28px 0 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; }
+  footer .wrap { display: grid; gap: 8px; }
+  footer b { color: var(--ink); }
+  .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--bg);
+    padding: 10px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: .25s; z-index: 50; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ---------- 11. Animations ---------- */
+  .hero-inner > * { animation: up .7s cubic-bezier(.2,.8,.2,1) both; }
+  .hero-inner > *:nth-child(2) { animation-delay: .08s; }
+  .hero-inner > *:nth-child(3) { animation-delay: .16s; }
+  .hero-inner > *:nth-child(4) { animation-delay: .24s; }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); }
+  .reveal.shown { opacity: 1; transform: none; }
+  .btn:active, .chip:active, .tile:active { transform: scale(.96); }
+  .hero-art .sun { transform-origin: 780px 58px; animation: pulse 5s ease-in-out infinite; }
+  .hero-art .wave { animation: slide 16s linear infinite; }
+  .hero-art .w2 { animation-duration: 11s; animation-direction: reverse; }
+  .hero-art .bird { animation: fly 22s linear infinite; }
+  .hero-art .b1 { animation-delay: -2s; }
+  .hero-art .b2 { animation-delay: -9s; animation-duration: 26s; }
+  .hero-art .b3 { animation-delay: -15s; animation-duration: 30s; }
+  .star.pop { animation: pop .45s cubic-bezier(.3,1.8,.5,1); }
+  .spark { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; z-index: 60; animation: burst .8s ease-out forwards; }
+  @keyframes up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.15); } }
+  @keyframes pulse { 50% { transform: scale(1.06); } }
+  @keyframes slide { to { transform: translateX(-1200px); } }
+  @keyframes fly { 0% { transform: translate(-60px, 70px); } 50% { transform: translate(600px, 40px); } 100% { transform: translate(1260px, 80px); } }
+  @keyframes pop { 30% { transform: scale(1.45) rotate(-12deg); } 100% { transform: scale(1); } }
+  @keyframes burst { to { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); opacity: 0; } }
+  /* Turn animations off for people who set "reduce motion" on their device */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html, .timeline { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+<script data-goatcounter="https://tricitiesvolunteer.goatcounter.com/count" data-goatcounter-settings='{"no_onload": true}' async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="topbar" aria-label="Main">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#home" aria-label="Tri-Cities Teen Volunteer Finder, home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#1f6b4a"/><path d="M5 23l7-9 4 5 3-4 8 8z" fill="#9fe0bd"/><circle cx="23" cy="10" r="3" fill="#f2b33d"/></svg>
+      <span><small>Tri-Cities Teen</small>Volunteer Finder</span>
+    </a>
+    <div class="navlinks" id="navlinks">
+      <a href="#home" data-nav="home">Home</a>
+      <a href="#find" data-nav="find">Opportunities</a>
+      <a href="#future" data-nav="future">Your future</a>
+      <a href="#beyond" data-nav="beyond">Nearby cities</a>
+      <a href="#guide" data-nav="guide">How it works</a>
+    </div>
+    <a class="btn small nav-cta" href="#find">Find</a>
+    <button class="menu-btn" type="button" id="menuBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<header class="hero" data-view="home">
+  <div class="blob a" aria-hidden="true"></div><div class="blob b" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <div class="tag"><i></i>Coquitlam · Port Coquitlam · Port Moody</div>
+    <h1>Find your<br><em class="rot"><span id="rotWord">volunteer spot</span></em><br>in the <span style="white-space:nowrap">Tri-Cities.</span></h1>
+    <p class="lede">Youth volunteer opportunities from cities, libraries, arts centres, hatcheries and nonprofits, all in one place. Every listing is checked against the organization's own website.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#find">
+        Find opportunities
+        <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a class="btn ghost" href="#guide">New to volunteering?</a>
+    </div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <svg viewBox="0 0 1200 230" preserveAspectRatio="xMidYMax slice">
+      <g class="sunwrap"><g class="sun"><circle cx="780" cy="58" r="60" fill="#f2b33d" opacity=".18"/><circle cx="780" cy="58" r="42" fill="#f2b33d" opacity=".95"/></g></g>
+      <g class="birds" fill="none" stroke="#2b3d34" stroke-width="2" stroke-linecap="round" opacity=".55">
+        <path class="bird b1" d="M0 0 q6 -6 12 0 q6 -6 12 0"/><path class="bird b2" d="M0 0 q5 -5 10 0 q5 -5 10 0"/><path class="bird b3" d="M0 0 q4 -4 8 0 q4 -4 8 0"/>
+      </g>
+      <g class="far"><path d="M0 150 L120 70 L210 120 L330 40 L450 110 L560 60 L700 125 L820 55 L950 115 L1060 65 L1200 120 L1200 230 L0 230Z" fill="#c6d9c4"/>
+      <path d="M330 40 L360 60 L345 58 L330 70 L318 56 L305 58Z M820 55 L846 74 L832 72 L820 82 L808 70 L796 72Z" fill="#fff" opacity=".8"/></g>
+      <g class="near"><path d="M0 175 L150 110 L260 150 L400 95 L520 145 L640 100 L780 150 L900 105 L1040 150 L1200 110 L1200 230 L0 230Z" fill="#61a47f"/>
+      <g fill="#2b6b4b">
+        <path d="M80 182 l12 -30 l12 30z M104 186 l10 -24 l10 24z M980 180 l12 -30 l12 30z M1004 184 l10 -24 l10 24z M1150 178 l12 -32 l12 32z"/>
+        <path d="M600 186 l10 -26 l10 26z M624 188 l8 -20 l8 20z"/>
+      </g></g>
+      <g class="wave w1"><path d="M0 200 C200 188 400 206 600 196 S1000 186 1200 198 L1200 230 L0 230Z M1200 198 C1400 188 1600 206 1800 196 S2200 186 2400 198 L2400 230 L1200 230Z" fill="#6fb2d1" opacity=".75"/></g>
+      <g class="wave w2"><path d="M0 212 C220 204 420 220 640 210 S1000 204 1200 214 L1200 230 L0 230Z M1200 214 C1420 204 1620 220 1840 210 S2200 204 2400 214 L2400 230 L1200 230Z" fill="#4c97bb" opacity=".8"/></g>
+      <path d="M140 206 h40 M520 214 h56 M860 208 h44 M1040 216 h30" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+    </svg>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+    <div class="stats" id="stats" data-view="home"></div>
+
+    <section class="block reveal" aria-labelledby="h-cats" data-view="home">
+      <div class="sec-head"><div><h2 id="h-cats">What are you into?</h2><p>Tap a topic to jump straight to matching opportunities.</p></div></div>
+      <div class="tiles" id="tiles"></div>
+    </section>
+
+    <section class="block reveal" aria-labelledby="h-soon" id="soonWrap" data-view="home">
+      <div class="sec-head"><div><h2 id="h-soon">Coming up</h2><p>Dates and deadlines worth knowing about. Tap one to sign up.</p></div>
+        <div class="tl-nav"><button type="button" id="tlPrev" aria-label="Earlier dates" disabled>&larr;</button><button type="button" id="tlNext" aria-label="Later dates">&rarr;</button></div></div>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section class="block reveal home-next" data-view="home" aria-label="More">
+      <a href="#future" class="next-link"><b>Planning for university?</b><span>See volunteering that fits your future major →</span></a>
+      <a href="#beyond" class="next-link"><b>Willing to travel?</b><span><span class="beyondN"></span> more in Burnaby, Vancouver &amp; nearby →</span></a>
+      <a href="#guide" class="next-link"><b>First time volunteering?</b><span>How applying works, plus common questions →</span></a>
+    </section>
+
+    <section class="block reveal" id="future" aria-labelledby="h-future" data-view="future">
+      <div class="sec-head page-head"><div><span class="eyebrow">Your future</span><h2 id="h-future">Build toward your future</h2><p>Planning for university or a career? Pick a path to see volunteering that fits it.</p></div></div>
+      <div class="paths" id="paths"></div>
+      <div class="path-panel" id="pathPanel" hidden></div>
+      <div class="count-tips">
+        <b>Make it count on applications</b>
+        <ul>
+          <li><span>Go deep.</span> One role you stick with for months says more than ten one-time shifts.</li>
+          <li><span>Take on responsibility.</span> Ask to train new volunteers, lead an activity or plan an event.</li>
+          <li><span>Keep a log and notes.</span> Write down hours and a line about what you did, so you remember specifics later.</li>
+          <li><span>Ask for a reference.</span> Before you finish, ask your supervisor for a reference letter.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="find" aria-labelledby="h-find" data-view="find">
+      <div class="sec-head page-head"><div><span class="eyebrow">Opportunities</span><h2 id="h-find">All opportunities</h2><p id="findSub">Filter by your age, city and interests.</p></div></div>
+      <div class="focus-bar" id="focusBar" hidden>
+        <button class="chip back" type="button" id="backHome">← Back</button>
+        <button class="chip" type="button" id="allOpps">See all</button>
+        <button class="chip" type="button" id="moreFilters" aria-controls="finder" aria-expanded="false">More filters</button>
+      </div>
+      <div class="finder" id="finder">
+        <div class="row">
+          <div>
+            <label class="lbl" for="q">Search</label>
+            <div class="field">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+              <input id="q" type="search" placeholder="Try “animals”, “library” or “camp”" autocomplete="off">
+            </div>
+          </div>
+          <div>
+            <label class="lbl" for="age">My age</label>
+            <input id="age" type="number" min="5" max="25" inputmode="numeric" placeholder="e.g. 14">
+          </div>
+        </div>
+        <div><span class="lbl">City</span><div class="chips" id="cities"></div></div>
+        <div><span class="lbl">Interest</span><div class="chips" id="cats"></div></div>
+      </div>
+
+      <div class="toolbar">
+        <div class="count-wrap"><div class="count" id="count" aria-live="polite"></div><button class="chip active-path" type="button" id="pathChip" hidden></button></div>
+        <div class="toggles">
+          <button class="chip" type="button" id="openOnly" aria-pressed="false">Accepting now</button>
+          <button class="chip" type="button" id="savedOnly" aria-pressed="false">★ Saved (0)</button>
+          <select id="sort" aria-label="Sort listings">
+            <option value="az">Sort: organization A–Z</option>
+            <option value="age">Sort: youngest age first</option>
+            <option value="city">Sort: by city</option>
+          </select>
+        </div>
+      </div>
+      <a class="far-hint" id="farHint" href="#beyond" hidden></a>
+      <div class="grid" id="list"></div>
+      <a class="beyond-cta" href="#beyond"><b>Want more options?</b> <span><span class="beyondN"></span> more opportunities in Burnaby, New Westminster, Vancouver and other nearby cities →</span></a>
+    </section>
+
+    <section class="block" id="beyond" aria-labelledby="h-beyond" data-view="beyond">
+      <div class="sec-head page-head"><div><span class="eyebrow">Nearby cities</span><h2 id="h-beyond">Beyond the Tri-Cities</h2>
+        <p>Bigger programs a SkyTrain or bus ride away, checked the same way as everything else. Kept separate so the main list stays local.</p></div></div>
+      <div class="chips beyond-jump" id="beyondJump" aria-label="Jump to a city"></div>
+      <div id="beyondList"></div>
+    </section>
+
+    <section class="block reveal" id="guide" aria-labelledby="h-guide" data-view="guide">
+      <div class="sec-head page-head"><div><span class="eyebrow">How it works</span><h2 id="h-guide">First time volunteering?</h2><p>How it usually works, from finding a spot to logging your hours.</p></div></div>
+      <div class="steps">
+        <div class="step"><b>Pick two or three</b><span>Save a few that match your age and interests. Applying to more than one helps, since popular programs fill up.</span></div>
+        <div class="step"><b>Read the requirements</b><span>Check the minimum age, time commitment and dates. Some programs only take new volunteers at certain times of year.</span></div>
+        <div class="step"><b>Apply</b><span>Most use an online form. Many also ask for references, an interview, an orientation or a police check.</span></div>
+        <div class="step"><b>Track your hours</b><span>Write down the date, hours and what you did after every shift, and ask your supervisor to sign off.</span></div>
+      </div>
+      <div class="faq">
+        <details><summary>What's a police information check?</summary><p>It's a background check many organizations need before you work with kids or the public. The organization tells you when and how to get one. For example, the City of Coquitlam says its check is free for volunteers.</p></details>
+        <details><summary>Who can I use as a reference?</summary><p>Usually an adult who knows you but isn't related to you, like a teacher, coach or past supervisor. Ask them first, and give them a heads-up about what you're applying for.</p></details>
+        <details><summary>Will these count for my school volunteer hours?</summary><p>That's up to your school, so check with your career centre. Many programs here say their hours count toward community service hours, and several give a reference letter at the end.</p></details>
+        <details><summary>What if I'm too young for most of these?</summary><p>Use the age filter. Several listings start at 12 or 13, including library teen councils, the BC SPCA (with a parent) and SHARE's holiday programs. Older-age listings will be there when you're ready.</p></details>
+      </div>
+    </section>
+
+    <section class="block reveal" id="suggest" aria-labelledby="h-sug" data-view="guide">
+      <div class="suggest">
+        <div>
+          <h2 id="h-sug">Know one we're missing?</h2>
+          <p>Students and organizations can suggest a listing. Fill this in, tap Create, then copy it and send it to us. We'll check it before it goes up.</p>
+        </div>
+        <div>
+          <form id="suggestForm" class="form-grid">
+            <div><label class="lbl" for="sOrg">Organization</label><input id="sOrg" type="text" required></div>
+            <div><label class="lbl" for="sTitle">Volunteer role</label><input id="sTitle" type="text" required></div>
+            <div><label class="lbl" for="sCity">City</label>
+              <select id="sCity"><option>Coquitlam</option><option>Port Coquitlam</option><option>Port Moody</option><option>Anmore / Belcarra</option><option>Tri-Cities wide</option></select></div>
+            <div><label class="lbl" for="sAge">Minimum age</label><input id="sAge" type="text" placeholder="e.g. 14+"></div>
+            <div class="full"><label class="lbl" for="sUrl">Link to apply</label><input id="sUrl" type="url" placeholder="https://"></div>
+            <div class="full"><label class="lbl" for="sDesc">What do volunteers do?</label><textarea id="sDesc"></textarea></div>
+            <div class="full" style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn" type="submit">Create suggestion</button>
+              <button class="btn ghost" type="button" id="sCopy" style="display:none">Copy text</button>
+            </div>
+          </form>
+          <div class="out" id="sOut"></div>
+          <div class="note" id="sNote"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b>Tri-Cities Teen Volunteer Finder</b>, built by a Tri-Cities student to make volunteering easier to find.</div>
+    <div>Questions, corrections or a listing to add? Email <a href="mailto:tcvolhub@gmail.com">tcvolhub@gmail.com</a>.</div>
+    <div>Every listing was checked against the organization's own website on the date shown. Where an organization's page doesn't give a minimum age, we use the age from the SD43 Youth Volunteer Directory and say so, or show "Check age". Programs change often, so always confirm on the organization's page before applying.</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+// =====================================================================
+//  SETTINGS
+// =====================================================================
+// Put the project's contact email here (a project email, not a personal one).
+const CONTACT_EMAIL = "tcvolhub@gmail.com";
+
+// =====================================================================
+//  CATEGORIES: colour + icon for each interest
+// =====================================================================
+const CATS = {
+  "Animals":               { c: "#9c4a0b", cs: "#fbe6d3", d: "Shelters & animal care",
+    svg: '<circle cx="8" cy="7" r="2"/><circle cx="16" cy="7" r="2"/><circle cx="4.8" cy="12" r="1.8"/><circle cx="19.2" cy="12" r="1.8"/><path d="M12 12c-3 0-5 3-5 5.5 0 1.5 1.2 2.5 2.7 2.5.9 0 1.6-.5 2.3-.5s1.4.5 2.3.5c1.5 0 2.7-1 2.7-2.5C17 15 15 12 12 12z"/>' },
+  "Arts & culture":        { c: "#a3367a", cs: "#f8dfee", d: "Theatre, galleries, festivals",
+    svg: '<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.5-.8 1.5-1.5 0-1-.8-1.4-.8-2.3 0-.9.7-1.7 1.7-1.7H17a4 4 0 0 0 4-4C21 6.8 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/>' },
+  "Community & food":      { c: "#c0392b", cs: "#fbe0dc", d: "Food banks, events, causes",
+    svg: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>' },
+  "Environment":           { c: "#276b35", cs: "#dcefdc", d: "Parks, hatcheries, gardens",
+    svg: '<path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14z"/><path d="M5 19l8-8"/>' },
+  "Health & care":         { c: "#1f6f8b", cs: "#d9edf4", d: "Hospitals & support",
+    svg: '<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/>' },
+  "Kids & tutoring":       { c: "#6a4bc4", cs: "#e7e0fb", d: "Reading, homework, French",
+    svg: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15H5.5A1.5 1.5 0 0 0 4 20.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v15h5.5a1.5 1.5 0 0 1 1.5 1.5z"/>' },
+  "Leadership & councils": { c: "#7f5800", cs: "#fbefcc", d: "Youth councils & committees",
+    svg: '<path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>' },
+  "Science & tech":        { c: "#2a5bd7", cs: "#dfe8fc", d: "STEM camps & science centres",
+    svg: '<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/>' },
+  "Recreation & events":   { c: "#0f7a6c", cs: "#d5f0ea", d: "Camps, sports, city events",
+    svg: '<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.9 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/>' }
+};
+const icon = (cat) => `<svg viewBox="0 0 24 24" aria-hidden="true">${CATS[cat].svg}</svg>`;
+
+// =====================================================================
+//  LISTINGS: edit this list to add, update or remove opportunities.
+//  minAge:  number used by the age filter (null = not stated)
+//  who:     who can apply, in words
+//  status:  "open" (apply now), "seasonal" (opens at certain times), "full" (full right now)
+//  when:    optional note about dates
+//  checked: date you last confirmed it on the organization's site
+// =====================================================================
+const LISTINGS = [
+  // ---------- City of Coquitlam ----------
+  { title: "Recreation & community volunteering", org: "City of Coquitlam", city: "Coquitlam",
+    paths: ["edu", "sport", "biz"],
+    category: "Recreation & events", minAge: 13, who: "13+",
+    desc: "Help with swimming and skating lessons, festivals, day camps, and sports or arts programs at community centres like Maillardville, Pinetree and Poirier.",
+    how: "Create a profile on the city's volunteer portal. You'll need two references, a free police information check and an orientation.",
+    status: "open", url: "https://www.coquitlam.ca/415/Volunteer-Opportunities", checked: "2026-11-07" },
+  { title: "Park Spark youth teams", org: "City of Coquitlam", city: "Coquitlam",
+    paths: ["env", "sport"],
+    category: "Environment", minAge: null, who: "Youth (age not listed)",
+    desc: "Grow food with the YOUth Urban Garden team at Town Centre Park's Inspiration Garden, or help with park clean-ups and invasive plant removal. The city also runs a Youth Activity Committee and an Outdoor Youth Sport Committee.",
+    when: "Garden team meets Friday evenings, 4–7 pm.",
+    how: "Email parkspark@coquitlam.ca (or call 604-927-6329) and say which team or park you're interested in.",
+    status: "open", url: "https://coquitlam.ca/734/Park-Spark", checked: "2026-11-07" },
+  { title: "Coquitlam Youth Council", org: "City of Coquitlam", city: "Coquitlam",
+    paths: ["law"],
+    category: "Leadership & councils", minAge: 15, who: "Going into Grades 10–12, Coquitlam residents",
+    desc: "Give the city feedback on programs and youth issues, and lead your own community volunteer projects. Meets every second Wednesday, 4–5 pm, September to June.",
+    pause: "This year's intake has closed. Applications open again next summer (2026 intake ran July 6 – Aug 17).",
+    how: "Apply with the online form on the city's website during the summer intake.",
+    status: "paused", url: "https://www.coquitlam.ca/420/Coquitlam-Youth-Council-CYC", checked: "2026-11-07" },
+  { title: "Community Police Station volunteer", org: "Coquitlam RCMP", city: "Coquitlam",
+    paths: ["law"],
+    category: "Leadership & councils", minAge: 16, who: "16+, Canadian citizen or PR, 5+ years in Canada",
+    desc: "Bike and foot patrols, Speed Watch, taking non-emergency reports and public safety outreach at community events.",
+    how: "Submit the volunteer application form. Under-19s also submit RCMP Form 5272. Includes security screening and an interview.",
+    status: "open", url: "https://www.coquitlam.ca/441/Volunteer-in-Community-Police-Stations", checked: "2026-11-07" },
+  { title: "Museum programs & collections", org: "Mackin House Museum (Coquitlam Heritage)", city: "Coquitlam",
+    paths: ["arts", "edu"],
+    category: "Arts & culture", minAge: null, who: "Age not listed",
+    desc: "Help run events and kids' crafts, greet visitors and give casual tours, or work behind the scenes researching and photographing artifacts in a 1909 heritage house.",
+    how: "Fill in the Programming Volunteer or Collections Volunteer form on their Get Involved page. Questions: 604-516-6151.",
+    status: "open", url: "https://www.coquitlamheritage.ca/get-involved", checked: "2026-11-07" },
+
+  // ---------- City of Port Coquitlam ----------
+  { title: "Recreation & events volunteering", org: "City of Port Coquitlam", city: "Port Coquitlam",
+    paths: ["edu", "sport"],
+    category: "Recreation & events", minAge: 14, who: "14+ for events; 15+ for camps & kids' programs",
+    desc: "Face painting and games at city events, helping with skating and bike lessons (14+ and in Grade 9), and supporting preschool, after-school and day camp programs (15+).",
+    when: "Recruitment is seasonal. Skating & bike recruitment opens May 2027.",
+    how: "Apply through the 'Learn More & Apply' links (BetterImpact portal). Questions: 604-927-7953.",
+    status: "seasonal", url: "https://www.portcoquitlam.ca/explore-poco/volunteering/volunteer-recreation", checked: "2026-11-07" },
+  { title: "PoCo Youth Leadership Group", org: "City of Port Coquitlam", city: "Port Coquitlam",
+    paths: ["law", "biz"],
+    category: "Leadership & councils", minAge: 13, who: "Ages 13–18",
+    desc: "A youth-led team that meets weekly to plan community events and projects like Pink Shirt Day and Youth Week. Members can earn volunteer hours toward graduation.",
+    how: "Fill in an application on the PYLG volunteer page. Questions: 604-927-7953.",
+    status: "open", url: "https://app.betterimpact.com/PublicOrganization/a965d64c-ced6-467c-b0c9-bef7b8cb611c/1", checked: "2026-11-07" },
+
+  // ---------- City of Port Moody ----------
+  { title: "Recreation & community events", org: "City of Port Moody", city: "Port Moody",
+    paths: ["biz", "sport", "edu"],
+    category: "Recreation & events", minAge: 14, who: "14+ (under 16 needs parent consent)",
+    desc: "Help at day camps, recreation programs and big events like Canada Day, Car Free Day and Cheer at the Pier: setup, greeting people, leading games and cleanup.",
+    when: "Applications reopened Oct 15, 2026.",
+    how: "Email volunteers@portmoody.ca. You'll do a police information check, create an account and attend an orientation.",
+    status: "open", url: "https://www.portmoody.ca/parks-recreation-and-environment/volunteering/", checked: "2026-11-07" },
+  { title: "Youth Seat on a city committee", org: "City of Port Moody", city: "Port Moody",
+    paths: ["law", "eng", "env"],
+    category: "Leadership & councils", minAge: 15, who: "Ages 15–25",
+    desc: "Most of Port Moody's civic committees, including Climate Action, Parks and Environment, Arts and Transportation, have a Youth Seat to advise City Council.",
+    when: "Recruitment usually happens in the fall (last deadline: Nov 12, 2025).",
+    how: "Apply online through portmoody.ca/committees when recruitment is open.",
+    status: "seasonal", url: "https://www.portmoody.ca/news/posts/help-shape-port-moody-s-future-join-a-civic-committee-apply-online-today", checked: "2026-11-07" },
+
+  // ---------- Libraries ----------
+  { title: "Reading Buddies", org: "Coquitlam Public Library", city: "Coquitlam",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 14, who: "14+ and in Grades 9–12",
+    desc: "Help a young reader in Grades 1–4 practise reading at the Poirier or City Centre branch. Hours count toward community service hours.",
+    pause: "Teen spots for the fall session are full. Ask the library about the next session.",
+    how: "Email librarian Chris Miller at cmiller@coqlibrary.ca to ask about the next session. New volunteers need a criminal record check.",
+    status: "paused", url: "https://coqlibrary.ca/reading-buddies/", checked: "2026-11-07" },
+  { title: "Homework Help Club", org: "Coquitlam Public Library", city: "Coquitlam",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 13, who: "Grades 8–12",
+    desc: "Be a Big Buddy and help students in Grades 1–6 with homework at the Poirier branch. Hours count toward community service hours.",
+    pause: "Teen spots for the fall session (Fridays, Nov 13 – Dec 18) are full.",
+    how: "Email cmiller@coqlibrary.ca to ask about the next session.",
+    status: "paused", url: "https://coqlibrary.ca/homework-help-club/", checked: "2026-11-07" },
+  { title: "Parlez-Nous en Français", org: "Coquitlam Public Library", city: "Coquitlam",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 13, who: "Grades 8–12, fluent in French",
+    desc: "Help French Immersion and Francophone kids in Grades 1–6 with homework and French conversation at the Poirier branch.",
+    when: "Next session: Fridays 3:45–4:30 pm, Jan 8 – Feb 19.",
+    how: "Fill in the teen application form on the program page.",
+    status: "open", url: "https://coqlibrary.ca/parlez-nous-en-francais/", checked: "2026-11-07" },
+  { title: "Teen Advisory Council", org: "Coquitlam Public Library", city: "Coquitlam",
+    paths: ["law", "biz"],
+    category: "Leadership & councils", minAge: 11, who: "Grades 6–12",
+    desc: "Plan and run programs for youth and advise the library, all on Zoom. New members are always welcome, and you earn community service hours.",
+    when: "Next meetings: Nov 18, Dec 16, Jan 20 (4:15–5:15 pm).",
+    how: "Fill in the online application on the Teen Advisory Council page.",
+    status: "open", url: "https://coqlibrary.ca/teen-advisory-council/", checked: "2026-11-07" },
+  { title: "Book Buddies", org: "Port Moody Public Library", city: "Port Moody",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 13, who: "13+",
+    desc: "Read and share books with kids to help them build reading skills. You get a reference letter listing your hours.",
+    how: "Apply online, then an interview, police information check and training.",
+    status: "seasonal", url: "https://www.portmoodylibrary.ca/en/programs-and-events/teen-volunteer-programs.aspx", checked: "2026-11-07" },
+  { title: "Tutoring for Kids", org: "Port Moody Public Library", city: "Port Moody",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 14, who: "14+",
+    desc: "Help kids with their homework and get tutoring experience. You get a reference letter listing your hours.",
+    how: "Apply online, then an interview, police information check and training.",
+    status: "seasonal", url: "https://www.portmoodylibrary.ca/en/programs-and-events/teen-volunteer-programs.aspx", checked: "2026-11-07" },
+  { title: "Teen Advisory Group", org: "Port Moody Public Library", city: "Port Moody",
+    paths: ["law", "biz"],
+    category: "Leadership & councils", minAge: 13, who: "Grades 8–12",
+    desc: "Share ideas for library displays, events and books, and meet other teens. You get a reference letter listing your hours.",
+    how: "Apply with the Tween and Teen Advisory Group form on the library's site.",
+    status: "open", url: "https://www.portmoodylibrary.ca/en/programs-and-events/teen-volunteer-programs.aspx", checked: "2026-11-07" },
+  { title: "Teen Advisory Group (TAG)", org: "Terry Fox Library (FVRL)", city: "Port Coquitlam",
+    paths: ["eng", "law"],
+    category: "Leadership & councils", minAge: 14, who: "Grades 9–12",
+    desc: "Help with library programs, including STEAM activities, and earn volunteer hours.",
+    when: "New members start with an orientation (the last one was Sept 12, 2026).",
+    how: "Ask Terry Fox Library about the next TAG orientation: 604-927-7999.",
+    status: "seasonal", url: "https://www.fvrl.bc.ca/locations/terry-fox-library", checked: "2026-11-07" },
+
+  // ---------- Arts & culture ----------
+  { title: "Arts centre & camp volunteer", org: "Place des Arts", city: "Coquitlam",
+    paths: ["arts", "edu"],
+    category: "Arts & culture", minAge: 13, who: "Over 13",
+    desc: "Supervise kids and help teachers at art camps on Pro-D days, Spring Break and summer, plus other roles around the arts centre.",
+    when: "Applications have reopened.",
+    how: "Apply online. Includes an interview, references and a criminal record check. Phone: 604-664-1636.",
+    status: "open", url: "https://placedesarts.ca/volunteer/", checked: "2026-11-07" },
+  { title: "Youth Arts Council", org: "Place des Arts", city: "Coquitlam",
+    paths: ["arts", "law"],
+    category: "Arts & culture", also: ["Leadership & councils"], minAge: 14, who: "Grades 9–12 (per SD43 directory)",
+    desc: "A council that gets local teens involved in the arts community and organizes youth arts events.",
+    pause: "Not accepting applicants for the 2026/2027 council.",
+    how: "Check the volunteer page for the next council's application.",
+    status: "paused", url: "https://placedesarts.ca/volunteer/", checked: "2026-11-07" },
+  { title: "Youth Actors – Summer Theatre Troupe", org: "Place des Arts", city: "Coquitlam",
+    paths: ["arts"],
+    category: "Arts & culture", minAge: 13, who: "Ages 13–17 (audition)",
+    desc: "A volunteer acting role in a summer theatre troupe, with a $500 honorarium when you finish.",
+    how: "Watch the volunteer page for audition details.",
+    status: "seasonal", url: "https://placedesarts.ca/volunteer/", checked: "2026-11-07" },
+  { title: "Theatre, gallery & camp volunteer", org: "Evergreen Cultural Centre", city: "Coquitlam",
+    paths: ["arts", "biz", "edu"],
+    category: "Arts & culture", minAge: 15, who: "15+",
+    desc: "Usher, run concessions or coat check at shows, help in the gallery, join the AGE Youth Committee, or be an arts camp counsellor (minimum one week).",
+    when: "Apply any time. For camps, apply in January (Spring Break) or April (July).",
+    how: "Apply online, then an interview, a free criminal record check and orientation. Contact volunteer@evergreenculturalcentre.ca.",
+    status: "open", url: "https://evergreenculturalcentre.ca/get-involved/volunteer-opportunities/", checked: "2026-11-07" },
+  { title: "Youth arts volunteer", org: "PoMoArts", city: "Port Moody",
+    paths: ["arts", "biz"],
+    category: "Arts & culture", minAge: 14, who: "14+",
+    desc: "Help with kids' art camps, the ceramics studio, gallery openings, recitals and the Art Out Side Festival. Youth with 30+ hours can apply for an arts scholarship.",
+    how: "Fill in the Youth Volunteer Application on the PoMoArts website.",
+    status: "open", url: "https://www.pomoarts.ca/get-involved/volunteer", checked: "2026-11-07" },
+  { title: "Museum volunteer", org: "POMO Museum", city: "Port Moody",
+    paths: ["arts"],
+    category: "Arts & culture", minAge: null, who: "Students welcome (age not listed)",
+    desc: "Work with the collection, transcribe historical documents, help in the garden, help make videos, or help at events.",
+    how: "Fill in the application on the museum's site. They keep it for a year and contact you when something fits.",
+    status: "open", url: "https://www.pomo.museum/volunteers", checked: "2026-11-07" },
+  { title: "Festival du Bois volunteer", org: "Société francophone de Maillardville", city: "Coquitlam",
+    paths: ["biz", "arts"],
+    category: "Arts & culture", minAge: null, who: "Age not listed",
+    desc: "Help run BC's biggest francophone festival in Mackin Park. Good if you speak French or want to practise.",
+    when: "The festival runs each March (2026 was March 6–8).",
+    how: "Fill in the online volunteer form. Questions: info@maillardville.com.",
+    status: "seasonal", url: "https://www.festivaldubois.ca/volunteer/", checked: "2026-11-07" },
+
+  // ---------- Community ----------
+  { title: "Holiday programs: Gift Wrap & Toy Bank", org: "SHARE Family & Community Services", city: "Tri-Cities wide",
+    paths: ["biz", "law"],
+    category: "Community & food", minAge: 12, who: "Ages 12–17 (youth form)",
+    desc: "Help with SHARE's holiday programs: Gift Wrap, Toy Bank and the Enchanted Elevator.",
+    when: "Opens November 9.",
+    how: "Apply through Better Impact using the Youth (12–17) form.",
+    status: "seasonal", url: "https://sharesociety.ca/volunteer-for-share", checked: "2026-11-07" },
+  { title: "Community events & fundraisers", org: "SHARE Family & Community Services", city: "Tri-Cities wide",
+    paths: ["biz", "law"],
+    category: "Community & food", minAge: null, who: "Age not listed",
+    desc: "Collect food and cash donations at events, help out with SHARE Bear, or tell people about SHARE. You choose when.",
+    how: "Email community@sharesociety.ca.",
+    status: "open", url: "https://sharesociety.ca/volunteer-for-share", checked: "2026-11-07" },
+  { title: "Pride festival volunteer", org: "Tri-Cities Pride Society", city: "Tri-Cities wide",
+    paths: ["law", "biz"],
+    category: "Community & food", minAge: 16, who: "16+ (per SD43 directory)",
+    desc: "Help run Pride events in Port Moody, Coquitlam and Port Coquitlam each summer. You don't need to be a member or part of the 2S/LGBTQIA+ community.",
+    when: "Festivals run June–July.",
+    how: "Join the general volunteer list using the form on their volunteer page.",
+    status: "seasonal", url: "https://tricitiespride.ca/volunteer/", checked: "2026-11-07" },
+  { title: "Volunteer roles", org: "Low Entropy Foundation", city: "Tri-Cities wide",
+    paths: ["arts", "biz"],
+    category: "Community & food", minAge: 15, who: "15+ (per SD43 directory)",
+    desc: "Community programs and personal-growth projects, plus blog and magazine writing.",
+    how: "See open roles through the application link on their volunteer page.",
+    status: "open", url: "https://lowentropy.org/get-involved/volunteer-opportunities/", checked: "2026-11-07" },
+  { title: "Food bank volunteer", org: "PoCo People's Pantry", city: "Port Coquitlam",
+    paths: ["law"],
+    category: "Community & food", minAge: 15, who: "Grade 10+ (per SD43 directory)",
+    desc: "Assemble food hampers, sort donations, and help pick up and deliver food for families in Port Coquitlam.",
+    pause: "Not accepting new volunteers right now.",
+    how: "Check their volunteer page or contact them to ask when intake reopens.",
+    status: "paused", url: "https://thepeoplespantry.ca/volunteer/", checked: "2026-11-07" },
+  { title: "Farmers market volunteer", org: "Coquitlam & Port Moody Farmers Markets", city: "Tri-Cities wide",
+    paths: ["biz", "env"],
+    category: "Community & food", minAge: null, who: "Age not listed",
+    desc: "Set up and take down the market, help vendors and visitors, and help with crafts and events. Training on site.",
+    how: "Sign up online through the market's volunteer link.",
+    status: "seasonal", url: "https://makebakegrow.com/get-involved-at-the-market/", checked: "2026-11-07" },
+  { title: "Constituency Youth Council", org: "Office of MP Zoe Royer", city: "Tri-Cities wide",
+    paths: ["law"],
+    category: "Leadership & councils", minAge: 15, who: "Ages 15–18",
+    desc: "A non-partisan youth council in the Port Moody–Coquitlam riding. Members discuss national issues like climate change and youth employment and take on community projects.",
+    pause: "The current council runs until March 2027. The last intake closed March 1, 2026, so watch for the next one early in the year.",
+    how: "Apply with the online form when the next intake opens. Questions: 778-786-2595.",
+    status: "paused", url: "https://zoeroyer.libparl.ca/tag/news/", checked: "2026-11-07" },
+
+  // ---------- Health & care ----------
+  { title: "Gift shop & thrift shop volunteer", org: "Eagle Ridge Hospital Auxiliary", city: "Tri-Cities wide",
+    paths: ["health", "biz"],
+    category: "Health & care", minAge: null, who: "All ages (separate under-19 form)",
+    desc: "Help at the hospital gift shop in Port Moody or the thrift shop in Port Coquitlam: sorting, pricing, stocking and serving customers.",
+    how: "Download the under-19 application and email it to erha1976@gmail.com.",
+    status: "open", url: "https://erha.ca/volunteer/", checked: "2026-11-07" },
+  { title: "Hospital & care home volunteer", org: "Eagle Ridge Hospital & Manor", city: "Port Moody",
+    paths: ["health"],
+    category: "Health & care", minAge: 17, who: "17+, Tri-Cities residents",
+    desc: "Support patients and residents at Eagle Ridge Hospital and Manor. One 2–4 hour shift a week for at least 16 weeks.",
+    how: "Apply online, then a criminal record check, interview, two references and training.",
+    status: "open", url: "https://www.fraserhealth.ca/about-us/volunteer-opportunities/volunteer-opportunities-eagle-ridge-hospital-and-manor", checked: "2026-11-07" },
+  { title: "Sport program volunteer", org: "Special Olympics BC – Coquitlam", city: "Tri-Cities wide",
+    paths: ["health", "sport", "edu"],
+    category: "Health & care", minAge: null, who: "Age not listed (16+ need a record check)",
+    desc: "Help coach or support athletes with intellectual disabilities in sports like swimming, basketball, bowling, soccer and skating. No sport background needed.",
+    how: "Register on the Coquitlam local page and search open roles. Questions: 604-525-2208.",
+    status: "open", url: "https://specialolympics.ca/node/2449", checked: "2026-11-07" },
+
+  // ---------- Animals ----------
+  { title: "Youth animal volunteer", org: "BC SPCA", city: "Tri-Cities wide",
+    paths: ["vet"],
+    category: "Animals", minAge: 12, who: "12–15 with a parent; 16–18 alone in some roles",
+    desc: "Help care for animals at the SPCA. Ages 12–15 volunteer alongside a parent or guardian. Not every location takes under-16s.",
+    how: "Click Apply Now and pick the nearest location. Tri-Cities contact: tricitiesvolunteers@spca.bc.ca.",
+    status: "open", url: "https://spca.bc.ca/ways-to-help/volunteer/youth-volunteers/", checked: "2026-11-07" },
+
+  { title: "Wildlife hospital volunteer", org: "Wildlife Rescue Association of BC", city: "Burnaby",
+    paths: ["vet", "env", "health"],
+    category: "Animals", minAge: 14, who: "14–15: Welcome Volunteer only; 16+ for other roles",
+    desc: "Help injured and orphaned wild animals at the wildlife hospital by Burnaby Lake, just next to the Tri-Cities. Roles include animal care, rescue, transport, the helpline and photography.",
+    when: "Minimum 100 hours. Recruitment is busiest early in the year.",
+    how: "Apply through their BetterImpact page and watch the recorded info session. Animal Care roles also have a virtual group interview, usually in spring.",
+    status: "open", url: "https://www.wildliferescue.ca/get-involved/volunteer", checked: "2026-11-07" },
+  { title: "Student Ambassador", org: "Elephanatics", city: "Tri-Cities wide",
+    paths: ["vet", "law"],
+    category: "Animals", minAge: null, who: "Students (age not listed)",
+    desc: "Spread the word about elephant poaching at your school: recruit other students, run outreach and fundraising, or read Elephanatics' books to younger classes. A Vancouver-based nonprofit you can volunteer with from your own school.",
+    how: "Contact Elephanatics through the volunteer page on their website.",
+    status: "open", url: "https://elephanatics.org/volunteer/", checked: "2026-11-07" },
+
+  { title: "Animal shelter volunteer", org: "Coquitlam Animal Shelter", city: "Coquitlam",
+    paths: ["vet"],
+    category: "Animals", minAge: null, who: "Age not listed",
+    desc: "The city-run shelter that cares for stray animals from Coquitlam, Port Coquitlam and Port Moody.",
+    pause: "No volunteer opportunities right now, because there are few dogs available for walking.",
+    how: "Check the shelter's volunteer page for when spots reopen.",
+    status: "paused", url: "https://coquitlam.ca/470/Volunteer-Opportunities", checked: "2026-11-07" },
+
+  // ---------- Environment ----------
+  { title: "Noons Creek Hatchery volunteer", org: "Port Moody Ecological Society", city: "Port Moody",
+    paths: ["env", "vet", "eng"],
+    category: "Environment", also: ["Animals"], minAge: 16, who: "16+ (per SD43 directory)",
+    desc: "Help raise coho and chum salmon, test water quality, remove invasive plants and help at the Fingerling Festival.",
+    when: "New volunteers can drop in Saturdays, 9–11 am, at 300 Ioco Road.",
+    how: "Drop in on a Saturday morning, or email portmoodyecologicalsociety@hotmail.com.",
+    status: "open", url: "https://www.noonscreek.org/", checked: "2026-11-07" },
+  { title: "Hyde Creek hatchery volunteer", org: "Hyde Creek Watershed Society", city: "Port Coquitlam",
+    paths: ["env", "vet", "edu"],
+    category: "Environment", also: ["Animals"], minAge: null, who: "All ages welcome",
+    desc: "Guide hatchery tours and classes, help plan events like the Fish Release, and help with day-to-day hatchery work. You pick your own days.",
+    how: "Email hcws.info@gmail.com.",
+    status: "open", url: "https://www.hydecreek.org/volunteer", checked: "2026-11-07" },
+  { title: "Camp volunteer", org: "Camp Sasamat", city: "Anmore / Belcarra",
+    paths: ["edu", "sport"],
+    category: "Recreation & events", minAge: 17, who: "17+ (or turning 17 this year)",
+    desc: "Assist camp counsellors with kids' programs, or help the kitchen or maintenance team at the camp in Belcarra.",
+    how: "Apply through the camp's online staff portal. Needs a criminal record check with vulnerable sector search.",
+    status: "open", url: "https://www.sasamat.org/get-involved", checked: "2026-11-07" },
+
+  { title: "Adaptive Soccer volunteer", org: "Port Moody Soccer Club", city: "Port Moody",
+    paths: ["sport", "health", "edu"],
+    category: "Recreation & events", also: ["Health & care"], minAge: 15, who: "15+",
+    desc: "Help kids and teens with disabilities play soccer in the club's Adaptive Soccer Program at Trasolini Field. No soccer experience needed, and they give volunteer letters for graduation hours.",
+    when: "Runs three sessions a year: fall, winter and spring.",
+    how: "Email the Adaptive Soccer Program through the club's website.",
+    status: "seasonal", url: "https://portmoodysoccer.com/club-chat/pmscs-adaptive-program-is-now-recruiting-volunteers-age-15/", checked: "2026-11-07" },
+  { title: "Outdoor camp volunteer", org: "Rainforest Adventure Camps", city: "Tri-Cities wide",
+    paths: ["edu", "sport"],
+    category: "Recreation & events", minAge: 13, who: "13+ (police check needed)",
+    desc: "Help lead games and outdoor adventures for kids at White Pine Beach, the Coquitlam River and local pools. Run by a Tri-Cities nonprofit, with flexible hours.",
+    when: "Spring Break and summer camps (summer 2026 ran June 26 – Sept 4).",
+    how: "Apply on the camp's volunteer page. You'll need a police information check and orientation.",
+    status: "seasonal", url: "https://www.rfcamps.com/Volunteer/", checked: "2026-11-07" },
+
+  // ---------- Science, tech & older-teen programs ----------
+  { title: "Junior Instructor", org: "Geering Up (UBC Engineering)", city: "Vancouver",
+    paths: ["eng", "edu"],
+    category: "Science & tech", also: ["Kids & tutoring"], minAge: 15, who: "Grade 10+",
+    desc: "Help UBC's engineering outreach team run STEM summer camps, weekly clubs and one-day events for kids. Geering Up runs camps in several cities, including Port Coquitlam.",
+    how: "Check the Junior Instructor program page for timing, or email geering.up@ubc.ca.",
+    status: "seasonal", url: "https://geeringup.apsc.ubc.ca/join-us/general-information/volunteering/", checked: "2026-11-07" },
+  { title: "STEM Leadership Program", org: "Geering Up (UBC Engineering)", city: "Vancouver",
+    paths: ["eng", "edu"],
+    category: "Science & tech", also: ["Leadership & councils"], minAge: 15, who: "Grades 10–12",
+    desc: "A year-long program that trains high school students as STEM leaders, followed by volunteering with Geering Up. You can continue as a STEM Ambassador.",
+    when: "Applications have usually been in May–June (per SD43 directory).",
+    how: "Check the STEM Leadership program page on Geering Up's site, or email geering.up@ubc.ca.",
+    status: "seasonal", url: "https://geeringup.apsc.ubc.ca/join-us/general-information/volunteering/", checked: "2026-11-07" },
+  { title: "Summer Academy volunteer", org: "Science Alive (SFU)", city: "Burnaby",
+    paths: ["eng", "edu", "env"],
+    category: "Science & tech", also: ["Kids & tutoring"], minAge: 15, who: "Grades 10–12, interested in STEAM",
+    desc: "Support SFU's summer STEAM programs for kids. Useful skills include coding, robotics, engineering and explaining science.",
+    pause: "This year's application window has closed. Watch for the next call in spring.",
+    how: "Apply with the online form on their volunteer page when it reopens. Questions: sciencealive@sfu.ca.",
+    status: "paused", url: "https://sciencealive.ca/volunteer-with-us", checked: "2026-11-07" },
+  { title: "Core volunteer", org: "Science World", city: "Vancouver",
+    paths: ["eng", "env", "edu"],
+    category: "Science & tech", minAge: 16, who: "16+, 100-hour minimum",
+    desc: "Volunteer at Science World in Vancouver with one 2–3 hour shift a week. Grade 11–12 students can also be nominated by a teacher for High School Work Experience.",
+    pause: "Volunteer intake is closed right now. Intake and training happen once a year.",
+    how: "Check their volunteer page for the next intake.",
+    status: "paused", url: "https://www.scienceworld.ca/volunteer/", checked: "2026-11-07" },
+  { title: "Junior medical volunteer", org: "Odyssey Medical", city: "Around Metro Vancouver",
+    paths: ["health"],
+    category: "Health & care", minAge: 15, who: "Grades 10–12, valid first aid certificate",
+    desc: "Work with a supervised medical team in a field hospital at music festivals, races and sports events: do first aid and talk with patients. You get reference letters and volunteer-hour sign-off.",
+    how: "Apply with the 'Apply to Join Odyssey's Crew' link. You need parent permission and a current first aid certificate.",
+    status: "open", url: "https://odysseymedical.ca/crew/whoisodysseycrew/", checked: "2026-11-07" },
+  { title: "Fraser Youth Parliament", org: "BC Youth Parliament", city: "Tri-Cities wide",
+    paths: ["law"],
+    category: "Leadership & councils", minAge: 14, who: "Ages 14–18, nominated by a youth organization",
+    desc: "Debate local and world issues in a real parliamentary session held at Coquitlam City Hall, then join the group's service and fundraising events. Registration is $50.",
+    pause: "Applications for the 2026 session have closed. The session runs each spring, so watch for the next call.",
+    how: "When applications open, get a school or club to nominate you (with five signatures), then apply online. Questions: fyp@bcyp.org.",
+    status: "paused", url: "https://bcyp.org/fyp", checked: "2026-11-07" },
+
+  // ---------- More listings ----------
+  { title: "Search more local listings", org: "Community Volunteer Connections", city: "Tri-Cities wide",
+    category: "Community & food", minAge: null, who: "Varies by listing",
+    desc: "The Tri-Cities' volunteer centre. Nonprofits post openings to its directory, and it also has a youth volunteer directory PDF.",
+    how: "Use their 'Search for Volunteer Positions' page.",
+    status: "open", url: "https://volunteerconnections.ca/find-volunteer-opportunities/", checked: "2026-11-07" },
+  { title: "Salmon hatchery volunteer", org: "Hoy/Scott Watershed Society", city: "Coquitlam",
+    paths: ["env", "vet"],
+    category: "Environment", also: ["Animals"], minAge: null, who: "Students welcome (age not listed)",
+    desc: "Help run the Hoy Creek Hatchery: catch salmon for broodstock, feed fish, repair nets, clean the rearing pond and help with trail clean-ups. They give school volunteer hours and reference letters.",
+    when: "Saturday work sessions, 8:30–10:30 am. Open house the first Saturday of each month (not July–September).",
+    how: "Fill in the registration form on their Get Involved page and pay the $5 student membership, which covers insurance. Questions: hoyscottwatershed@gmail.com.",
+    status: "open", url: "https://www.hoyscottcreeks.org/get-involved", checked: "2026-11-07" },
+  { title: "Citizen science: toad & bat counts", org: "Minnekhada Park Association", city: "Coquitlam",
+    paths: ["env", "vet"],
+    category: "Environment", also: ["Animals", "Science & tech"], minAge: null, who: "Age not listed",
+    desc: "Count western toads and their egg masses, help with evening bat counts at Minnekhada Marsh, and talk to visitors at the nature table in Minnekhada Regional Park.",
+    when: "Toad counts run late spring to summer. Bat counts are on summer evenings.",
+    how: "Fill in the form on their volunteer page or email coordinator@minnekhada.ca.",
+    status: "seasonal", url: "https://minnekhada.ca/?p=3509", checked: "2026-11-07" },
+  { title: "Snow Angel", org: "City of Coquitlam", city: "Coquitlam",
+    paths: ["health"],
+    category: "Community & food", minAge: null, who: "16+ on your own, younger with an adult. Coquitlam residents.",
+    desc: "Get matched with one or two neighbours (seniors or people with mobility challenges) and clear their city sidewalk after it snows. The city gives you a shovel, toque, scarf, ice cleats and mitts. SD43 students can count the hours.",
+    when: "Runs all of the 2026–27 winter, whenever it snows.",
+    how: "Start the volunteer process on the Snow Angels page.",
+    status: "open", url: "https://www.coquitlam.ca/363/Snow-Angels", checked: "2026-11-07" },
+  { title: "Festival volunteer", org: "Caribbean Days Festival", city: "Coquitlam",
+    paths: ["biz", "arts"],
+    category: "Arts & culture", also: ["Recreation & events"], minAge: null, who: "Age not listed",
+    desc: "Help at one of BC's biggest cultural festivals in Town Centre Park. Shifts are 4 or 8 hours. You get a festival T-shirt and a snack or meal, and high school students can get a letter for grad credit.",
+    when: "Last weekend of July. Sign-up opens in early summer.",
+    how: "Sign up on the festival website.",
+    status: "seasonal", url: "https://caribbeandays.ca/", checked: "2026-11-07" },
+  { title: "Festival volunteer", org: "BC Dumpling Festival", city: "Coquitlam",
+    paths: ["biz", "arts"],
+    category: "Arts & culture", also: ["Recreation & events"], minAge: null, who: "Age not listed",
+    desc: "Help run a free multicultural food festival at Town Centre Park run by the Asian Arts & Culture Society. It draws over 40,000 people.",
+    when: "Mid-August. The volunteer form filled up early in 2025, so apply as soon as it opens.",
+    how: "Watch their website for the volunteer sign-up form.",
+    status: "seasonal", url: "https://bcdumplingfest.com/", checked: "2026-11-07" },
+  { title: "Festival volunteer", org: "Golden Spike Days", city: "Port Moody",
+    paths: ["biz", "sport"],
+    category: "Recreation & events", minAge: null, who: "Age not listed",
+    desc: "Help at Port Moody's long-running summer festival at Rocky Point Park: set-up and tear-down, bike valet, gate greeter, activity assistant or stage hand.",
+    when: "Around Canada Day. Sign-up opens in spring.",
+    how: "Sign up through the festival website.",
+    status: "seasonal", url: "https://goldenspike.ca/", checked: "2026-11-07" },
+  { title: "Volunteer Youth Program", org: "Fraser River Discovery Centre", city: "New Westminster",
+    paths: ["env", "edu"],
+    category: "Science & tech", also: ["Environment"], minAge: null, who: "Youth (check age on their site)",
+    desc: "Be a summer camp assistant or public programs assistant at the river science centre in New Westminster, running hands-on activities about the Fraser River.",
+    when: "Youth positions are posted in spring for the summer.",
+    how: "Apply through their Become a Volunteer page. Includes an orientation and a criminal record check.",
+    status: "seasonal", url: "https://fraserriverdiscovery.org/becomeavolunteer/", checked: "2026-11-07" },
+  { title: "Volunteer (sports, social & events)", org: "Canucks Autism Network", city: "Tri-Cities wide",
+    paths: ["health", "edu", "sport"],
+    category: "Health & care",
+    also: ["Recreation & events"],
+    minAge: 15,
+    who: "15+ (16+ to support programs directly)",
+    desc: "Support kids, teens and adults on the autism spectrum in sports, swim, social and music programs, or help at events and family days. CAN runs programs across Metro Vancouver, including in Coquitlam and Port Coquitlam.",
+    how: "Apply through the volunteer page on CAN's website. Training is provided.",
+    status: "open",
+    url: "https://www.canucksautism.ca/?p=147",
+    checked: "2026-11-07" },
+  { title: "Terry Fox Hometown Run volunteer", org: "City of Port Coquitlam", city: "Port Coquitlam",
+    paths: ["health", "sport", "biz"],
+    category: "Recreation & events",
+    also: ["Health & care"],
+    minAge: null,
+    who: "Age not listed",
+    desc: "Help run the Terry Fox Run in Terry's hometown: it starts and ends at Hyde Creek Recreation Centre and passes the Terry Fox Hometown Square. Money raised goes to cancer research.",
+    when: "Held each September (Sept 20 in 2026). Sign-ups open in late summer.",
+    how: "Sign up through Port Coquitlam's volunteer page.",
+    status: "seasonal",
+    url: "https://www.portcoquitlam.ca/node/6132",
+    checked: "2026-11-07" },
+  { title: "Seniors' centre volunteer", org: "Glen Pine Pavilion (City of Coquitlam)", city: "Coquitlam",
+    paths: ["health", "edu"],
+    category: "Health & care",
+    also: ["Community & food"],
+    minAge: 13,
+    who: "13+ (City of Coquitlam minimum age)",
+    desc: "Help older adults at Coquitlam's 50+ centre: assist in computer classes, greet people at special events and help with crafts and games. Dogwood Pavilion has similar roles.",
+    how: "Sign up through the Glen Pine Pavilion volunteer page and create a City of Coquitlam volunteer profile.",
+    status: "open",
+    url: "https://coquitlam.ca/429/Glen-Pine-Pavilion-Volunteer-Opportuniti",
+    checked: "2026-11-07" },
+  { title: "Equipment sale volunteer", org: "KidSport Tri-Cities", city: "Tri-Cities wide",
+    paths: ["biz", "sport"],
+    category: "Recreation & events",
+    also: ["Community & food"],
+    minAge: null,
+    who: "Age not listed (families volunteer together)",
+    desc: "Help run KidSport's big used sports equipment sales, which raise money so kids from families who can't afford it can play a season of sport.",
+    when: "Sales happen in spring (March) and fall (September), plus a used bike sale in April.",
+    how: "Email cwilson630@gmail.com, or fill in the volunteer form on their page and email it in.",
+    status: "seasonal",
+    url: "https://kidsportcanada.ca/british-columbia/tri-cities-port-moody-port-coquitlam-coquitlam/",
+    checked: "2026-11-07" },
+  { title: "Teen Mentor", org: "Big Brothers of Greater Vancouver", city: "Tri-Cities wide",
+    paths: ["edu", "health"],
+    category: "Kids & tutoring",
+    minAge: null,
+    who: "High school students",
+    desc: "Get matched with an elementary school student and be a mentor and role model. Big Brothers runs mentoring programs across the Tri-Cities.",
+    how: "Fill in the volunteer inquiry form on their website or join an online info session.",
+    status: "open",
+    url: "https://www.bigbrothersvancouver.com/volunteer/inquire/",
+    checked: "2026-11-07" },
+  { title: "Celebrate BC Festival volunteer", org: "S.U.C.C.E.S.S.", city: "Tri-Cities wide",
+    paths: ["biz", "arts"],
+    category: "Arts & culture",
+    also: ["Recreation & events"],
+    minAge: null,
+    who: "Age not listed",
+    desc: "Help at a two-day multicultural festival: one day at Rocky Point Park in Port Moody and one at Town Centre Park in Coquitlam.",
+    when: "Early August (Aug 1 and 3 in 2026). Recruiting starts in early summer.",
+    how: "Apply through the festival's volunteer posting.",
+    status: "seasonal",
+    url: "https://app.betterimpact.com/PublicOrganization/ddf82d85-bebb-42fc-91f5-d3ff2077af9e/Activity/1c1d0e39-ebd5-40df-afa8-fde226d68529/1",
+    checked: "2026-11-07" },
+  { title: "parkrun volunteer", org: "Mundy parkrun", city: "Coquitlam",
+    paths: ["sport", "health"],
+    category: "Recreation & events",
+    also: ["Health & care"],
+    minAge: null,
+    who: "Age not listed",
+    desc: "Help run the free weekly 5 km run, jog or walk in Mundy Park: timekeeping, scanning, marshalling the course and cheering people on.",
+    when: "Every Saturday at 9 am at Mundy Park (Hillcrest Middle School corner).",
+    how: "Register once for free on parkrun's website, then volunteer on any Saturday.",
+    status: "open",
+    url: "https://www.parkrun.ca/mundy/",
+    checked: "2026-11-07" },
+  { title: "Watershed stewardship volunteer", org: "Watershed Watch Salmon Society", city: "Tri-Cities wide",
+    paths: ["env", "vet"],
+    category: "Environment",
+    also: ["Animals"],
+    minAge: null,
+    who: "Age not listed",
+    desc: "Help protect wild salmon in the Coquitlam River watershed, where the group started: garbage clean-ups, storm drain marking and outreach booths at Tri-Cities events like Salmon Day and Canada Day.",
+    how: "Join their volunteer Meetup group and RSVP to upcoming events.",
+    status: "open",
+    url: "https://www.meetup.com/wwss-volunteers/",
+    checked: "2026-11-07" },
+  { title: "Track meet volunteer", org: "Coquitlam Cheetahs Track & Field Club", city: "Coquitlam",
+    paths: ["sport"],
+    category: "Recreation & events",
+    minAge: null,
+    who: "High school students",
+    desc: "Help at big track meets at Percy Perry Stadium: measure jumps and throws, rake the sand pit and set the high-jump bar. No experience needed, and each day counts as 8 hours. Food is provided.",
+    when: "Home meets in late May/early June, and BC Championships in early July.",
+    how: "Email coquitlamcheetahs.secretary@gmail.com.",
+    status: "seasonal",
+    url: "https://coquitlamcheetahs.org",
+    checked: "2026-11-07" },
+  { title: "Summer Learning volunteer", org: "Coquitlam School District (SD43)", city: "Tri-Cities wide",
+    paths: ["edu"],
+    category: "Kids & tutoring",
+    minAge: null,
+    who: "SD43 secondary students",
+    desc: "Help younger students in SD43's summer school classes and earn volunteer hours.",
+    when: "Applications are due in early June (June 5 in 2026).",
+    how: "Fill in the secondary student volunteer application through your school's career centre or the Summer Learning page.",
+    status: "seasonal",
+    url: "https://ce43.augusoft.net//info/landing/summer-learning",
+    checked: "2026-11-07" },
+  { title: "Beachkeeper", org: "Metro Vancouver Regional Parks", city: "Anmore / Belcarra",
+    paths: ["env", "vet", "edu"],
+    category: "Environment",
+    also: ["Animals"],
+    minAge: null,
+    who: "Age not listed",
+    desc: "Teach visitors at Belcarra Regional Park about marine life, harvesting rules and beach-friendly behaviour. Run with Fisheries and Oceans Canada.",
+    when: "Regional Parks takes volunteer applications in spring.",
+    how: "Apply through Metro Vancouver Regional Parks' volunteer page.",
+    status: "seasonal",
+    url: "https://app.betterimpact.com/PublicOrganization/46f4140f-db5f-42be-ac8a-b0e65c38c382/1",
+    checked: "2026-11-07" },
+  { title: "Arts & STEM Activity Leader", org: "Kids Innovative", city: "Coquitlam",
+    paths: ["eng", "edu", "arts"],
+    category: "Science & tech", also: ["Kids & tutoring", "Arts & culture"], minAge: null, who: "Age not listed (posting says good for youth)",
+    desc: "Lead arts and STEM activities for kids in an after-school program in Coquitlam: run hands-on projects, help manage the group and get kids excited to learn.",
+    when: "About 1–3 hours a week for 2.5 months.",
+    how: "Click Apply Now on the Volunteer Connector posting (you'll need a free account). A background check may be needed.",
+    status: "open", url: "https://www.volunteerconnector.org/tri-cities/hill/arts-stem-activity-leader-after-school-program-coquitlam", checked: "2026-11-07" },
+  // ---------- Beyond the Tri-Cities (shown on their own page) ----------
+  { title: "Museum volunteer", org: "Burnaby Village Museum", city: "Burnaby",
+    paths: ["arts", "edu"],
+    category: "Arts & culture", minAge: 14, who: "14+ (parent consent under 18)",
+    desc: "Help at a 10-acre heritage village: work in the exhibits, collections or library, and help at events. Volunteers range from age 14 to over 70.",
+    when: "Asks for a one-year commitment and at least 35 hours a year.",
+    how: "Apply on the museum's volunteer page. You need two references and valid medical coverage.",
+    status: "open", url: "https://burnabyvillagemuseum.ca/EN/main/support/volunteers.html", checked: "2026-11-07" },
+  { title: "Youth centre volunteer", org: "City of Burnaby Youth Services", city: "Burnaby",
+    paths: ["edu", "sport"],
+    category: "Kids & tutoring", also: ["Leadership & councils"], minAge: 14, who: "Ages 14–18",
+    desc: "Help run preteen drop-ins, Pro-D Day camps and special events at Burnaby's youth centres (Creekside, Edmonds, South Central and Summit). Some centres also have youth planning committees.",
+    how: "Fill in an application on their volunteer page, then contact the youth centre you're interested in.",
+    status: "open", url: "https://app.betterimpact.com/PublicOrganization/1be816d4-d817-4b59-bbdb-aba2e978c186/1", checked: "2026-11-07" },
+  { title: "Summer camp volunteer", org: "SFU Camps", city: "Burnaby",
+    paths: ["edu", "sport", "eng"],
+    category: "Kids & tutoring", also: ["Recreation & events"], minAge: 15, who: "15+ (high school students)",
+    desc: "Help run SFU's summer day camps: educational, outdoor, sports and leadership programs for kids. Counts for service hours and Work Experience, and you can ask for a reference.",
+    when: "Applications open in spring and closed April 20 last year. Camps start late June.",
+    how: "Apply online, then do one interview and one training session.",
+    status: "seasonal", url: "https://www.sfu.ca/camps/opportunities/volunteer-opportunities.html", checked: "2026-11-07" },
+  { title: "Warehouse & program pack volunteer", org: "Greater Vancouver Food Bank", city: "Burnaby",
+    paths: ["health", "biz"],
+    category: "Community & food", minAge: 15, who: "15+ for warehouse and program pack (other roles 16+ or 18+)",
+    desc: "Sort and pack food at the food bank's Burnaby warehouse for families across Vancouver, Burnaby, New Westminster and the North Shore.",
+    when: "Youth applications (ages 15–17) open in seasonal rounds. The winter round is open now.",
+    how: "Apply on their Individual Volunteer page while a round is open. Needs a criminal record check. If a round closes, the page says when the next one opens.",
+    status: "open", url: "https://foodbank.bc.ca/?p=234", checked: "2026-11-07" },
+  { title: "Reading Buddies", org: "New Westminster Public Library", city: "New Westminster",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 14, who: "14+",
+    desc: "Get paired with a younger child and help them practise reading. It's the library's most popular teen volunteer program.",
+    when: "Sign-up happens twice a year, in September and January.",
+    how: "Apply to volunteer through the City of New Westminster website first, then sign up for Reading Buddies.",
+    status: "seasonal", url: "https://nwpl.ca/teens", checked: "2026-11-07" },
+  { title: "Parks & recreation volunteer", org: "City of New Westminster", city: "New Westminster",
+    paths: ["sport", "edu"],
+    category: "Recreation & events", minAge: 14, who: "14+",
+    desc: "Help with recreation programs, community centres and events around New Westminster.",
+    how: "Apply online, then go to an information session and interview. Questions: jhowey@newwestcity.ca.",
+    status: "open", url: "https://newwestcity.ca/parks-and-recreation/volunteering", checked: "2026-11-07" },
+  { title: "Patient & family volunteer", org: "BC Children's Hospital", city: "Vancouver",
+    paths: ["health"],
+    category: "Health & care", minAge: 16, who: "16+, one-year commitment",
+    desc: "Give kids, siblings and families a break at BC Children's and BC Women's Hospital with safe play and distraction activities. Training covers infection control and patient privacy.",
+    how: "Apply through their volunteer page and attend an information session. Must be 16 before you apply.",
+    status: "open", url: "https://app.betterimpact.com/PublicOrganization/77a715dc-d284-4b7b-8590-6782245d8250/1", checked: "2026-11-07" },
+  { title: "EcoSteward & Nature House volunteer", org: "Stanley Park Ecology", city: "Vancouver",
+    paths: ["env", "vet", "edu"],
+    category: "Environment", also: ["Animals"], minAge: 12, who: "16–17 for most roles; 12–16 for EcoStewards with an adult",
+    desc: "Restore habitat in Stanley Park, host visitors at the Nature House, help with bird counts, or be an EcoRanger or EcoCamp Assistant in summer.",
+    when: "Nature House Host applications open February–March. Bird counts run monthly.",
+    how: "Register as a volunteer on their site and pick the programs you want. A parent signs a youth consent form.",
+    status: "open", url: "https://stanleyparkecology.ca/?p=58040", checked: "2026-11-07" },
+  { title: "Summer camp assistant", org: "VanDusen Botanical Garden", city: "Vancouver",
+    paths: ["env", "edu"],
+    category: "Kids & tutoring", also: ["Environment"], minAge: 15, who: "15+",
+    desc: "Help camp leaders run outdoor nature games, crafts and experiments for kids at VanDusen Botanical Garden.",
+    when: "Summer camp applications are posted in spring.",
+    how: "Apply through the garden's volunteer application page.",
+    status: "seasonal", url: "https://app.betterimpact.com/PublicOrganization/5757625f-27eb-4d6c-9df5-ff3182c978da/Activity/d3cfedc9-1393-4cbd-a7bf-04a793bc0ab8/1", checked: "2026-11-07" },
+  { title: "YouthToSea leadership program", org: "Ocean Wise", city: "Vancouver",
+    paths: ["env", "vet", "edu"],
+    category: "Environment", also: ["Science & tech"], minAge: 15, who: "Ages 15–18",
+    desc: "A free ocean conservation leadership program: learning trips around Metro Vancouver, coaching, and your own Ocean Service Project with grant funding. It can count toward BC Work Experience.",
+    when: "120 service hours over the program. Applications open once a year.",
+    how: "Apply on Ocean Wise's YouthToSea page. Staff select students from the applications.",
+    status: "seasonal", url: "https://ocean.org/action/youthtosea-be-a-leader", checked: "2026-11-07" },
+  { title: "Reading Buddies", org: "Vancouver Public Library", city: "Vancouver",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 13, who: "Ages 13–18",
+    desc: "Get paired with a young child at a VPL branch and help them build reading confidence. Training happens at the first session.",
+    when: "Runs in fall, winter and spring sessions with a new application form each time.",
+    how: "Fill in the Reading Buddies teen application for the next session. You need a reference.",
+    status: "seasonal", url: "https://vpl.ca/", checked: "2026-11-07" },
+  { title: "Teen library volunteer", org: "North Vancouver City Library", city: "North Vancouver",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 13, who: "Grades 8–12",
+    desc: "Volunteer at the library in North Vancouver. Spots are first-come, first-served and fill up quickly.",
+    how: "Fill in the teen volunteer registration form. Volunteers who work with the public get a criminal record check.",
+    status: "open", url: "https://www.nvcl.ca/teenvolunteer2025", checked: "2026-11-07" },
+  { title: "Teen Ambassadors", org: "Richmond Public Library", city: "Richmond",
+    paths: ["edu", "law"],
+    category: "Leadership & councils", minAge: 13, who: "Grades 8–12",
+    desc: "Plan teen programs and help choose the teen book collection with library staff. You earn service hours.",
+    when: "Meets the first Tuesday of every month.",
+    how: "Join the library's volunteer team, then sign up for Teen Ambassadors. It can fill up, so ask about other teen roles if it's full.",
+    status: "open", url: "https://www.yourlibrary.ca/teens", checked: "2026-11-07" },
+  { title: "Raptor rehab volunteer", org: "OWL Rehabilitation Society", city: "Delta",
+    paths: ["vet", "env"],
+    category: "Animals", also: ["Environment"], minAge: 15, who: "15+, tetanus shot up to date",
+    desc: "Help care for injured and orphaned birds of prey: daily bird care, facility upkeep, guiding visitors and helping at fundraisers.",
+    how: "Contact OWL through their website to ask about volunteering.",
+    status: "open", url: "https://www.owlrehab.org/", checked: "2026-11-07" },
+  { title: "Reading Buddies", org: "Surrey Libraries", city: "Surrey",
+    paths: ["edu"],
+    category: "Kids & tutoring",
+    minAge: 14,
+    who: "Ages 14–18",
+    desc: "Mentor a younger child as they practise reading. Surrey Libraries has run the program since 2004.",
+    when: "Applications open twice a year, in spring and fall.",
+    how: "Apply on the Reading Buddies page. Volunteers need a police information check.",
+    status: "seasonal",
+    url: "https://surreylibraries.ca/reading-buddies",
+    checked: "2026-11-07" },
+  { title: "Peer & special events volunteer", org: "Canuck Place Children's Hospice", city: "Vancouver",
+    paths: ["health"],
+    category: "Health & care",
+    minAge: 16,
+    who: "16+ (Family Volunteers 18+)",
+    desc: "Support families and the care team at BC's children's hospice: Peer Volunteers run errands for clinical staff, and Special Events volunteers help at galas and fundraisers.",
+    when: "Peer roles need a 4-hour training and a one-year commitment of weekly or bi-weekly shifts. Recruitment happens in quarterly rounds.",
+    how: "Apply on their volunteer page. Needs a criminal record check.",
+    status: "open",
+    url: "https://www.canuckplace.org/how-to-give/volunteer/",
+    checked: "2026-11-07" },
+  { title: "Art class & summer art days volunteer", org: "Burnaby Art Gallery", city: "Burnaby",
+    paths: ["arts", "edu"],
+    category: "Arts & culture",
+    also: ["Kids & tutoring"],
+    minAge: null,
+    who: "High school students (age not listed)",
+    desc: "Help with kids' art classes, summer art camps, gallery tours and community art events at the gallery in Deer Lake Park.",
+    how: "Apply through the gallery's volunteer page.",
+    status: "open",
+    url: "https://app.betterimpact.com/PublicOrganization/3d127d9a-738d-413f-9ae1-37b7f9f2ce4c/1",
+    checked: "2026-11-07" },
+  { title: "VGH Youth Leadership Program", org: "VGH & UBC Hospital Foundation", city: "Vancouver",
+    paths: ["health", "biz"],
+    category: "Health & care",
+    also: ["Leadership & councils"],
+    minAge: 12,
+    who: "Ages 12–19",
+    desc: "Volunteer and fundraise for health care at Vancouver General Hospital, UBC Hospital and GF Strong, while building leadership and teamwork skills.",
+    how: "Fill in the application form on the Youth Leadership page.",
+    status: "open",
+    url: "https://vghfoundation.ca/giving/youth-leadership/",
+    checked: "2026-11-07" },
+  { title: "Ecology Centre volunteer", org: "Lynn Canyon Ecology Centre", city: "North Vancouver",
+    paths: ["env", "edu"],
+    category: "Environment",
+    also: ["Kids & tutoring"],
+    minAge: 10,
+    who: "15+ on your own; 10–14 with an adult",
+    desc: "Keep Lynn Canyon Park clean, or help run the nature centre's mini-camps for kids over spring and summer break and some Pro-D days.",
+    when: "Park clean-ups any time; camp helpers commit to at least one full camp.",
+    how: "Fill in the application on their volunteer page.",
+    status: "open",
+    url: "https://ecologycentre.ca/volunteer/",
+    checked: "2026-11-07" },
+  { title: "Summer soccer camp volunteer", org: "Royal Soccer Club", city: "Around Metro Vancouver",
+    paths: ["sport", "edu"],
+    category: "Recreation & events",
+    also: ["Kids & tutoring"],
+    minAge: 14,
+    who: "14+ by your volunteer week",
+    desc: "Help coach and supervise kids aged 5–13 at summer soccer day camps, look after equipment and help set up. 16+ can apply to be a Counsellor-in-Training.",
+    when: "Camps run late June to early September. Check which BC locations are near you.",
+    how: "Apply through their online volunteer portal.",
+    status: "seasonal",
+    url: "https://royalsoccer.com",
+    checked: "2026-11-07" },
+  { title: "Peer Leader", org: "CTS Youth Society", city: "Around Metro Vancouver",
+    paths: ["env", "edu", "sport"],
+    category: "Leadership & councils",
+    also: ["Environment"],
+    minAge: 15,
+    who: "Ages 15–18",
+    desc: "Get trained in leadership and outdoor safety, then plan and lead free outdoor camp trips for youth in Metro Vancouver's regional parks.",
+    when: "Applications open in spring for the summer.",
+    how: "Apply through CTS Youth Society's website.",
+    status: "seasonal",
+    url: "https://www.ctsyouthsociety.com/",
+    checked: "2026-11-07" },
+  { title: "Donor centre volunteer", org: "Canadian Blood Services", city: "Around Metro Vancouver",
+    paths: ["health"],
+    category: "Health & care",
+    minAge: 16,
+    who: "16+",
+    desc: "Welcome blood donors, run the refreshment area and watch for anyone feeling unwell after donating, at donor centres and mobile clinics.",
+    how: "Apply through blood.ca and find the donor centre or clinic closest to you.",
+    status: "open",
+    url: "https://www.blood.ca",
+    checked: "2026-11-07" },
+];
+
+// =====================================================================
+//  FUTURE PATHS: link volunteering to university majors and careers
+// =====================================================================
+const PATHS = {
+  eng:    { t: "Engineering & Tech", c: "#2a5bd7", cs: "#dfe8fc", icon: "Science & tech",
+            majors: "Engineering, Computer Science, Applied Science, Physics",
+            why: "Programs that value hands-on problem solving like to see you teaching STEM, building things or working on technical problems in the community.",
+            skills: "Explaining technical ideas simply, teamwork on projects, problem solving, leading activities for kids",
+            tip: "Building a tool for a real problem (like a website for a local cause) counts too. Describe the problem, what you built and who it helped." },
+  health: { t: "Health & Medicine", c: "#1f6f8b", cs: "#d9edf4", icon: "Health & care",
+            majors: "Nursing, Pre-med, Kinesiology, Pharmacy, Health Sciences",
+            why: "Time around patients, care settings and first aid shows you understand what health work is really like, not just the science.",
+            skills: "Empathy, communication with patients and families, staying calm, following procedures",
+            tip: "Talk about a specific moment with a patient or participant and what it taught you about care." },
+  vet:    { t: "Animals & Vet Science", c: "#9c4a0b", cs: "#fbe6d3", icon: "Animals",
+            majors: "Animal Biology, Pre-vet, Zoology, Wildlife Management",
+            why: "Hands-on animal care and conservation work is close to essential for vet and animal-science paths.",
+            skills: "Animal handling, responsibility and routine, observation, working under supervision",
+            tip: "Long-term roles (like 100+ hours at one place) show more commitment than many one-off days." },
+  env:    { t: "Environment & Life Sciences", c: "#2f7d3f", cs: "#dcefdc", icon: "Environment",
+            majors: "Environmental Science, Biology, Forestry, Geography",
+            why: "Hatcheries, restoration and science outreach give you real field and lab experience early.",
+            skills: "Field work, data collection, water testing, public education",
+            tip: "Mention measurable results, like salmon released, plants removed or data you helped collect." },
+  edu:    { t: "Education & Working with Kids", c: "#6a4bc4", cs: "#e7e0fb", icon: "Kids & tutoring",
+            majors: "Education, Psychology, Child & Youth Care, Speech Sciences",
+            why: "Tutoring, camps and reading programs show patience and the ability to help someone else learn.",
+            skills: "Teaching, patience, planning activities, supervising groups",
+            tip: "Describe how you adapted when a kid was struggling. That shows real teaching skill." },
+  law:    { t: "Politics, Law & Social Change", c: "#9a6a00", cs: "#fbefcc", icon: "Leadership & councils",
+            majors: "Political Science, Law (later), Sociology, International Relations",
+            why: "Youth councils, committees and advocacy show you can represent others and work inside real institutions.",
+            skills: "Public speaking, debate, research, advocacy, working with officials",
+            tip: "Name one idea you pushed for and what happened to it, even if it didn't pass." },
+  biz:    { t: "Business, Marketing & Events", c: "#c0392b", cs: "#fbe0dc", icon: "Community & food",
+            majors: "Commerce, Marketing, Economics, Tourism & Hospitality",
+            why: "Running events, retail shifts and fundraisers is practical business experience: customers, money, logistics and promotion.",
+            skills: "Customer service, organization, sales and fundraising, promotion",
+            tip: "Use numbers where you can, like money raised, people served or event attendance." },
+  arts:   { t: "Arts, Media & Design", c: "#a3367a", cs: "#f8dfee", icon: "Arts & culture",
+            majors: "Fine Arts, Design, Media Studies, Theatre, History",
+            why: "Galleries, theatres and museums let you work behind the scenes in creative fields and build a portfolio.",
+            skills: "Creativity, audience experience, collections and research, event production",
+            tip: "Keep photos or examples of work you helped with to show in a portfolio later." },
+  sport:  { t: "Sport & Kinesiology", c: "#0f7a6c", cs: "#d5f0ea", icon: "Recreation & events",
+            majors: "Kinesiology, Physical Education, Recreation Management",
+            why: "Coaching and adaptive sport show leadership and an understanding of how people move and learn skills.",
+            skills: "Coaching, inclusion, safety awareness, motivating others",
+            tip: "Adaptive programs (like Special Olympics or adaptive soccer) stand out because they take extra skill and care." }
+};
+
+// =====================================================================
+//  COMING UP: dated items. Past dates hide themselves.
+// =====================================================================
+const TIMELINE = [
+  { date: "2026-11-09", label: "Nov 9", title: "SHARE holiday programs open", note: "Youth form for ages 12–17.", url: "https://sharesociety.ca/volunteer-for-share" },
+  { date: "2026-11-18", label: "Nov 18", title: "Library Teen Advisory Council", note: "Coquitlam Public Library, on Zoom. New members welcome.", url: "https://coqlibrary.ca/teen-advisory-council/" },
+  { date: "2027-01-08", label: "Jan 8", title: "Parlez-Nous en Français starts", note: "Apply now if you're fluent in French.", url: "https://coqlibrary.ca/parlez-nous-en-francais/" },
+  { date: "2027-01-31", label: "January", title: "Apply for Evergreen Spring Break camps", note: "Arts camp counsellors, 15+.", url: "https://evergreenculturalcentre.ca/get-involved/volunteer-opportunities/" },
+  { date: "2027-03-01", label: "Early March", title: "Festival du Bois", note: "Francophone festival in Maillardville.", url: "https://www.festivaldubois.ca/volunteer/" },
+  { date: "2027-04-30", label: "April", title: "Apply for Evergreen July camps", note: "Arts camp counsellors, 15+.", url: "https://evergreenculturalcentre.ca/get-involved/volunteer-opportunities/" },
+  { date: "2027-05-31", label: "May", title: "PoCo skating & bike recruitment", note: "14+ and in Grade 9.", url: "https://www.portcoquitlam.ca/explore-poco/volunteering/volunteer-recreation" },
+  { date: "2027-07-15", label: "July", title: "Coquitlam Youth Council intake", note: "Going into Grades 10–12.", url: "https://www.coquitlam.ca/420/Coquitlam-Youth-Council-CYC" }
+];
+
+// =====================================================================
+//  APP
+// =====================================================================
+const CITIES = ["All", "Coquitlam", "Port Coquitlam", "Port Moody", "Anmore / Belcarra", "Tri-Cities wide"];
+// Anything not in one of these places goes on the "Nearby cities" page instead of the main list.
+const TRI = new Set(CITIES.slice(1));
+const isTri = (l) => TRI.has(l.city);
+const TRI_LIST = LISTINGS.filter(isTri);
+const BEYOND = LISTINGS.filter(l => !isTri(l));
+const BEYOND_CITIES = ["Burnaby", "New Westminster", "Vancouver", "North Vancouver", "Richmond", "Surrey", "Delta", "Around Metro Vancouver"];
+const inCat = (l, c) => l.category === c || (l.also || []).includes(c);
+const CAT_NAMES = Object.keys(CATS);
+const STATUS = { open: "Accepting now", seasonal: "Seasonal", paused: "Temporarily not accepting" };
+const state = { q: "", age: null, city: "All", cat: "All", path: null, openOnly: false, savedOnly: false, sort: "az", focus: false };
+let fromTile = false, backToTiles = false;
+const $ = (id) => document.getElementById(id);
+
+// Saved listings (kept in this browser only)
+const SAVE_KEY = "tcvf-saved";
+let saved = new Set();
+try { saved = new Set(JSON.parse(localStorage.getItem(SAVE_KEY) || "[]")); } catch (e) { saved = new Set(); }
+function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify([...saved])); } catch (e) {} }
+const idOf = l => (l.org + "|" + l.title).toLowerCase();
+
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+function fmtDate(iso) { return new Date(iso + "T12:00:00").toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" }); }
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); }
+
+function stats() {
+  const orgs = new Set(TRI_LIST.map(l => l.org)).size;
+  const open = TRI_LIST.filter(l => l.status === "open").length;
+  const latest = LISTINGS.map(l => l.checked).sort().pop();
+  $("stats").innerHTML =
+    `<div class="stat"><b>${TRI_LIST.length}</b><span>opportunities</span></div>` +
+    `<div class="stat"><b>${orgs}</b><span>organizations</span></div>` +
+    `<div class="stat"><b>${open}</b><span>accepting now</span></div>` +
+    `<div class="stat"><b>${new Date(latest + "T12:00:00").toLocaleDateString("en-CA", { month: "short", day: "numeric" })}</b><span>last checked</span></div>`;
+}
+
+function tiles() {
+  $("tiles").innerHTML = CAT_NAMES.map(n => {
+    const k = CATS[n], count = TRI_LIST.filter(l => inCat(l, n)).length, near = BEYOND.filter(l => inCat(l, n)).length;
+    return `<button class="tile" type="button" data-cat="${esc(n)}" style="--c:${k.c};--cs:${k.cs}">
+      <span class="ico">${icon(n)}</span><span class="tname"><b>${esc(n)}</b><small>${count} ${count === 1 ? "opportunity" : "opportunities"}${near ? ` · +${near} nearby` : ""}</small></span><span class="tarrow" aria-hidden="true">→</span></button>`;
+  }).join("");
+  $("tiles").querySelectorAll(".tile").forEach(b => b.onclick = () => {
+    state.cat = b.dataset.cat; state.path = null; state.focus = true; fromTile = true; paths();
+    syncChips(); render();
+    goView("find");
+  });
+}
+
+function paths() {
+  const ids = Object.keys(PATHS);
+  $("paths").innerHTML = ids.map(id => {
+    const P = PATHS[id], n = TRI_LIST.filter(l => (l.paths || []).includes(id)).length;
+    return `<button class="path" type="button" data-id="${id}" aria-pressed="${state.path === id}" style="--c:${P.c};--cs:${P.cs}">
+      <span class="ico">${icon(P.icon)}</span><span><b>${esc(P.t)}</b><span class="n">${n}</span></span></button>`;
+  }).join("");
+  $("paths").querySelectorAll(".path").forEach(b => b.onclick = () => {
+    state.path = state.path === b.dataset.id ? null : b.dataset.id;
+    if (state.path) state.cat = "All";   // a path replaces any topic filter
+    syncChips(); tiles(); paths(); render();
+    if (state.path) { const r = $("pathPanel").getBoundingClientRect(); if (r.top > window.innerHeight - 120) $("pathPanel").scrollIntoView({ behavior: "smooth", block: "center" }); }
+  });
+  const panel = $("pathPanel");
+  if (!state.path) { panel.hidden = true; return; }
+  const P = PATHS[state.path], fits = l => (l.paths || []).includes(state.path);
+  const n = TRI_LIST.filter(fits).length, far = BEYOND.filter(fits).length;
+  panel.hidden = false; panel.style.setProperty("--c", P.c);
+  panel.innerHTML = `<h3>${esc(P.t)}</h3><div class="majors">Good for: ${esc(P.majors)}</div>
+    <div class="pp-grid"><div><b>Why it helps</b>${esc(P.why)}</div><div><b>Skills you'll build</b>${esc(P.skills)}</div><div><b>On your application</b>${esc(P.tip)}</div></div>
+    <div class="pp-actions"><button class="btn" type="button" id="seePath">See ${n} matching opportunities →</button>
+    ${far ? `<a class="pp-far" href="${viewHref("beyond")}">+ ${far} more in nearby cities</a>` : ""}</div>`;
+  $("seePath").onclick = () => { goView("find"); };
+}
+
+function timeline() {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const items = TIMELINE.filter(t => new Date(t.date + "T23:59:59") >= today);
+  if (!items.length) { $("soonWrap").style.display = "none"; return; }
+  $("timeline").innerHTML = items.map(t =>
+    `<a class="tl" href="${esc(t.url)}" target="_blank" rel="noopener"><span class="d">${esc(t.label)}</span><b>${esc(t.title)} <i aria-hidden="true">↗</i></b><span class="n">${esc(t.note)}</span></a>`).join("");
+  const tl = $("timeline"), prev = $("tlPrev"), next = $("tlNext");
+  const edges = () => {
+    const max = tl.scrollWidth - tl.clientWidth;
+    const start = tl.scrollLeft <= 4, end = tl.scrollLeft >= max - 4;
+    tl.classList.toggle("at-start", start); tl.classList.toggle("at-end", end);
+    prev.disabled = start; next.disabled = end;
+    prev.parentElement.classList.toggle("none", max <= 4);
+  };
+  const step = (dir) => {
+    const max = tl.scrollWidth - tl.clientWidth, card = 250;
+    const jump = Math.floor(tl.clientWidth / card) * card || card;   // whole cards only
+    let to = tl.scrollLeft + dir * jump;
+    if (to > max - card) to = max;   // don't leave a tiny last step
+    if (to < card) to = 0;
+    tl.scrollTo({ left: to });
+  };
+  prev.onclick = () => step(-1); next.onclick = () => step(1);
+  tl.addEventListener("scroll", edges, { passive: true });
+  addEventListener("resize", edges);
+  edges(); setTimeout(edges, 300);
+}
+
+function chipRow(el, items, key) {
+  el.innerHTML = "";
+  items.forEach(v => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.type = "button"; b.textContent = v;
+    b.setAttribute("aria-pressed", state[key] === v);
+    b.onclick = () => { state[key] = v; syncChips(); render(); if (key === "cat") tiles(); };
+    el.appendChild(b);
+  });
+}
+function syncChips() { chipRow($("cities"), CITIES, "city"); chipRow($("cats"), ["All", ...CAT_NAMES], "cat"); }
+
+function matches(l) {
+  if (!isTri(l) && !state.savedOnly) return false;   // nearby-city listings live on their own page
+  if (state.city !== "All" && l.city !== state.city && l.city !== "Tri-Cities wide") return false;
+  if (state.cat !== "All" && !inCat(l, state.cat)) return false;
+  if (state.path && !(l.paths || []).includes(state.path)) return false;
+  if (state.age && l.minAge && state.age < l.minAge) return false;
+  if (state.openOnly && l.status !== "open") return false;
+  if (state.savedOnly && !saved.has(idOf(l))) return false;
+  return textMatch(l);
+}
+
+function textMatch(l) {
+  if (!state.q) return true;
+  const hay = [l.title, l.org, l.desc, l.category, l.city, l.who, l.when || "", l.pause || ""].join(" ").toLowerCase();
+  return state.q.split(/\s+/).every(w => hay.includes(w));
+}
+
+function sorted(arr) {
+  const a = arr.slice();
+  const p = x => x.status === "paused" ? 1 : 0;
+  if (state.sort === "age") a.sort((x, y) => (x.minAge ?? 99) - (y.minAge ?? 99) || x.title.localeCompare(y.title));
+  else if (state.sort === "city") a.sort((x, y) => x.city.localeCompare(y.city) || x.org.localeCompare(y.org));
+  else a.sort((x, y) => x.org.localeCompare(y.org) || x.title.localeCompare(y.title));
+  return a.sort((x, y) => p(x) - p(y));
+}
+
+const STAR = '<svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.9 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>';
+const PIN = '<svg viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg>';
+const CHECK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const PAUSE = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></svg>';
+const ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+
+function render() {
+  const list = $("list");
+  const shown = sorted(LISTINGS.filter(matches));
+  $("count").innerHTML = `${shown.length} ${shown.length === 1 ? "opportunity" : "opportunities"} <small>of ${TRI_LIST.length}</small>`;
+  $("savedOnly").textContent = "★ Saved (" + saved.size + ")";
+  const far = (state.q || state.cat !== "All")
+    ? BEYOND.filter(l => textMatch(l) && (state.cat === "All" || inCat(l, state.cat))).length : 0;
+  $("farHint").hidden = !far;
+  if (far) $("farHint").textContent = state.q
+    ? `+ ${far} ${far === 1 ? "match" : "matches"} for “${state.q}” in nearby cities →`
+    : `+ ${far} more ${state.cat} ${far === 1 ? "opportunity" : "opportunities"} in nearby cities →`;
+  const topic = state.cat !== "All";
+  $("h-find").textContent = topic ? state.cat : "All opportunities";
+  $("findSub").textContent = topic ? CATS[state.cat].d + " around Coquitlam, Port Coquitlam and Port Moody."
+                                   : "Filter by your age, city and interests.";
+  if (!topic) state.focus = false;
+  $("focusBar").hidden = !state.focus;
+  $("finder").hidden = state.focus;
+  const pc = $("pathChip");
+  if (state.path) { const P = PATHS[state.path]; pc.hidden = false; pc.textContent = "Path: " + P.t + "  ✕"; pc.setAttribute("aria-label", "Path: " + P.t + ". Remove this filter"); pc.style.setProperty("--c", P.c); }
+  else pc.hidden = true;
+  $("savedOnly").setAttribute("aria-pressed", state.savedOnly);
+  if (!shown.length) {
+    list.innerHTML = `<div class="empty"><b>${state.savedOnly && !saved.size ? "Nothing saved yet" : "No matches"}</b>` +
+      (state.savedOnly && !saved.size ? "Tap the star on any listing to save it here." : "Try removing a filter or changing your search.") +
+      `<br><br><button class="btn small" type="button" id="reset">Clear filters</button></div>`;
+    $("reset").onclick = reset;
+    return;
+  }
+  list.innerHTML = shown.map(cardHTML).join("");
+  bindStars(list);
+}
+
+function cardHTML(l, i) {
+  const id = idOf(l), on = saved.has(id), k = CATS[l.category];
+  return `
+  <article class="card${l.status === "paused" ? " is-paused" : ""}" style="--c:${k.c};--cs:${k.cs};animation-delay:${Math.min(i, 12) * 25}ms">
+    <div class="card-top">
+      <span class="ico">${icon(l.category)}</span>
+      <span class="cat">${esc(l.category)}</span>
+      <button class="star" type="button" data-id="${esc(id)}" aria-pressed="${on}" aria-label="${on ? "Remove from saved" : "Save"}: ${esc(l.title)}">${STAR}</button>
+    </div>
+    <div class="card-body">
+      <h3>${esc(l.title)}</h3>
+      <div class="org">${esc(l.org)}</div>
+      <p>${esc(l.desc)}</p>
+      <div class="meta">
+        <span class="pill age ${l.minAge ? "" : "unknown"}">${esc(l.who)}</span>
+        <span class="pill ${l.status}"><span class="dot"></span>${STATUS[l.status]}</span>
+        <span class="pill city">${PIN}${esc(l.city)}</span>
+      </div>
+      ${l.status === "paused" ? `<div class="pausemsg">${PAUSE}<span><b>Temporarily not accepting volunteers.</b> ${esc(l.pause || "Check back later.")}</span></div>` : ""}
+      ${l.when ? `<div class="when">${esc(l.when)}</div>` : ""}
+      <details class="how"><summary>How to apply</summary><div>${esc(l.how)}</div></details>
+      <div class="foot">
+        <a class="go" href="${esc(l.url)}" target="_blank" rel="noopener">${l.status === "paused" ? "View details" : "View &amp; apply"} ${ARROW}</a>
+        <span class="checked">${CHECK}Checked ${fmtDate(l.checked)}</span>
+      </div>
+    </div>
+  </article>`;
+}
+
+function bindStars(root) {
+  root.querySelectorAll(".star").forEach(b => {
+    b.onclick = () => {
+      const id = b.dataset.id;
+      const r = b.getBoundingClientRect(), adding = !saved.has(id);
+      if (adding) { saved.add(id); toast("Saved ★"); burst(r.left + r.width / 2, r.top + r.height / 2); } else { saved.delete(id); toast("Removed from saved"); }
+      persist(); render(); renderBeyond();
+      const nb = [...root.querySelectorAll(".star")].find(x => x.dataset.id === id);
+      if (nb && adding) nb.classList.add("pop");
+    };
+  });
+}
+
+// "Nearby cities" page: same cards, grouped by city
+function renderBeyond() {
+  const groups = BEYOND_CITIES.map(c => [c, sorted(BEYOND.filter(l => l.city === c))]).filter(g => g[1].length);
+  $("beyondJump").innerHTML = groups.map(([c, ls]) =>
+    `<button class="chip" type="button" data-to="${esc(slug(c))}">${esc(c)} <small>${ls.length}</small></button>`).join("");
+  $("beyondJump").querySelectorAll("button").forEach(b => b.onclick = () =>
+    document.getElementById("b-" + b.dataset.to).scrollIntoView({ behavior: "smooth", block: "start" }));
+  $("beyondList").innerHTML = groups.map(([c, ls]) =>
+    `<div class="bgroup" id="b-${esc(slug(c))}"><h3 class="bcity">${PIN}${esc(c)} <small>${ls.length}</small></h3><div class="grid">${ls.map(cardHTML).join("")}</div></div>`).join("");
+  bindStars($("beyondList"));
+}
+const slug = (t) => t.toLowerCase().replace(/[^a-z]+/g, "-");
+
+function reset() {
+  Object.assign(state, { q: "", age: null, city: "All", cat: "All", path: null, openOnly: false, savedOnly: false, focus: false });
+  paths();
+  $("q").value = ""; $("age").value = "";
+  $("openOnly").setAttribute("aria-pressed", "false");
+  syncChips(); tiles(); render();
+}
+
+// Filters
+$("q").addEventListener("input", e => { state.q = e.target.value.trim().toLowerCase(); render(); });
+$("age").addEventListener("input", e => { const n = parseInt(e.target.value, 10); state.age = Number.isFinite(n) && n >= 5 && n <= 25 ? n : null; render(); });
+$("openOnly").onclick = e => { state.openOnly = !state.openOnly; e.currentTarget.setAttribute("aria-pressed", state.openOnly); render(); };
+$("savedOnly").onclick = () => { state.savedOnly = !state.savedOnly; render(); };
+$("sort").onchange = e => { state.sort = e.target.value; render(); };
+
+// Suggest a listing
+$("suggestForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = id => $(id).value.trim();
+  const text =
+`New listing suggestion – Tri-Cities Teen Volunteer Finder
+Organization: ${v("sOrg")}
+Role: ${v("sTitle")}
+City: ${v("sCity")}
+Minimum age: ${v("sAge") || "not sure"}
+Link: ${v("sUrl") || "none"}
+What volunteers do: ${v("sDesc") || "-"}`;
+  $("sOut").textContent = text; $("sOut").style.display = "block";
+  $("sCopy").style.display = "inline-flex";
+  $("sNote").textContent = CONTACT_EMAIL ? "Copy this and email it to " + CONTACT_EMAIL + "." : "Copy this and send it to the person who runs this site.";
+});
+$("sCopy").onclick = async () => {
+  try { await navigator.clipboard.writeText($("sOut").textContent); toast("Copied!"); }
+  catch (err) { $("sNote").textContent = "Couldn't copy automatically. Select the text above and copy it."; }
+};
+
+document.querySelectorAll(".beyondN").forEach(e => e.textContent = BEYOND.length);
+stats(); tiles(); paths(); timeline(); syncChips(); render(); renderBeyond(); motion();
+$("pathChip").onclick = () => { state.path = null; paths(); render(); };
+
+// =====================================================================
+//  PAGES: the header switches between views using #home, #find, #future, #guide
+// =====================================================================
+const VIEW_OF = { "": "home", home: "home", find: "find", future: "future", beyond: "beyond", guide: "guide", suggest: "guide" };
+// Clean addresses (tricitiesvolunteer.ca/find) on the real site; #find everywhere else (previews, local files)
+const CLEAN = /(^|\.)tricitiesvolunteer\.ca$/.test(location.hostname);
+const viewHref = n => CLEAN ? (n === "home" ? "/" : "/" + n) : "#" + n;
+function currentKey() {
+  const h = location.hash.replace("#", "");
+  if (!CLEAN) return h;
+  const p = location.pathname.replace(/^\/+|\/+$/g, "");
+  if (VIEW_OF[h] !== undefined && h !== "") {
+    // old #links: move to the clean address
+    if (h === "suggest") return h;
+    history.replaceState(null, "", viewHref(h)); return h;
+  }
+  return p;
+}
+function goView(n) {
+  if (!CLEAN) { location.hash = n; return; }
+  if (location.pathname + location.hash !== viewHref(n)) history.pushState(null, "", viewHref(n));
+  route();
+}
+if (CLEAN) {
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    const n = a.getAttribute("href").slice(1);
+    if (VIEW_OF[n] !== undefined && n !== "suggest" && n !== "") a.setAttribute("href", viewHref(n));
+  });
+  document.addEventListener("click", e => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const a = e.target.closest("a[href]");
+    if (!a) return;
+    const m = a.getAttribute("href").match(/^\/([a-z]*)$/);
+    if (!m || VIEW_OF[m[1]] === undefined) return;
+    e.preventDefault();
+    goView(m[1] || "home");
+  });
+  window.addEventListener("popstate", route);
+}
+function route() {
+  const h = currentKey();
+  const v = VIEW_OF[h] || "home";
+  if (v === "find" && !fromTile && state.focus) { state.focus = false; render(); }
+  fromTile = false;
+  document.querySelectorAll("[data-view]").forEach(el => {
+    const show = el.dataset.view === v;
+    el.hidden = !show;
+    el.classList.remove("view-in");
+    if (show) { void el.offsetWidth; el.classList.add("view-in"); }
+  });
+  document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === v));
+  $("navlinks").classList.remove("open"); $("menuBtn").setAttribute("aria-expanded", "false");
+  document.querySelector("main").classList.toggle("view-top", v !== "home");
+  const tilesTarget = backToTiles && v === "home"; backToTiles = false;
+  const go = () => {
+    if (h === "suggest") $("suggest").scrollIntoView();
+    else if (tilesTarget) $("tiles").scrollIntoView({ block: "center" });
+    else window.scrollTo(0, 0);
+  };
+  go(); setTimeout(go, 0); requestAnimationFrame(go);
+  track(v);
+}
+// Visit counting (GoatCounter): one hit per page view, including views reached via the header links
+let lastTracked = null;
+function track(v) {
+  if (v === lastTracked) return;
+  lastTracked = v;
+  const path = v === "home" ? "/" : "/" + v;
+  let tries = 0;
+  const send = () => {
+    if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path });
+    else if (tries++ < 40) setTimeout(send, 250);
+  };
+  send();
+}
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+window.addEventListener("hashchange", route);
+window.addEventListener("load", route);
+$("backHome").onclick = () => { backToTiles = true; goView("home"); };
+$("allOpps").onclick = () => { state.cat = "All"; state.focus = false; syncChips(); tiles(); render(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+$("moreFilters").onclick = () => {
+  state.focus = false; render();
+  $("finder").classList.add("opening"); setTimeout(() => $("finder").classList.remove("opening"), 400);
+};
+$("menuBtn").onclick = () => {
+  const open = $("navlinks").classList.toggle("open");
+  $("menuBtn").setAttribute("aria-expanded", open);
+};
+const closeMenu = () => { $("navlinks").classList.remove("open"); $("menuBtn").setAttribute("aria-expanded", "false"); };
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && $("navlinks").classList.contains("open")) { closeMenu(); $("menuBtn").focus(); }
+});
+document.addEventListener("click", e => {
+  if ($("navlinks").classList.contains("open") && !e.target.closest("#navlinks, #menuBtn")) closeMenu();
+});
+route();
+
+// =====================================================================
+//  MOTION (all skipped if the viewer prefers reduced motion)
+// =====================================================================
+function motion() {
+  const calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Ticker of organization names
+
+  // Scroll reveal
+  const els = document.querySelectorAll(".reveal");
+  if (calm || !("IntersectionObserver" in window)) { els.forEach(e => e.classList.add("shown")); }
+  else {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("shown"); io.unobserve(e.target); } }), { threshold: 0, rootMargin: "0px 0px -8% 0px" });
+    els.forEach(e => io.observe(e));
+  }
+  if (calm) return;
+
+  // Rotating headline word
+  const words = ["volunteer spot", "people", "next adventure", "thing", "volunteer spot"];
+  let wi = 0; const w = $("rotWord");
+  const em = w.parentElement;
+  const fit = () => em.style.setProperty("--uw", w.offsetWidth + "px");
+  fit(); window.addEventListener("resize", fit);
+  setInterval(() => {
+    w.classList.add("rot-out"); em.classList.add("swap");
+    setTimeout(() => {
+      wi = (wi + 1) % (words.length - 1); w.textContent = words[wi];
+      fit();
+      w.classList.remove("rot-out"); w.classList.add("rot-in");
+      requestAnimationFrame(() => requestAnimationFrame(() => { w.classList.remove("rot-in"); em.classList.remove("swap"); }));
+    }, 350);
+  }, 2600);
+
+  // Count-up stats
+  document.querySelectorAll(".stat b").forEach(b => {
+    const end = parseInt(b.textContent, 10);
+    if (!Number.isFinite(end) || String(end) !== b.textContent.trim()) return;
+    const t0 = performance.now(), dur = 1100;
+    b.textContent = "0";
+    const step = t => { const k = Math.min(1, (t - t0) / dur); b.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+
+  // Mountain parallax
+  const far = document.querySelector(".hero-art .far"), near = document.querySelector(".hero-art .near"), sun = document.querySelector(".hero-art .sunwrap");
+  let ticking = false, lastY = -1;
+  const paint = () => {
+    ticking = false;
+    const y = Math.round(Math.min(window.scrollY, 700));
+    if (y === lastY) return;            // mountains are off-screen or nothing changed
+    lastY = y;
+    sun.setAttribute("transform", `translate(0 ${y * .18})`);
+    far.setAttribute("transform", `translate(0 ${y * .12})`);
+    near.setAttribute("transform", `translate(0 ${y * .06})`);
+  };
+  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(paint); } }, { passive: true });
+
+  // Gentle card tilt on desktop
+  if (window.matchMedia("(hover: hover)").matches) {
+    $("list").addEventListener("pointermove", e => {
+      const c = e.target.closest(".card"); if (!c) return;
+      const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      c.style.transform = `translateY(-3px) rotateX(${-y * 4}deg) rotateY(${x * 4}deg)`;
+    });
+    $("list").addEventListener("pointerout", e => { const c = e.target.closest(".card"); if (c && !c.contains(e.relatedTarget)) c.style.transform = ""; });
+  }
+}
+
+// Little confetti burst when saving
+function burst(x, y) {
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const colors = ["#f2b33d", "#2f8a61", "#a3367a", "#1f6f8b", "#c0392b", "#6a4bc4"];
+  for (let i = 0; i < 14; i++) {
+    const d = document.createElement("i"); d.className = "spark";
+    const a = Math.random() * Math.PI * 2, r = 40 + Math.random() * 50;
+    d.style.left = x + "px"; d.style.top = y + "px"; d.style.background = colors[i % colors.length];
+    d.style.setProperty("--dx", Math.cos(a) * r + "px"); d.style.setProperty("--dy", Math.sin(a) * r + "px"); d.style.setProperty("--r", (Math.random() * 360) + "deg");
+    document.body.appendChild(d); setTimeout(() => d.remove(), 850);
+  }
+}
+</script>
+</body>
+</html>
