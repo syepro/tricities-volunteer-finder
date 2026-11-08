@@ -108,6 +108,9 @@
   .ico svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
   /* ---------- 3. Header (top bar) ---------- */
+  .skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; }
+  .skip:focus { top: 12px; }
+  main:focus { outline: none; }
   .topbar { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg) 82%, transparent);
     backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
   .topbar-inner { display: flex; align-items: center; gap: 18px; height: 62px; }
@@ -211,22 +214,37 @@
   .tile:hover { background: linear-gradient(90deg, var(--cs), transparent); padding-left: 14px; }
   .tile:hover .ico { transform: rotate(-10deg) scale(1.12); }
   .tile:hover .tarrow { transform: translateX(4px); color: var(--c); }
-  .tile:hover b, .tile[aria-pressed="true"] b { color: var(--c); }
-  .tile[aria-pressed="true"] { border-bottom-color: var(--c); }
+  .tile:hover b { color: var(--c); }
   @media (prefers-color-scheme: dark) { .tile:hover { background: linear-gradient(90deg, rgba(255,255,255,.05), transparent); } }
   @media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 560px) { .tiles { grid-template-columns: 1fr; } .tile { padding: 15px 4px; } .tile b { font-size: 18px; } }
 
   /* "Coming up" timeline */
-  .timeline { display: flex; overflow-x: auto; padding: 8px 2px; position: relative; scroll-snap-type: x mandatory;
-    mask-image: linear-gradient(90deg, #000 88%, transparent); -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); }
-  .tl { flex: 0 0 250px; scroll-snap-align: start; padding: 36px 26px 0 0; position: relative; transition: transform .2s; }
+  .timeline { display: flex; overflow-x: auto; padding: 8px 2px 14px; position: relative; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    scrollbar-width: none; --fl: 0%; --fr: 12%;
+    mask-image: linear-gradient(90deg, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent); }
+  .timeline::-webkit-scrollbar { display: none; }
+  .timeline.at-start { --fl: 0%; } .timeline:not(.at-start) { --fl: 8%; } .timeline.at-end { --fr: 0%; }
+  .tl-nav { display: flex; gap: 8px; align-self: flex-end; }
+  .tl-nav button { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--line); background: transparent; color: var(--ink);
+    font: inherit; font-size: 18px; cursor: pointer; transition: background .2s, border-color .2s, transform .2s, opacity .2s; }
+  .tl-nav button:hover:not(:disabled) { border-color: var(--ink); transform: scale(1.06); }
+  .tl-nav button:disabled { opacity: .3; cursor: default; }
+  .tl-nav.none { display: none; }
+  @media (max-width: 640px), (hover: none) { .tl-nav { display: none; } }
+  .tl { flex: 0 0 250px; scroll-snap-align: start; padding: 36px 26px 0 0; position: relative; transition: transform .2s;
+    display: flex; flex-direction: column; align-items: flex-start; color: inherit; text-decoration: none; border-radius: 6px; }
   .tl:hover { transform: translateY(-4px) rotate(-.6deg); }
+  .tl:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+  .tl .tl-go { display: inline-block; margin-top: auto; padding-top: 12px; font-size: 14px; font-weight: 700; color: var(--ink);
+    background: linear-gradient(var(--sun), var(--sun)) 0 100% / 0 2px no-repeat; transition: background-size .25s; }
+  .tl:hover .tl-go, .tl:focus-visible .tl-go { background-size: 100% 2px; }
   .tl::before { content: ""; position: absolute; left: 0; right: 0; top: 9px; height: 2px; background: var(--line); }
   .tl::after { content: ""; position: absolute; left: 0; top: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--sun); box-shadow: 0 0 0 4px var(--bg); }
   .tl .d { display: inline-block; font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); margin-bottom: 6px; }
   .tl b { display: block; font-size: 17.5px; line-height: 1.3; margin-bottom: 6px; }
-  .tl span { font-size: 14.5px; color: var(--muted); }
+  .tl .n { display: block; font-size: 14.5px; color: var(--muted); }
   @media (prefers-color-scheme: dark) { .tl .d { color: var(--sun); } }
   @media (max-width: 640px) { .tl { flex-basis: 230px; } }
 
@@ -292,8 +310,11 @@
   .card p { margin: 0; font-size: 15.5px; line-height: 1.6; }
   .meta { display: flex; flex-wrap: wrap; gap: 6px; }
   .when { font-size: 13.5px; color: var(--ink); background: var(--field); border-left: 3px solid var(--sun); padding: 7px 10px; border-radius: 6px; }
+  @media (prefers-color-scheme: dark) {
+    .pp-grid b, .tile:hover b { color: color-mix(in srgb, var(--c) 45%, #fff); }
+  }
   details.how { border-top: 1px dashed var(--line); padding-top: 8px; font-size: 13.5px; color: var(--muted); }
-  details.how summary { cursor: pointer; font-weight: 600; color: var(--ink); list-style: none; display: flex; align-items: center; gap: 6px; }
+  details.how summary { cursor: pointer; min-height: 40px; padding: 4px 0; font-weight: 600; color: var(--ink); list-style: none; display: flex; align-items: center; gap: 6px; }
   details.how summary::-webkit-details-marker { display: none; }
   details.how summary::before { content: "+"; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--bg-2); font-size: 13px; }
   details.how[open] summary::before { content: "–"; }
@@ -449,12 +470,13 @@
   /* Turn animations off for people who set "reduce motion" on their device */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
-    html { scroll-behavior: auto; }
+    html, .timeline { scroll-behavior: auto; }
     .reveal { opacity: 1; transform: none; }
   }
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <nav class="topbar" aria-label="Main">
   <div class="wrap topbar-inner">
@@ -507,7 +529,7 @@
   </div>
 </header>
 
-<main>
+<main id="main" tabindex="-1">
   <div class="wrap">
     <div class="stats" id="stats" data-view="home"></div>
 
@@ -517,7 +539,8 @@
     </section>
 
     <section class="block reveal" aria-labelledby="h-soon" id="soonWrap" data-view="home">
-      <div class="sec-head"><div><h2 id="h-soon">Coming up</h2><p>Dates and deadlines worth knowing about.</p></div></div>
+      <div class="sec-head"><div><h2 id="h-soon">Coming up</h2><p>Dates and deadlines worth knowing about. Tap one to sign up.</p></div>
+        <div class="tl-nav"><button type="button" id="tlPrev" aria-label="Earlier dates" disabled>&larr;</button><button type="button" id="tlNext" aria-label="Later dates">&rarr;</button></div></div>
       <div class="timeline" id="timeline"></div>
     </section>
 
@@ -554,7 +577,7 @@
           </div>
           <div>
             <label class="lbl" for="age">My age</label>
-            <input id="age" type="number" min="8" max="19" inputmode="numeric" placeholder="e.g. 14">
+            <input id="age" type="number" min="5" max="25" inputmode="numeric" placeholder="e.g. 14">
           </div>
         </div>
         <div><span class="lbl">City</span><div class="chips" id="cities"></div></div>
@@ -567,7 +590,7 @@
           <button class="chip" type="button" id="openOnly" aria-pressed="false">Accepting now</button>
           <button class="chip" type="button" id="savedOnly" aria-pressed="false">★ Saved (0)</button>
           <select id="sort" aria-label="Sort listings">
-            <option value="az">Sort: A–Z</option>
+            <option value="az">Sort: organization A–Z</option>
             <option value="age">Sort: youngest age first</option>
             <option value="city">Sort: by city</option>
           </select>
@@ -641,19 +664,19 @@ const CONTACT_EMAIL = "tcvolhub@gmail.com";
 //  CATEGORIES: colour + icon for each interest
 // =====================================================================
 const CATS = {
-  "Animals":               { c: "#b4580f", cs: "#fbe6d3", d: "Shelters & animal care",
+  "Animals":               { c: "#9c4a0b", cs: "#fbe6d3", d: "Shelters & animal care",
     svg: '<circle cx="8" cy="7" r="2"/><circle cx="16" cy="7" r="2"/><circle cx="4.8" cy="12" r="1.8"/><circle cx="19.2" cy="12" r="1.8"/><path d="M12 12c-3 0-5 3-5 5.5 0 1.5 1.2 2.5 2.7 2.5.9 0 1.6-.5 2.3-.5s1.4.5 2.3.5c1.5 0 2.7-1 2.7-2.5C17 15 15 12 12 12z"/>' },
   "Arts & culture":        { c: "#a3367a", cs: "#f8dfee", d: "Theatre, galleries, festivals",
     svg: '<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.5-.8 1.5-1.5 0-1-.8-1.4-.8-2.3 0-.9.7-1.7 1.7-1.7H17a4 4 0 0 0 4-4C21 6.8 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/>' },
   "Community & food":      { c: "#c0392b", cs: "#fbe0dc", d: "Food banks, events, causes",
     svg: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>' },
-  "Environment":           { c: "#2f7d3f", cs: "#dcefdc", d: "Parks, hatcheries, gardens",
+  "Environment":           { c: "#276b35", cs: "#dcefdc", d: "Parks, hatcheries, gardens",
     svg: '<path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14z"/><path d="M5 19l8-8"/>' },
   "Health & care":         { c: "#1f6f8b", cs: "#d9edf4", d: "Hospitals & support",
     svg: '<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/>' },
   "Kids & tutoring":       { c: "#6a4bc4", cs: "#e7e0fb", d: "Reading, homework, French",
     svg: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15H5.5A1.5 1.5 0 0 0 4 20.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v15h5.5a1.5 1.5 0 0 1 1.5 1.5z"/>' },
-  "Leadership & councils": { c: "#9a6a00", cs: "#fbefcc", d: "Youth councils & committees",
+  "Leadership & councils": { c: "#7f5800", cs: "#fbefcc", d: "Youth councils & committees",
     svg: '<path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>' },
   "Science & tech":        { c: "#2a5bd7", cs: "#dfe8fc", d: "STEM camps & science centres",
     svg: '<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/>' },
@@ -1037,7 +1060,7 @@ const PATHS = {
             why: "Time around patients, care settings and first aid shows you understand what health work is really like, not just the science.",
             skills: "Empathy, communication with patients and families, staying calm, following procedures",
             tip: "Talk about a specific moment with a patient or participant and what it taught you about care." },
-  vet:    { t: "Animals & Vet Science", c: "#b4580f", cs: "#fbe6d3", icon: "Animals",
+  vet:    { t: "Animals & Vet Science", c: "#9c4a0b", cs: "#fbe6d3", icon: "Animals",
             majors: "Animal Biology, Pre-vet, Zoology, Wildlife Management",
             why: "Hands-on animal care and conservation work is close to essential for vet and animal-science paths.",
             skills: "Animal handling, responsibility and routine, observation, working under supervision",
@@ -1078,14 +1101,14 @@ const PATHS = {
 //  COMING UP: dated items. Past dates hide themselves.
 // =====================================================================
 const TIMELINE = [
-  { date: "2026-11-09", label: "Nov 9", title: "SHARE holiday programs open", note: "Youth form for ages 12–17." },
-  { date: "2026-11-18", label: "Nov 18", title: "Library Teen Advisory Council", note: "Coquitlam Public Library, on Zoom. New members welcome." },
-  { date: "2027-01-08", label: "Jan 8", title: "Parlez-Nous en Français starts", note: "Apply now if you're fluent in French." },
-  { date: "2027-01-31", label: "January", title: "Apply for Evergreen Spring Break camps", note: "Arts camp counsellors, 15+." },
-  { date: "2027-03-01", label: "Early March", title: "Festival du Bois", note: "Francophone festival in Maillardville." },
-  { date: "2027-04-30", label: "April", title: "Apply for Evergreen July camps", note: "Arts camp counsellors, 15+." },
-  { date: "2027-05-31", label: "May", title: "PoCo skating & bike recruitment", note: "14+ and in Grade 9." },
-  { date: "2027-07-15", label: "July", title: "Coquitlam Youth Council intake", note: "Going into Grades 10–12." }
+  { date: "2026-11-09", label: "Nov 9", title: "SHARE holiday programs open", note: "Youth form for ages 12–17.", url: "https://sharesociety.ca/volunteer-for-share" },
+  { date: "2026-11-18", label: "Nov 18", title: "Library Teen Advisory Council", note: "Coquitlam Public Library, on Zoom. New members welcome.", url: "https://coqlibrary.ca/teen-advisory-council/" },
+  { date: "2027-01-08", label: "Jan 8", title: "Parlez-Nous en Français starts", note: "Apply now if you're fluent in French.", url: "https://coqlibrary.ca/parlez-nous-en-francais/" },
+  { date: "2027-01-31", label: "January", title: "Apply for Evergreen Spring Break camps", note: "Arts camp counsellors, 15+.", url: "https://evergreenculturalcentre.ca/get-involved/volunteer-opportunities/" },
+  { date: "2027-03-01", label: "Early March", title: "Festival du Bois", note: "Francophone festival in Maillardville.", url: "https://www.festivaldubois.ca/volunteer/" },
+  { date: "2027-04-30", label: "April", title: "Apply for Evergreen July camps", note: "Arts camp counsellors, 15+.", url: "https://evergreenculturalcentre.ca/get-involved/volunteer-opportunities/" },
+  { date: "2027-05-31", label: "May", title: "PoCo skating & bike recruitment", note: "14+ and in Grade 9.", url: "https://www.portcoquitlam.ca/explore-poco/volunteering/volunteer-recreation" },
+  { date: "2027-07-15", label: "July", title: "Coquitlam Youth Council intake", note: "Going into Grades 10–12.", url: "https://www.coquitlam.ca/420/Coquitlam-Youth-Council-CYC" }
 ];
 
 // =====================================================================
@@ -1123,12 +1146,12 @@ function stats() {
 function tiles() {
   $("tiles").innerHTML = CAT_NAMES.map(n => {
     const k = CATS[n], count = LISTINGS.filter(l => inCat(l, n)).length;
-    return `<button class="tile" type="button" data-cat="${esc(n)}" aria-pressed="${state.cat === n}" style="--c:${k.c};--cs:${k.cs}">
+    return `<button class="tile" type="button" data-cat="${esc(n)}" style="--c:${k.c};--cs:${k.cs}">
       <span class="ico">${icon(n)}</span><span class="tname"><b>${esc(n)}</b><small>${count} ${count === 1 ? "opportunity" : "opportunities"}</small></span><span class="tarrow" aria-hidden="true">→</span></button>`;
   }).join("");
   $("tiles").querySelectorAll(".tile").forEach(b => b.onclick = () => {
-    state.cat = state.cat === b.dataset.cat ? "All" : b.dataset.cat; state.path = null; paths();
-    syncChips(); render(); tiles();
+    state.cat = b.dataset.cat; state.path = null; paths();
+    syncChips(); render();
     location.hash = "find";
   });
 }
@@ -1161,7 +1184,20 @@ function timeline() {
   const items = TIMELINE.filter(t => new Date(t.date + "T23:59:59") >= today);
   if (!items.length) { $("soonWrap").style.display = "none"; return; }
   $("timeline").innerHTML = items.map(t =>
-    `<div class="tl"><span class="d">${esc(t.label)}</span><b>${esc(t.title)}</b><span>${esc(t.note)}</span></div>`).join("");
+    `<a class="tl" href="${esc(t.url)}" target="_blank" rel="noopener"><span class="d">${esc(t.label)}</span><b>${esc(t.title)}</b><span class="n">${esc(t.note)}</span><span class="tl-go">Sign up ↗</span></a>`).join("");
+  const tl = $("timeline"), prev = $("tlPrev"), next = $("tlNext");
+  const edges = () => {
+    const max = tl.scrollWidth - tl.clientWidth;
+    const start = tl.scrollLeft <= 4, end = tl.scrollLeft >= max - 4;
+    tl.classList.toggle("at-start", start); tl.classList.toggle("at-end", end);
+    prev.disabled = start; next.disabled = end;
+    prev.parentElement.classList.toggle("none", max <= 4);
+  };
+  const step = (dir) => tl.scrollBy({ left: dir * Math.max(250, tl.clientWidth * .8) });
+  prev.onclick = () => step(-1); next.onclick = () => step(1);
+  tl.addEventListener("scroll", edges, { passive: true });
+  addEventListener("resize", edges);
+  edges(); setTimeout(edges, 300);
 }
 
 function chipRow(el, items, key) {
@@ -1211,7 +1247,7 @@ function render() {
   $("count").innerHTML = `${shown.length} ${shown.length === 1 ? "opportunity" : "opportunities"} <small>of ${LISTINGS.length}</small>`;
   $("savedOnly").textContent = "★ Saved (" + saved.size + ")";
   const pc = $("pathChip");
-  if (state.path) { const P = PATHS[state.path]; pc.hidden = false; pc.textContent = "Path: " + P.t + "  ✕"; pc.style.setProperty("--c", P.c); }
+  if (state.path) { const P = PATHS[state.path]; pc.hidden = false; pc.textContent = "Path: " + P.t + "  ✕"; pc.setAttribute("aria-label", "Path: " + P.t + ". Remove this filter"); pc.style.setProperty("--c", P.c); }
   else pc.hidden = true;
   $("savedOnly").setAttribute("aria-pressed", state.savedOnly);
   if (!shown.length) {
@@ -1271,7 +1307,7 @@ function reset() {
 
 // Filters
 $("q").addEventListener("input", e => { state.q = e.target.value.trim().toLowerCase(); render(); });
-$("age").addEventListener("input", e => { const n = parseInt(e.target.value, 10); state.age = Number.isFinite(n) ? n : null; render(); });
+$("age").addEventListener("input", e => { const n = parseInt(e.target.value, 10); state.age = Number.isFinite(n) && n >= 5 && n <= 25 ? n : null; render(); });
 $("openOnly").onclick = e => { state.openOnly = !state.openOnly; e.currentTarget.setAttribute("aria-pressed", state.openOnly); render(); };
 $("savedOnly").onclick = () => { state.savedOnly = !state.savedOnly; render(); };
 $("sort").onchange = e => { state.sort = e.target.value; render(); };
@@ -1321,6 +1357,13 @@ $("menuBtn").onclick = () => {
   const open = $("navlinks").classList.toggle("open");
   $("menuBtn").setAttribute("aria-expanded", open);
 };
+const closeMenu = () => { $("navlinks").classList.remove("open"); $("menuBtn").setAttribute("aria-expanded", "false"); };
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && $("navlinks").classList.contains("open")) { closeMenu(); $("menuBtn").focus(); }
+});
+document.addEventListener("click", e => {
+  if ($("navlinks").classList.contains("open") && !e.target.closest("#navlinks, #menuBtn")) closeMenu();
+});
 route();
 
 // =====================================================================
