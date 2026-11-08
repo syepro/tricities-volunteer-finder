@@ -1832,7 +1832,7 @@ if (CLEAN) {
   });
   window.addEventListener("popstate", route);
 }
-function route() {
+function route(animate = true) {
   const h = currentKey();
   const v = VIEW_OF[h] || "home";
   if (v === "find" && !fromTile && state.focus) { state.focus = false; render(); }
@@ -1841,7 +1841,7 @@ function route() {
     const show = el.dataset.view === v;
     el.hidden = !show;
     el.classList.remove("view-in");
-    if (show) { void el.offsetWidth; el.classList.add("view-in"); }
+    if (show && animate) { void el.offsetWidth; el.classList.add("view-in"); }
   });
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === v));
   $("navlinks").classList.remove("open"); $("menuBtn").setAttribute("aria-expanded", "false");
@@ -1870,7 +1870,7 @@ function track(v) {
 }
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 window.addEventListener("hashchange", route);
-window.addEventListener("load", route);
+window.addEventListener("load", () => route(false));
 $("backHome").onclick = () => { backToTiles = true; goView("home"); };
 $("allOpps").onclick = () => { state.cat = "All"; state.focus = false; syncChips(); tiles(); render(); window.scrollTo({ top: 0, behavior: "smooth" }); };
 $("moreFilters").onclick = () => {
@@ -1888,7 +1888,7 @@ document.addEventListener("keydown", e => {
 document.addEventListener("click", e => {
   if ($("navlinks").classList.contains("open") && !e.target.closest("#navlinks, #menuBtn")) closeMenu();
 });
-route();
+route(false);
 
 // =====================================================================
 //  MOTION (all skipped if the viewer prefers reduced motion)
