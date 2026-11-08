@@ -217,6 +217,23 @@
   @media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 560px) { .tiles { grid-template-columns: 1fr; } .tile { padding: 15px 4px; } .tile b { font-size: 18px; } }
 
+  .far-hint { display: inline-block; margin: -8px 0 18px; color: var(--green); font-weight: 600; text-underline-offset: 3px; }
+  .far-hint[hidden] { display: none; }
+  .pp-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .pp-far { color: var(--green); font-weight: 600; text-underline-offset: 3px; }
+
+  /* Nearby cities page */
+  .beyond-jump { margin: -4px 0 8px; }
+  .beyond-jump small { opacity: .6; margin-left: 4px; font-weight: 700; }
+  .bgroup { margin-top: 44px; scroll-margin-top: 84px; }
+  .bcity { display: flex; align-items: center; gap: 8px; font-size: clamp(22px, 3vw, 28px); margin: 0 0 18px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .bcity svg { width: 20px; height: 20px; fill: none; stroke: var(--green); stroke-width: 2; }
+  .bcity small { font-size: 15px; color: var(--muted); font-weight: 600; margin-left: 2px; }
+  .beyond-cta { display: block; margin-top: 40px; padding: 26px 4px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); font-size: 17px; }
+  .beyond-cta b { font-family: "Bricolage Grotesque", sans-serif; font-size: 22px; margin-right: 6px; }
+  .beyond-cta > span { color: var(--green); font-weight: 600; }
+  .beyond-cta:hover > span { text-decoration: underline; text-underline-offset: 3px; }
+
   /* "Coming up" timeline */
   .timeline { display: flex; overflow-x: auto; padding: 8px 2px 14px; position: relative; scroll-snap-type: x mandatory; scroll-behavior: smooth;
     scrollbar-width: none; --fl: 0%; --fr: 12%;
@@ -246,10 +263,12 @@
   @media (prefers-color-scheme: dark) { .tl .d { color: var(--sun); } }
   @media (max-width: 640px) { .tl { flex-basis: 230px; } }
 
-  /* The two links at the bottom of Home */
-  .home-next { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); margin-top: 72px; }
+  /* The links at the bottom of Home */
+  .home-next { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); margin-top: 72px; }
   .next-link { display: block; padding: 34px 4px; text-decoration: none; color: var(--ink); border-bottom: 1px solid var(--line); }
-  .next-link + .next-link { padding-left: 34px; border-left: 1px solid var(--line); }
+  .next-link + .next-link { padding-left: 30px; border-left: 1px solid var(--line); }
+  .next-link { padding-right: 24px; }
+  .next-link span span { color: inherit; font: inherit; }
   .next-link b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 26px; margin-bottom: 4px; }
   .next-link span { color: var(--green); font-weight: 600; font-size: 15.5px; }
   .next-link:hover b { color: var(--green); }
@@ -492,6 +511,7 @@
       <a href="#home" data-nav="home">Home</a>
       <a href="#find" data-nav="find">Opportunities</a>
       <a href="#future" data-nav="future">Your future</a>
+      <a href="#beyond" data-nav="beyond">Nearby cities</a>
       <a href="#guide" data-nav="guide">How it works</a>
     </div>
     <a class="btn small nav-cta" href="#find">Find</a>
@@ -550,6 +570,7 @@
 
     <section class="block reveal home-next" data-view="home" aria-label="More">
       <a href="#future" class="next-link"><b>Planning for university?</b><span>See volunteering that fits your future major →</span></a>
+      <a href="#beyond" class="next-link"><b>Willing to travel?</b><span><span class="beyondN"></span> more in Burnaby, Vancouver &amp; nearby →</span></a>
       <a href="#guide" class="next-link"><b>First time volunteering?</b><span>How applying works, plus common questions →</span></a>
     </section>
 
@@ -605,7 +626,16 @@
           </select>
         </div>
       </div>
+      <a class="far-hint" id="farHint" href="#beyond" hidden></a>
       <div class="grid" id="list"></div>
+      <a class="beyond-cta" href="#beyond"><b>Want more options?</b> <span><span class="beyondN"></span> more opportunities in Burnaby, New Westminster, Vancouver and other nearby cities →</span></a>
+    </section>
+
+    <section class="block" id="beyond" aria-labelledby="h-beyond" data-view="beyond">
+      <div class="sec-head page-head"><div><span class="eyebrow">Nearby cities</span><h2 id="h-beyond">Beyond the Tri-Cities</h2>
+        <p>Bigger programs a SkyTrain or bus ride away, checked the same way as everything else. Kept separate so the main list stays local.</p></div></div>
+      <div class="chips beyond-jump" id="beyondJump" aria-label="Jump to a city"></div>
+      <div id="beyondList"></div>
     </section>
 
     <section class="block reveal" id="guide" aria-labelledby="h-guide" data-view="guide">
@@ -947,14 +977,14 @@ const LISTINGS = [
     how: "Click Apply Now and pick the nearest location. Tri-Cities contact: tricitiesvolunteers@spca.bc.ca.",
     status: "open", url: "https://spca.bc.ca/ways-to-help/volunteer/youth-volunteers/", checked: "2026-11-07" },
 
-  { title: "Wildlife hospital volunteer", org: "Wildlife Rescue Association of BC", city: "Nearby & online",
+  { title: "Wildlife hospital volunteer", org: "Wildlife Rescue Association of BC", city: "Burnaby",
     paths: ["vet", "env", "health"],
     category: "Animals", minAge: 14, who: "14–15: Welcome Volunteer only; 16+ for other roles",
     desc: "Help injured and orphaned wild animals at the wildlife hospital by Burnaby Lake, just next to the Tri-Cities. Roles include animal care, rescue, transport, the helpline and photography.",
     when: "Minimum 100 hours. Recruitment is busiest early in the year.",
     how: "Apply through their BetterImpact page and watch the recorded info session. Animal Care roles also have a virtual group interview, usually in spring.",
     status: "open", url: "https://www.wildliferescue.ca/get-involved/volunteer", checked: "2026-11-07" },
-  { title: "Student Ambassador", org: "Elephanatics", city: "Nearby & online",
+  { title: "Student Ambassador", org: "Elephanatics", city: "Tri-Cities wide",
     paths: ["vet", "law"],
     category: "Animals", minAge: null, who: "Students (age not listed)",
     desc: "Spread the word about elephant poaching at your school: recruit other students, run outreach and fundraising, or read Elephanatics' books to younger classes. A Vancouver-based nonprofit you can volunteer with from your own school.",
@@ -1006,34 +1036,34 @@ const LISTINGS = [
     status: "seasonal", url: "https://www.rfcamps.com/Volunteer/", checked: "2026-11-07" },
 
   // ---------- Science, tech & older-teen programs ----------
-  { title: "Junior Instructor", org: "Geering Up (UBC Engineering)", city: "Nearby & online",
+  { title: "Junior Instructor", org: "Geering Up (UBC Engineering)", city: "Vancouver",
     paths: ["eng", "edu"],
     category: "Science & tech", also: ["Kids & tutoring"], minAge: 15, who: "Grade 10+",
     desc: "Help UBC's engineering outreach team run STEM summer camps, weekly clubs and one-day events for kids. Geering Up runs camps in several cities, including Port Coquitlam.",
     how: "Check the Junior Instructor program page for timing, or email geering.up@ubc.ca.",
     status: "seasonal", url: "https://geeringup.apsc.ubc.ca/join-us/general-information/volunteering/", checked: "2026-11-07" },
-  { title: "STEM Leadership Program", org: "Geering Up (UBC Engineering)", city: "Nearby & online",
+  { title: "STEM Leadership Program", org: "Geering Up (UBC Engineering)", city: "Vancouver",
     paths: ["eng", "edu"],
     category: "Science & tech", also: ["Leadership & councils"], minAge: 15, who: "Grades 10–12",
     desc: "A year-long program that trains high school students as STEM leaders, followed by volunteering with Geering Up. You can continue as a STEM Ambassador.",
     when: "Applications have usually been in May–June (per SD43 directory).",
     how: "Check the STEM Leadership program page on Geering Up's site, or email geering.up@ubc.ca.",
     status: "seasonal", url: "https://geeringup.apsc.ubc.ca/join-us/general-information/volunteering/", checked: "2026-11-07" },
-  { title: "Summer Academy volunteer", org: "Science Alive (SFU)", city: "Nearby & online",
+  { title: "Summer Academy volunteer", org: "Science Alive (SFU)", city: "Burnaby",
     paths: ["eng", "edu", "env"],
     category: "Science & tech", also: ["Kids & tutoring"], minAge: 15, who: "Grades 10–12, interested in STEAM",
     desc: "Support SFU's summer STEAM programs for kids. Useful skills include coding, robotics, engineering and explaining science.",
     pause: "This year's application window has closed. Watch for the next call in spring.",
     how: "Apply with the online form on their volunteer page when it reopens. Questions: sciencealive@sfu.ca.",
     status: "paused", url: "https://sciencealive.ca/volunteer-with-us", checked: "2026-11-07" },
-  { title: "Core volunteer", org: "Science World", city: "Nearby & online",
+  { title: "Core volunteer", org: "Science World", city: "Vancouver",
     paths: ["eng", "env", "edu"],
     category: "Science & tech", minAge: 16, who: "16+, 100-hour minimum",
     desc: "Volunteer at Science World in Vancouver with one 2–3 hour shift a week. Grade 11–12 students can also be nominated by a teacher for High School Work Experience.",
     pause: "Volunteer intake is closed right now. Intake and training happen once a year.",
     how: "Check their volunteer page for the next intake.",
     status: "paused", url: "https://www.scienceworld.ca/volunteer/", checked: "2026-11-07" },
-  { title: "Junior medical volunteer", org: "Odyssey Medical", city: "Nearby & online",
+  { title: "Junior medical volunteer", org: "Odyssey Medical", city: "Around Metro Vancouver",
     paths: ["health"],
     category: "Health & care", minAge: 15, who: "Grades 10–12, valid first aid certificate",
     desc: "Work with a supervised medical team in a field hospital at music festivals, races and sports events: do first aid and talk with patients. You get reference letters and volunteer-hour sign-off.",
@@ -1095,13 +1125,107 @@ const LISTINGS = [
     when: "Around Canada Day. Sign-up opens in spring.",
     how: "Sign up through the festival website.",
     status: "seasonal", url: "https://goldenspike.ca/", checked: "2026-11-07" },
-  { title: "Volunteer Youth Program", org: "Fraser River Discovery Centre", city: "Nearby & online",
+  { title: "Volunteer Youth Program", org: "Fraser River Discovery Centre", city: "New Westminster",
     paths: ["env", "edu"],
     category: "Science & tech", also: ["Environment"], minAge: null, who: "Youth (check age on their site)",
     desc: "Be a summer camp assistant or public programs assistant at the river science centre in New Westminster, running hands-on activities about the Fraser River.",
     when: "Youth positions are posted in spring for the summer.",
     how: "Apply through their Become a Volunteer page. Includes an orientation and a criminal record check.",
     status: "seasonal", url: "https://fraserriverdiscovery.org/becomeavolunteer/", checked: "2026-11-07" },
+  // ---------- Beyond the Tri-Cities (shown on their own page) ----------
+  { title: "Museum volunteer", org: "Burnaby Village Museum", city: "Burnaby",
+    paths: ["arts", "edu"],
+    category: "Arts & culture", minAge: 14, who: "14+ (parent consent under 18)",
+    desc: "Help at a 10-acre heritage village: work in the exhibits, collections or library, and help at events. Volunteers range from age 14 to over 70.",
+    when: "Asks for a one-year commitment and at least 35 hours a year.",
+    how: "Apply on the museum's volunteer page. You need two references and valid medical coverage.",
+    status: "open", url: "https://burnabyvillagemuseum.ca/EN/main/support/volunteers.html", checked: "2026-11-07" },
+  { title: "Youth centre volunteer", org: "City of Burnaby Youth Services", city: "Burnaby",
+    paths: ["edu", "sport"],
+    category: "Kids & tutoring", also: ["Leadership & councils"], minAge: 14, who: "Ages 14–18",
+    desc: "Help run preteen drop-ins, Pro-D Day camps and special events at Burnaby's youth centres (Creekside, Edmonds, South Central and Summit). Some centres also have youth planning committees.",
+    how: "Fill in an application on their volunteer page, then contact the youth centre you're interested in.",
+    status: "open", url: "https://app.betterimpact.com/PublicOrganization/1be816d4-d817-4b59-bbdb-aba2e978c186/1", checked: "2026-11-07" },
+  { title: "Summer camp volunteer", org: "SFU Camps", city: "Burnaby",
+    paths: ["edu", "sport", "eng"],
+    category: "Kids & tutoring", also: ["Recreation & events"], minAge: 15, who: "15+ (high school students)",
+    desc: "Help run SFU's summer day camps: educational, outdoor, sports and leadership programs for kids. Counts for service hours and Work Experience, and you can ask for a reference.",
+    when: "Applications open in spring and closed April 20 last year. Camps start late June.",
+    how: "Apply online, then do one interview and one training session.",
+    status: "seasonal", url: "https://www.sfu.ca/camps/opportunities/volunteer-opportunities.html", checked: "2026-11-07" },
+  { title: "Warehouse & program pack volunteer", org: "Greater Vancouver Food Bank", city: "Burnaby",
+    paths: ["health", "biz"],
+    category: "Community & food", minAge: 15, who: "15+ for warehouse and program pack (other roles 16+ or 18+)",
+    desc: "Sort and pack food at the food bank's Burnaby warehouse for families across Vancouver, Burnaby, New Westminster and the North Shore.",
+    when: "Youth applications (ages 15–17) opened on May 20 last year.",
+    how: "Apply on their volunteer page when youth applications open. Needs a criminal record check.",
+    status: "seasonal", url: "https://foodbank.bc.ca/?p=234", checked: "2026-11-07" },
+  { title: "Reading Buddies", org: "New Westminster Public Library", city: "New Westminster",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 14, who: "14+",
+    desc: "Get paired with a younger child and help them practise reading. It's the library's most popular teen volunteer program.",
+    when: "Sign-up happens twice a year, in September and January.",
+    how: "Apply to volunteer through the City of New Westminster website first, then sign up for Reading Buddies.",
+    status: "seasonal", url: "https://nwpl.ca/teens", checked: "2026-11-07" },
+  { title: "Parks & recreation volunteer", org: "City of New Westminster", city: "New Westminster",
+    paths: ["sport", "edu"],
+    category: "Recreation & events", minAge: 14, who: "14+",
+    desc: "Help with recreation programs, community centres and events around New Westminster.",
+    how: "Apply online, then go to an information session and interview. Questions: jhowey@newwestcity.ca.",
+    status: "open", url: "https://newwestcity.ca/parks-and-recreation/volunteering", checked: "2026-11-07" },
+  { title: "Patient & family volunteer", org: "BC Children's Hospital", city: "Vancouver",
+    paths: ["health"],
+    category: "Health & care", minAge: 16, who: "16+, one-year commitment",
+    desc: "Give kids, siblings and families a break at BC Children's and BC Women's Hospital with safe play and distraction activities. Training covers infection control and patient privacy.",
+    how: "Apply through their volunteer page and attend an information session. Must be 16 before you apply.",
+    status: "open", url: "https://app.betterimpact.com/PublicOrganization/77a715dc-d284-4b7b-8590-6782245d8250/1", checked: "2026-11-07" },
+  { title: "EcoSteward & Nature House volunteer", org: "Stanley Park Ecology", city: "Vancouver",
+    paths: ["env", "vet", "edu"],
+    category: "Environment", also: ["Animals"], minAge: 12, who: "16–17 for most roles; 12–16 for EcoStewards with an adult",
+    desc: "Restore habitat in Stanley Park, host visitors at the Nature House, help with bird counts, or be an EcoRanger or EcoCamp Assistant in summer.",
+    when: "Nature House Host applications open February–March. Bird counts run monthly.",
+    how: "Register as a volunteer on their site and pick the programs you want. A parent signs a youth consent form.",
+    status: "open", url: "https://stanleyparkecology.ca/?p=58040", checked: "2026-11-07" },
+  { title: "Summer camp assistant", org: "VanDusen Botanical Garden", city: "Vancouver",
+    paths: ["env", "edu"],
+    category: "Kids & tutoring", also: ["Environment"], minAge: 15, who: "15+",
+    desc: "Help camp leaders run outdoor nature games, crafts and experiments for kids at VanDusen Botanical Garden.",
+    when: "Summer camp applications are posted in spring.",
+    how: "Apply through the garden's volunteer application page.",
+    status: "seasonal", url: "https://app.betterimpact.com/PublicOrganization/5757625f-27eb-4d6c-9df5-ff3182c978da/Activity/d3cfedc9-1393-4cbd-a7bf-04a793bc0ab8/1", checked: "2026-11-07" },
+  { title: "YouthToSea leadership program", org: "Ocean Wise", city: "Vancouver",
+    paths: ["env", "vet", "edu"],
+    category: "Environment", also: ["Science & tech"], minAge: 15, who: "Ages 15–18",
+    desc: "A free ocean conservation leadership program: learning trips around Metro Vancouver, coaching, and your own Ocean Service Project with grant funding. It can count toward BC Work Experience.",
+    when: "120 service hours over the program. Applications open once a year.",
+    how: "Apply on Ocean Wise's YouthToSea page. Staff select students from the applications.",
+    status: "seasonal", url: "https://ocean.org/action/youthtosea-be-a-leader", checked: "2026-11-07" },
+  { title: "Reading Buddies", org: "Vancouver Public Library", city: "Vancouver",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 13, who: "Ages 13–18",
+    desc: "Get paired with a young child at a VPL branch and help them build reading confidence. Training happens at the first session.",
+    when: "Runs in fall, winter and spring sessions with a new application form each time.",
+    how: "Fill in the Reading Buddies teen application for the next session. You need a reference.",
+    status: "seasonal", url: "https://vpl.ca/", checked: "2026-11-07" },
+  { title: "Teen library volunteer", org: "North Vancouver City Library", city: "North Vancouver",
+    paths: ["edu"],
+    category: "Kids & tutoring", minAge: 13, who: "Grades 8–12",
+    desc: "Volunteer at the library in North Vancouver. Spots are first-come, first-served and fill up quickly.",
+    how: "Fill in the teen volunteer registration form. Volunteers who work with the public get a criminal record check.",
+    status: "open", url: "https://www.nvcl.ca/teenvolunteer2025", checked: "2026-11-07" },
+  { title: "Teen Ambassadors", org: "Richmond Public Library", city: "Richmond",
+    paths: ["edu", "law"],
+    category: "Leadership & councils", minAge: 13, who: "Grades 8–12",
+    desc: "Plan teen programs and help choose the teen book collection with library staff. You earn service hours.",
+    when: "Meets the first Tuesday of every month.",
+    how: "Join the library's volunteer team, then sign up for Teen Ambassadors. It can fill up, so ask about other teen roles if it's full.",
+    status: "open", url: "https://www.yourlibrary.ca/teens", checked: "2026-11-07" },
+  { title: "Raptor rehab volunteer", org: "OWL Rehabilitation Society", city: "Delta",
+    paths: ["vet", "env"],
+    category: "Animals", also: ["Environment"], minAge: 15, who: "15+, tetanus shot up to date",
+    desc: "Help care for injured and orphaned birds of prey: daily bird care, facility upkeep, guiding visitors and helping at fundraisers.",
+    how: "Contact OWL through their website to ask about volunteering.",
+    status: "open", url: "https://www.owlrehab.org/", checked: "2026-11-07" },
 ];
 
 // =====================================================================
@@ -1172,7 +1296,13 @@ const TIMELINE = [
 // =====================================================================
 //  APP
 // =====================================================================
-const CITIES = ["All", "Coquitlam", "Port Coquitlam", "Port Moody", "Anmore / Belcarra", "Tri-Cities wide", "Nearby & online"];
+const CITIES = ["All", "Coquitlam", "Port Coquitlam", "Port Moody", "Anmore / Belcarra", "Tri-Cities wide"];
+// Anything not in one of these places goes on the "Nearby cities" page instead of the main list.
+const TRI = new Set(CITIES.slice(1));
+const isTri = (l) => TRI.has(l.city);
+const TRI_LIST = LISTINGS.filter(isTri);
+const BEYOND = LISTINGS.filter(l => !isTri(l));
+const BEYOND_CITIES = ["Burnaby", "New Westminster", "Vancouver", "North Vancouver", "Richmond", "Delta", "Around Metro Vancouver"];
 const inCat = (l, c) => l.category === c || (l.also || []).includes(c);
 const CAT_NAMES = Object.keys(CATS);
 const STATUS = { open: "Accepting now", seasonal: "Seasonal", paused: "Temporarily not accepting" };
@@ -1192,11 +1322,11 @@ function fmtDate(iso) { return new Date(iso + "T12:00:00").toLocaleDateString("e
 function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); }
 
 function stats() {
-  const orgs = new Set(LISTINGS.map(l => l.org)).size;
-  const open = LISTINGS.filter(l => l.status === "open").length;
+  const orgs = new Set(TRI_LIST.map(l => l.org)).size;
+  const open = TRI_LIST.filter(l => l.status === "open").length;
   const latest = LISTINGS.map(l => l.checked).sort().pop();
   $("stats").innerHTML =
-    `<div class="stat"><b>${LISTINGS.length}</b><span>opportunities</span></div>` +
+    `<div class="stat"><b>${TRI_LIST.length}</b><span>opportunities</span></div>` +
     `<div class="stat"><b>${orgs}</b><span>organizations</span></div>` +
     `<div class="stat"><b>${open}</b><span>accepting now</span></div>` +
     `<div class="stat"><b>${new Date(latest + "T12:00:00").toLocaleDateString("en-CA", { month: "short", day: "numeric" })}</b><span>last checked</span></div>`;
@@ -1204,7 +1334,7 @@ function stats() {
 
 function tiles() {
   $("tiles").innerHTML = CAT_NAMES.map(n => {
-    const k = CATS[n], count = LISTINGS.filter(l => inCat(l, n)).length;
+    const k = CATS[n], count = TRI_LIST.filter(l => inCat(l, n)).length;
     return `<button class="tile" type="button" data-cat="${esc(n)}" style="--c:${k.c};--cs:${k.cs}">
       <span class="ico">${icon(n)}</span><span class="tname"><b>${esc(n)}</b><small>${count} ${count === 1 ? "opportunity" : "opportunities"}</small></span><span class="tarrow" aria-hidden="true">→</span></button>`;
   }).join("");
@@ -1218,7 +1348,7 @@ function tiles() {
 function paths() {
   const ids = Object.keys(PATHS);
   $("paths").innerHTML = ids.map(id => {
-    const P = PATHS[id], n = LISTINGS.filter(l => (l.paths || []).includes(id)).length;
+    const P = PATHS[id], n = TRI_LIST.filter(l => (l.paths || []).includes(id)).length;
     return `<button class="path" type="button" data-id="${id}" aria-pressed="${state.path === id}" style="--c:${P.c};--cs:${P.cs}">
       <span class="ico">${icon(P.icon)}</span><span><b>${esc(P.t)}</b><span class="n">${n}</span></span></button>`;
   }).join("");
@@ -1230,11 +1360,13 @@ function paths() {
   });
   const panel = $("pathPanel");
   if (!state.path) { panel.hidden = true; return; }
-  const P = PATHS[state.path], n = LISTINGS.filter(l => (l.paths || []).includes(state.path)).length;
+  const P = PATHS[state.path], fits = l => (l.paths || []).includes(state.path);
+  const n = TRI_LIST.filter(fits).length, far = BEYOND.filter(fits).length;
   panel.hidden = false; panel.style.setProperty("--c", P.c);
   panel.innerHTML = `<h3>${esc(P.t)}</h3><div class="majors">Good for: ${esc(P.majors)}</div>
     <div class="pp-grid"><div><b>Why it helps</b>${esc(P.why)}</div><div><b>Skills you'll build</b>${esc(P.skills)}</div><div><b>On your application</b>${esc(P.tip)}</div></div>
-    <button class="btn" type="button" id="seePath">See ${n} matching opportunities →</button>`;
+    <div class="pp-actions"><button class="btn" type="button" id="seePath">See ${n} matching opportunities →</button>
+    ${far ? `<a class="pp-far" href="#beyond">+ ${far} more in nearby cities</a>` : ""}</div>`;
   $("seePath").onclick = () => { location.hash = "find"; };
 }
 
@@ -1279,17 +1411,20 @@ function chipRow(el, items, key) {
 function syncChips() { chipRow($("cities"), CITIES, "city"); chipRow($("cats"), ["All", ...CAT_NAMES], "cat"); }
 
 function matches(l) {
-  if (state.city !== "All" && l.city !== state.city && !(l.city === "Tri-Cities wide" && state.city !== "Nearby & online")) return false;
+  if (!isTri(l) && !state.savedOnly) return false;   // nearby-city listings live on their own page
+  if (state.city !== "All" && l.city !== state.city && l.city !== "Tri-Cities wide") return false;
   if (state.cat !== "All" && !inCat(l, state.cat)) return false;
   if (state.path && !(l.paths || []).includes(state.path)) return false;
   if (state.age && l.minAge && state.age < l.minAge) return false;
   if (state.openOnly && l.status !== "open") return false;
   if (state.savedOnly && !saved.has(idOf(l))) return false;
-  if (state.q) {
-    const hay = [l.title, l.org, l.desc, l.category, l.city, l.who, l.when || "", l.pause || ""].join(" ").toLowerCase();
-    if (!state.q.split(/\s+/).every(w => hay.includes(w))) return false;
-  }
-  return true;
+  return textMatch(l);
+}
+
+function textMatch(l) {
+  if (!state.q) return true;
+  const hay = [l.title, l.org, l.desc, l.category, l.city, l.who, l.when || "", l.pause || ""].join(" ").toLowerCase();
+  return state.q.split(/\s+/).every(w => hay.includes(w));
 }
 
 function sorted(arr) {
@@ -1310,8 +1445,11 @@ const ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" strok
 function render() {
   const list = $("list");
   const shown = sorted(LISTINGS.filter(matches));
-  $("count").innerHTML = `${shown.length} ${shown.length === 1 ? "opportunity" : "opportunities"} <small>of ${LISTINGS.length}</small>`;
+  $("count").innerHTML = `${shown.length} ${shown.length === 1 ? "opportunity" : "opportunities"} <small>of ${TRI_LIST.length}</small>`;
   $("savedOnly").textContent = "★ Saved (" + saved.size + ")";
+  const far = state.q ? BEYOND.filter(textMatch).length : 0;
+  $("farHint").hidden = !far;
+  if (far) $("farHint").textContent = `+ ${far} ${far === 1 ? "match" : "matches"} for “${state.q}” in nearby cities →`;
   const topic = state.cat !== "All";
   $("h-find").textContent = topic ? state.cat : "All opportunities";
   $("findSub").textContent = topic ? CATS[state.cat].d + " around Coquitlam, Port Coquitlam and Port Moody."
@@ -1330,45 +1468,64 @@ function render() {
     $("reset").onclick = reset;
     return;
   }
-  list.innerHTML = shown.map((l, i) => {
-    const id = idOf(l), on = saved.has(id), k = CATS[l.category];
-    return `
-    <article class="card${l.status === "paused" ? " is-paused" : ""}" style="--c:${k.c};--cs:${k.cs};animation-delay:${Math.min(i, 12) * 25}ms">
-      <div class="card-top">
-        <span class="ico">${icon(l.category)}</span>
-        <span class="cat">${esc(l.category)}</span>
-        <button class="star" type="button" data-id="${esc(id)}" aria-pressed="${on}" aria-label="${on ? "Remove from saved" : "Save"}: ${esc(l.title)}">${STAR}</button>
+  list.innerHTML = shown.map(cardHTML).join("");
+  bindStars(list);
+}
+
+function cardHTML(l, i) {
+  const id = idOf(l), on = saved.has(id), k = CATS[l.category];
+  return `
+  <article class="card${l.status === "paused" ? " is-paused" : ""}" style="--c:${k.c};--cs:${k.cs};animation-delay:${Math.min(i, 12) * 25}ms">
+    <div class="card-top">
+      <span class="ico">${icon(l.category)}</span>
+      <span class="cat">${esc(l.category)}</span>
+      <button class="star" type="button" data-id="${esc(id)}" aria-pressed="${on}" aria-label="${on ? "Remove from saved" : "Save"}: ${esc(l.title)}">${STAR}</button>
+    </div>
+    <div class="card-body">
+      <h3>${esc(l.title)}</h3>
+      <div class="org">${esc(l.org)}</div>
+      <p>${esc(l.desc)}</p>
+      <div class="meta">
+        <span class="pill age ${l.minAge ? "" : "unknown"}">${esc(l.who)}</span>
+        <span class="pill ${l.status}"><span class="dot"></span>${STATUS[l.status]}</span>
+        <span class="pill city">${PIN}${esc(l.city)}</span>
       </div>
-      <div class="card-body">
-        <h3>${esc(l.title)}</h3>
-        <div class="org">${esc(l.org)}</div>
-        <p>${esc(l.desc)}</p>
-        <div class="meta">
-          <span class="pill age ${l.minAge ? "" : "unknown"}">${esc(l.who)}</span>
-          <span class="pill ${l.status}"><span class="dot"></span>${STATUS[l.status]}</span>
-          <span class="pill city">${PIN}${esc(l.city)}</span>
-        </div>
-        ${l.status === "paused" ? `<div class="pausemsg">${PAUSE}<span><b>Temporarily not accepting volunteers.</b> ${esc(l.pause || "Check back later.")}</span></div>` : ""}
-        ${l.when ? `<div class="when">${esc(l.when)}</div>` : ""}
-        <details class="how"><summary>How to apply</summary><div>${esc(l.how)}</div></details>
-        <div class="foot">
-          <a class="go" href="${esc(l.url)}" target="_blank" rel="noopener">${l.status === "paused" ? "View details" : "View &amp; apply"} ${ARROW}</a>
-          <span class="checked">${CHECK}Checked ${fmtDate(l.checked)}</span>
-        </div>
+      ${l.status === "paused" ? `<div class="pausemsg">${PAUSE}<span><b>Temporarily not accepting volunteers.</b> ${esc(l.pause || "Check back later.")}</span></div>` : ""}
+      ${l.when ? `<div class="when">${esc(l.when)}</div>` : ""}
+      <details class="how"><summary>How to apply</summary><div>${esc(l.how)}</div></details>
+      <div class="foot">
+        <a class="go" href="${esc(l.url)}" target="_blank" rel="noopener">${l.status === "paused" ? "View details" : "View &amp; apply"} ${ARROW}</a>
+        <span class="checked">${CHECK}Checked ${fmtDate(l.checked)}</span>
       </div>
-    </article>`;
-  }).join("");
-  list.querySelectorAll(".star").forEach(b => {
+    </div>
+  </article>`;
+}
+
+function bindStars(root) {
+  root.querySelectorAll(".star").forEach(b => {
     b.onclick = () => {
       const id = b.dataset.id;
       const r = b.getBoundingClientRect(), adding = !saved.has(id);
       if (adding) { saved.add(id); toast("Saved ★"); burst(r.left + r.width / 2, r.top + r.height / 2); } else { saved.delete(id); toast("Removed from saved"); }
-      persist(); render();
-      const nb = [...$("list").querySelectorAll(".star")].find(x => x.dataset.id === id);
+      persist(); render(); renderBeyond();
+      const nb = [...root.querySelectorAll(".star")].find(x => x.dataset.id === id);
       if (nb && adding) nb.classList.add("pop");
     };
   });
 }
+
+// "Nearby cities" page: same cards, grouped by city
+function renderBeyond() {
+  const groups = BEYOND_CITIES.map(c => [c, sorted(BEYOND.filter(l => l.city === c))]).filter(g => g[1].length);
+  $("beyondJump").innerHTML = groups.map(([c, ls]) =>
+    `<button class="chip" type="button" data-to="${esc(slug(c))}">${esc(c)} <small>${ls.length}</small></button>`).join("");
+  $("beyondJump").querySelectorAll("button").forEach(b => b.onclick = () =>
+    document.getElementById("b-" + b.dataset.to).scrollIntoView({ behavior: "smooth", block: "start" }));
+  $("beyondList").innerHTML = groups.map(([c, ls]) =>
+    `<div class="bgroup" id="b-${esc(slug(c))}"><h3 class="bcity">${PIN}${esc(c)} <small>${ls.length}</small></h3><div class="grid">${ls.map(cardHTML).join("")}</div></div>`).join("");
+  bindStars($("beyondList"));
+}
+const slug = (t) => t.toLowerCase().replace(/[^a-z]+/g, "-");
 
 function reset() {
   Object.assign(state, { q: "", age: null, city: "All", cat: "All", path: null, openOnly: false, savedOnly: false, focus: false });
@@ -1406,13 +1563,14 @@ $("sCopy").onclick = async () => {
   catch (err) { $("sNote").textContent = "Couldn't copy automatically. Select the text above and copy it."; }
 };
 
-stats(); tiles(); paths(); timeline(); syncChips(); render(); motion();
+document.querySelectorAll(".beyondN").forEach(e => e.textContent = BEYOND.length);
+stats(); tiles(); paths(); timeline(); syncChips(); render(); renderBeyond(); motion();
 $("pathChip").onclick = () => { state.path = null; paths(); render(); };
 
 // =====================================================================
 //  PAGES: the header switches between views using #home, #find, #future, #guide
 // =====================================================================
-const VIEW_OF = { "": "home", home: "home", find: "find", future: "future", guide: "guide", suggest: "guide" };
+const VIEW_OF = { "": "home", home: "home", find: "find", future: "future", beyond: "beyond", guide: "guide", suggest: "guide" };
 function route() {
   const h = location.hash.replace("#", "");
   const v = VIEW_OF[h] || "home";
