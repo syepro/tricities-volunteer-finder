@@ -497,6 +497,7 @@
     .reveal { opacity: 1; transform: none; }
   }
 </style>
+<script data-goatcounter="https://sye.goatcounter.com/count" data-goatcounter-settings='{"no_onload": true}' async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -1817,6 +1818,20 @@ function route() {
     else window.scrollTo(0, 0);
   };
   go(); setTimeout(go, 0); requestAnimationFrame(go);
+  track(v);
+}
+// Visit counting (GoatCounter): one hit per page view, including views reached via the header links
+let lastTracked = null;
+function track(v) {
+  if (v === lastTracked) return;
+  lastTracked = v;
+  const path = v === "home" ? "/" : "/" + v;
+  let tries = 0;
+  const send = () => {
+    if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path });
+    else if (tries++ < 40) setTimeout(send, 250);
+  };
+  send();
 }
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 window.addEventListener("hashchange", route);
