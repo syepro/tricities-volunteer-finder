@@ -111,8 +111,7 @@
   .skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 700; text-decoration: none; }
   .skip:focus { top: 12px; }
   main:focus { outline: none; }
-  .topbar { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg) 82%, transparent);
-    backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
+  .topbar { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg) 96%, transparent); border-bottom: 1px solid var(--line); }
   .topbar-inner { display: flex; align-items: center; gap: 18px; height: 62px; }
   .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); margin-right: auto; }
   .brand svg { width: 34px; height: 34px; flex: none; }
@@ -160,11 +159,10 @@
   /* Mountain illustration */
   .hero-art { position: absolute; inset: auto 0 0 0; z-index: 1; width: 100%; height: max(170px, 19.2vw); }
   .hero-art svg { width: 100%; height: 100%; display: block; overflow: visible; }
-  .hero-art .far, .hero-art .near { transition: transform .1s linear; }
   /* Soft colour blobs behind the hero text */
-  .blob { position: absolute; border-radius: 50%; filter: blur(40px); opacity: .45; z-index: 0; pointer-events: none; }
-  .blob.a { width: 320px; height: 320px; background: #ffd27a; top: -80px; right: 8%; animation: drift 14s ease-in-out infinite alternate; }
-  .blob.b { width: 260px; height: 260px; background: #9fe0bd; top: 120px; left: -60px; animation: drift 18s ease-in-out infinite alternate-reverse; }
+  .blob { position: absolute; border-radius: 50%; opacity: .45; will-change: transform; z-index: 0; pointer-events: none; }
+  .blob.a { width: 320px; height: 320px; background: radial-gradient(closest-side, #ffd27a, rgba(255,210,122,.5) 55%, rgba(255,210,122,0)); top: -80px; right: 8%; animation: drift 14s ease-in-out infinite alternate; }
+  .blob.b { width: 260px; height: 260px; background: radial-gradient(closest-side, #9fe0bd, rgba(159,224,189,.5) 55%, rgba(159,224,189,0)); top: 120px; left: -60px; animation: drift 18s ease-in-out infinite alternate-reverse; }
   @media (prefers-color-scheme: dark) {
     .hero { background: linear-gradient(180deg, #1b2a3a 0%, #142019 60%, var(--bg) 100%); }
     .hero-art { opacity: .75; }
@@ -299,7 +297,7 @@
   /* Listing cards */
   .grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; display: flex; flex-direction: column; overflow: hidden;
-    box-shadow: var(--shadow); transition: transform .18s, box-shadow .18s; animation: rise .35s ease both; transform-style: preserve-3d; will-change: transform; }
+    box-shadow: var(--shadow); transition: transform .18s, box-shadow .18s; animation: rise .35s ease both; }
   .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
   .card-top { display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: var(--cs); }
   .card-top .ico { width: 34px; height: 34px; border-radius: 10px; background: var(--card); transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
@@ -1448,10 +1446,17 @@ function motion() {
 
   // Mountain parallax
   const far = document.querySelector(".hero-art .far"), near = document.querySelector(".hero-art .near"), sun = document.querySelector(".hero-art .sunwrap");
-  window.addEventListener("scroll", () => {
-    const y = Math.min(window.scrollY, 600);
-    sun.style.transform = `translateY(${y * .18}px)`; far.style.transform = `translateY(${y * .12}px)`; near.style.transform = `translateY(${y * .06}px)`;
-  }, { passive: true });
+  let ticking = false, lastY = -1;
+  const paint = () => {
+    ticking = false;
+    const y = Math.round(Math.min(window.scrollY, 700));
+    if (y === lastY) return;            // mountains are off-screen or nothing changed
+    lastY = y;
+    sun.setAttribute("transform", `translate(0 ${y * .18})`);
+    far.setAttribute("transform", `translate(0 ${y * .12})`);
+    near.setAttribute("transform", `translate(0 ${y * .06})`);
+  };
+  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(paint); } }, { passive: true });
 
   // Gentle card tilt on desktop
   if (window.matchMedia("(hover: hover)").matches) {
