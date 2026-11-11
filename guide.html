@@ -39,10 +39,14 @@
 <meta property="og:image" content="https://tricitiesvolunteer.ca/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Find your volunteer spot in the Tri-Cities: youth volunteer opportunities in Coquitlam, Port Coquitlam and Port Moody">
+<meta property="og:site_name" content="Tri-Cities Teen Volunteer Finder">
+<meta property="og:locale" content="en_CA">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tri-Cities Teen Volunteer Finder">
 <meta name="twitter:description" content="Find youth volunteer opportunities in Coquitlam, Port Coquitlam and Port Moody, all in one place.">
 <meta name="twitter:image" content="https://tricitiesvolunteer.ca/og-image.png">
+<meta name="twitter:image:alt" content="Find your volunteer spot in the Tri-Cities">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -178,9 +182,9 @@
   .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
   /* City shortcuts: a route line with a stop per city. Tap a stop to see that city. */
   .route { position: relative; display: grid; margin-top: 10px; padding-left: 2px; }
-  .route::before { content: ""; position: absolute; left: 10px; top: 28px; bottom: 28px; width: 2px; border-radius: 2px; background: var(--green); opacity: .35; transform-origin: top; animation: drawv .8s cubic-bezier(.2,.8,.2,1) .35s both; }
+  .route::before { content: ""; position: absolute; left: 12px; top: 28px; bottom: 28px; width: 2px; border-radius: 2px; background: var(--green); opacity: .35; transform-origin: top; animation: drawv .8s cubic-bezier(.2,.8,.2,1) .35s both; }
   .stop { position: relative; display: flex; align-items: baseline; gap: 12px; width: 100%; text-align: left; background: none; border: 0; padding: 11px 0 11px 38px; cursor: pointer; color: var(--ink); }
-  .stop::before { content: ""; position: absolute; left: 3px; top: 50%; width: 16px; height: 16px; margin-top: -8px; border-radius: 50%; background: var(--bg); border: 3px solid var(--green); transition: background .2s, transform .25s cubic-bezier(.3,1.6,.5,1); }
+  .stop::before { box-sizing: border-box; content: ""; position: absolute; left: 3px; top: 50%; width: 16px; height: 16px; margin-top: -8px; border-radius: 50%; background: var(--bg); border: 3px solid var(--green); transition: background .2s, transform .25s cubic-bezier(.3,1.6,.5,1); }
   .stop.end::before { border-radius: 4px; background: var(--green); }
   .stop b { white-space: nowrap; font-family: "Bricolage Grotesque", sans-serif; font-size: 22px; font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; transition: color .2s; }
   .stop small { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
