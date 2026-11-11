@@ -177,25 +177,26 @@
   .lede { color: var(--muted); font-size: clamp(16px, 2.2vw, 19px); max-width: 600px; margin: 0; }
   .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
   /* City shortcuts: a route line with a stop per city. Tap a stop to see that city. */
-  .route { position: relative; display: grid; background: var(--card); border-radius: 22px; box-shadow: var(--shadow); padding: 22px 24px 22px 22px; margin-top: 8px; }
-  .route::before { content: ""; position: absolute; left: 35px; top: 56px; bottom: 52px; width: 3px; border-radius: 2px; background: var(--green); transform-origin: top; animation: drawv .8s cubic-bezier(.2,.8,.2,1) .35s both; }
-  .stop { position: relative; display: block; width: 100%; text-align: left; background: none; border: 0; border-radius: 12px; padding: 10px 8px 10px 40px; cursor: pointer; color: var(--ink); transition: background .2s, transform .15s; }
-  .stop::before { content: ""; position: absolute; left: 3px; top: 50%; width: 20px; height: 20px; margin-top: -10px; border-radius: 50%; background: var(--card); border: 3.5px solid var(--green); transition: background .2s, transform .25s cubic-bezier(.3,1.6,.5,1); }
-  .stop.end::before { border-radius: 6px; background: var(--green); }
-  .stop b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 21px; font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; }
-  .stop small { display: block; font-size: 13.5px; color: var(--muted); margin-top: 1px; font-variant-numeric: tabular-nums; }
-  .stop .go-arrow { display: inline-block; margin-left: 6px; color: var(--green); transition: transform .2s; }
-  .stop:hover { background: var(--bg-2); }
-  .stop:hover::before { background: var(--green); transform: scale(1.15); }
-  .stop:hover .go-arrow { transform: translateX(4px); }
-  .stop:active { transform: scale(.98); }
+  .route { position: relative; display: grid; margin-top: 10px; padding-left: 2px; }
+  .route::before { content: ""; position: absolute; left: 10px; top: 28px; bottom: 28px; width: 2px; border-radius: 2px; background: var(--green); opacity: .35; transform-origin: top; animation: drawv .8s cubic-bezier(.2,.8,.2,1) .35s both; }
+  .stop { position: relative; display: flex; align-items: baseline; gap: 12px; width: 100%; text-align: left; background: none; border: 0; padding: 11px 0 11px 38px; cursor: pointer; color: var(--ink); }
+  .stop::before { content: ""; position: absolute; left: 3px; top: 50%; width: 16px; height: 16px; margin-top: -8px; border-radius: 50%; background: var(--bg); border: 3px solid var(--green); transition: background .2s, transform .25s cubic-bezier(.3,1.6,.5,1); }
+  .stop.end::before { border-radius: 4px; background: var(--green); }
+  .stop b { white-space: nowrap; font-family: "Bricolage Grotesque", sans-serif; font-size: 22px; font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; transition: color .2s; }
+  .stop small { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .stop .go-arrow { display: inline-block; margin-left: 6px; color: var(--green); opacity: 0; transform: translateX(-4px); transition: opacity .2s, transform .2s; }
+  .stop:hover::before, .stop:focus-visible::before { background: var(--green); transform: scale(1.2); }
+  .stop:hover b { color: var(--green); }
+  .stop:hover .go-arrow, .stop:focus-visible .go-arrow { opacity: 1; transform: none; }
+  @media (hover: none) { .stop .go-arrow { opacity: 1; transform: none; } }
+  .stop:active { opacity: .7; }
   @keyframes drawv { from { transform: scaleY(0); } }
   @media (min-width: 960px) {   /* wide screens: the route sits to the right of the headline */
-    .hero-inner { grid-template-columns: minmax(0, 1fr) 320px; column-gap: 48px; align-content: center; }
+    .hero-inner { grid-template-columns: minmax(0, 1fr) 380px; column-gap: 40px; align-content: center; }
     .hero-inner > :not(.route) { grid-column: 1; }
-    .route { grid-column: 2; grid-row: 1 / 6; align-self: center; margin-top: 0; }
+    .route { grid-column: 2; grid-row: 1 / 5; align-self: center; margin-top: 0; }
   }
-  @media (max-width: 959px) { .route { max-width: 420px; padding: 14px 16px 14px 14px; } .route::before { left: 27px; top: 46px; bottom: 40px; } .stop { padding-top: 8px; padding-bottom: 8px; } .stop b { font-size: 18px; } }
+  @media (max-width: 959px) { .route { margin-top: 14px; } .stop { padding-top: 8px; padding-bottom: 8px; } .stop b { font-size: 19px; } .route::before { top: 22px; bottom: 22px; } }
   /* Rotating headline word and its yellow underline */
   h1 em.rot { display: inline-block; min-height: 1em; }
   h1 em.rot::after { content: ""; position: absolute; left: 0; width: var(--uw, 100%); bottom: .06em; height: .18em; background: var(--sun); opacity: .55;
@@ -573,7 +574,6 @@
 <header class="hero" data-view="home">
   <div class="blob a" aria-hidden="true"></div><div class="blob b" aria-hidden="true"></div>
   <div class="wrap hero-inner">
-    <div class="tag"><i></i>Coquitlam · Port Coquitlam · Port Moody</div>
     <h1 id="heroH1">Find your<br><em class="rot"><span id="rotWord">volunteer spot</span></em><br>in the <span style="white-space:nowrap">Tri-Cities.</span></h1>
     <p class="lede" data-i="hero.lede">Youth volunteer opportunities from cities, libraries, arts centres, hatcheries and nonprofits, all in one place. Every listing is checked against the organization's own website.</p>
     <div class="hero-cta">
