@@ -176,6 +176,26 @@
   h1 em { font-style: normal; color: var(--green); position: relative; white-space: nowrap; }
   .lede { color: var(--muted); font-size: clamp(16px, 2.2vw, 19px); max-width: 600px; margin: 0; }
   .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  /* City shortcuts: a route line with a stop per city. Tap a stop to see that city. */
+  .route { position: relative; display: grid; background: var(--card); border-radius: 22px; box-shadow: var(--shadow); padding: 22px 24px 22px 22px; margin-top: 8px; }
+  .route::before { content: ""; position: absolute; left: 35px; top: 56px; bottom: 52px; width: 3px; border-radius: 2px; background: var(--green); transform-origin: top; animation: drawv .8s cubic-bezier(.2,.8,.2,1) .35s both; }
+  .stop { position: relative; display: block; width: 100%; text-align: left; background: none; border: 0; border-radius: 12px; padding: 10px 8px 10px 40px; cursor: pointer; color: var(--ink); transition: background .2s, transform .15s; }
+  .stop::before { content: ""; position: absolute; left: 3px; top: 50%; width: 20px; height: 20px; margin-top: -10px; border-radius: 50%; background: var(--card); border: 3.5px solid var(--green); transition: background .2s, transform .25s cubic-bezier(.3,1.6,.5,1); }
+  .stop.end::before { border-radius: 6px; background: var(--green); }
+  .stop b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-size: 21px; font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; }
+  .stop small { display: block; font-size: 13.5px; color: var(--muted); margin-top: 1px; font-variant-numeric: tabular-nums; }
+  .stop .go-arrow { display: inline-block; margin-left: 6px; color: var(--green); transition: transform .2s; }
+  .stop:hover { background: var(--bg-2); }
+  .stop:hover::before { background: var(--green); transform: scale(1.15); }
+  .stop:hover .go-arrow { transform: translateX(4px); }
+  .stop:active { transform: scale(.98); }
+  @keyframes drawv { from { transform: scaleY(0); } }
+  @media (min-width: 960px) {   /* wide screens: the route sits to the right of the headline */
+    .hero-inner { grid-template-columns: minmax(0, 1fr) 320px; column-gap: 48px; align-content: center; }
+    .hero-inner > :not(.route) { grid-column: 1; }
+    .route { grid-column: 2; grid-row: 1 / 6; align-self: center; margin-top: 0; }
+  }
+  @media (max-width: 959px) { .route { max-width: 420px; padding: 14px 16px 14px 14px; } .route::before { left: 27px; top: 46px; bottom: 40px; } .stop { padding-top: 8px; padding-bottom: 8px; } .stop b { font-size: 18px; } }
   /* Rotating headline word and its yellow underline */
   h1 em.rot { display: inline-block; min-height: 1em; }
   h1 em.rot::after { content: ""; position: absolute; left: 0; width: var(--uw, 100%); bottom: .06em; height: .18em; background: var(--sun); opacity: .55;
@@ -563,6 +583,8 @@
       </a>
       <a class="btn ghost" href="#guide" data-i="hero.cta2">New to volunteering?</a>
     </div>
+    <!-- City shortcuts: one stop per city (filled in by the script) -->
+    <div class="route" id="route"></div>
   </div>
   <div class="hero-art" aria-hidden="true">
     <svg viewBox="0 0 1200 230" preserveAspectRatio="xMidYMax slice">
@@ -1613,6 +1635,7 @@ function fmtDate(iso) { return new Date(iso + "T12:00:00").toLocaleDateString(LO
 function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); }
 
 function stats() {
+  routeStops();
   const orgs = new Set(TRI_LIST.map(l => l.org)).size;
   const open = TRI_LIST.filter(l => l.status === "open").length;
   const latest = LISTINGS.map(l => l.checked).sort().pop();
@@ -1621,6 +1644,18 @@ function stats() {
     `<div class="stat"><b>${orgs}</b><span>${tr("stat.orgs")}</span></div>` +
     `<div class="stat"><b>${open}</b><span>${tr("stat.open")}</span></div>` +
     `<div class="stat"><b>${new Date(latest + "T12:00:00").toLocaleDateString(LOCALE, { month: "short", day: "numeric" })}</b><span>${tr("stat.checked")}</span></div>`;
+}
+
+function routeStops() {
+  const n = c => TRI_LIST.filter(l => l.city === c || l.city === "Tri-Cities wide").length;   // same rule as the city filter
+  const opps = k => `${k} ${tr(k === 1 ? "tile.one" : "tile.many")}`;
+  $("route").innerHTML = ["Coquitlam", "Port Coquitlam", "Port Moody"].map(c =>
+    `<button class="stop" type="button" data-city="${c}"><b>${esc(cityName(c))}</b><small>${opps(n(c))}<span class="go-arrow" aria-hidden="true">→</span></small></button>`).join("") +
+    `<button class="stop end" type="button" data-city=""><b>${tr("nav.beyond")}</b><small>${opps(BEYOND.length)}<span class="go-arrow" aria-hidden="true">→</span></small></button>`;
+  $("route").querySelectorAll(".stop").forEach(b => b.onclick = () => {
+    if (!b.dataset.city) return goView("beyond");
+    reset(); state.city = b.dataset.city; syncChips(); render(); goView("find");
+  });
 }
 
 function tiles() {
