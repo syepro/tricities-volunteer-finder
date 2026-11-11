@@ -122,10 +122,18 @@
   .navlinks a:hover { color: var(--ink); background: var(--bg-2); }
   .navlinks a.on { color: var(--ink); background: var(--card); box-shadow: var(--shadow); }
   .nav-cta { display: none; }
-  .lang { position: relative; display: inline-flex; align-items: center; flex: none; }
-  .lang svg { position: absolute; left: 11px; width: 16px; height: 16px; fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
-  .lang select { appearance: none; -webkit-appearance: none; font: inherit; font-size: 13.5px; font-weight: 600; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 0 16px 0 34px; height: 38px; cursor: pointer; }
-  .lang select:hover { background: var(--bg-2); }
+  .lang { position: relative; flex: none; }
+  .lang-btn { display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 13.5px; font-weight: 600; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 0 12px; height: 38px; cursor: pointer; }
+  .lang-btn:hover, .lang-btn[aria-expanded="true"] { background: var(--bg-2); }
+  .lang-btn svg { width: 16px; height: 16px; fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .lang-btn .chev { width: 12px; height: 12px; transition: transform .15s; }
+  .lang-btn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .lang-menu { position: absolute; right: 0; top: calc(100% + 8px); min-width: 170px; margin: 0; padding: 6px; list-style: none; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-hover); z-index: 60; }
+  .lang-menu[hidden] { display: none; }
+  .lang-menu button { display: flex; align-items: center; justify-content: space-between; width: 100%; font: inherit; font-size: 14px; font-weight: 500; color: var(--ink); background: none; border: 0; border-radius: 10px; padding: 9px 12px; cursor: pointer; text-align: left; }
+  .lang-menu button:hover, .lang-menu button:focus-visible { background: var(--bg-2); outline: none; }
+  .lang-menu button[aria-selected="true"] { color: var(--green); font-weight: 700; background: var(--green-soft); }
+  .lang-menu button[aria-selected="true"]::after { content: "✓"; font-size: 13px; }
   .lang-note { margin: 0 0 16px; padding: 10px 14px; border-radius: 12px; background: var(--bg-2); color: var(--muted); font-size: 13.5px; }
   .lang-note a { font-weight: 600; white-space: nowrap; }
   .menu-btn { display: none; width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); cursor: pointer;
@@ -135,9 +143,9 @@
   .menu-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
   .menu-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
   @media (max-width: 760px) {   /* phone: the language picker shrinks to a globe button */
-    .lang { width: 42px; height: 42px; justify-content: center; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
-    .lang svg { position: static; width: 20px; height: 20px; }
-    .lang select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; padding: 0; border: 0; }
+    .lang-btn { width: 42px; height: 42px; padding: 0; justify-content: center; border-radius: 12px; }
+    .lang-btn svg { width: 20px; height: 20px; }
+    .lang-btn .cur, .lang-btn .chev { display: none; }
   }
   @media (max-width: 760px) {   /* phone: links fold into the ☰ menu */
     .topbar-inner { gap: 8px; height: 58px; }
@@ -527,7 +535,7 @@
       <a href="#beyond" data-nav="beyond" data-i="nav.beyond">Nearby cities</a>
       <a href="#guide" data-nav="guide" data-i="nav.guide">How it works</a>
     </div>
-    <label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3z"/></svg><select id="langSel" aria-label="Language" data-i-aria="lang.label"></select></label>
+    <div class="lang"><button type="button" class="lang-btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Language" data-i-aria="lang.label"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3z"/></svg><span class="cur" id="langCur">English</span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><ul class="lang-menu" id="langMenu" role="listbox" hidden></ul></div>
     <a class="btn small nav-cta" href="#find" data-i="nav.cta">Find</a>
     <button class="menu-btn" type="button" id="menuBtn" aria-label="Menu" data-i-aria="nav.menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
@@ -1579,7 +1587,7 @@ function setLang(code, remember = true) {
   const L = LANGS.find(x => x[0] === code);
   LOCALE = L[2]; document.documentElement.lang = L[3];
   if (remember) { try { localStorage.setItem("tcvf-lang", code); } catch (e) {} }
-  $("langSel").value = code;
+  langMark(code);
   applyStatic(); heroText();
   stats(); tiles(); paths(); timeline(); syncChips(); render(); renderBeyond();
 }
@@ -1845,8 +1853,16 @@ $("sCopy").onclick = async () => {
 };
 
 document.querySelectorAll(".beyondN").forEach(e => e.textContent = BEYOND.length);
-$("langSel").innerHTML = LANGS.map(l => `<option value="${l[0]}">${l[1]}</option>`).join("");
-$("langSel").onchange = e => setLang(e.target.value);
+$("langMenu").innerHTML = LANGS.map(l => `<li><button type="button" role="option" data-l="${l[0]}" lang="${l[3]}">${l[1]}</button></li>`).join("");
+function langMark(code) {
+  $("langCur").textContent = LANGS.find(l => l[0] === code)[1];
+  $("langMenu").querySelectorAll("button").forEach(b => b.setAttribute("aria-selected", b.dataset.l === code));
+}
+function langOpen(o) { $("langMenu").hidden = !o; $("langBtn").setAttribute("aria-expanded", o); }
+$("langBtn").onclick = e => { e.stopPropagation(); langOpen($("langMenu").hidden); };
+$("langMenu").onclick = e => { const b = e.target.closest("button"); if (b) { setLang(b.dataset.l); langOpen(false); $("langBtn").focus(); } };
+document.addEventListener("click", e => { if (!e.target.closest(".lang")) langOpen(false); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("langMenu").hidden) { langOpen(false); $("langBtn").focus(); } });
 setLang(pickLang(), false); motion();
 $("pathChip").onclick = () => { state.path = null; paths(); render(); };
 
