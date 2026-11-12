@@ -369,6 +369,7 @@
 
   /* Listing cards */
   .grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .still .card { animation: none; }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; display: flex; flex-direction: column; overflow: hidden;
     box-shadow: var(--shadow); transition: transform .18s, box-shadow .18s; animation: rise .35s ease both; }
   .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
@@ -1777,8 +1778,9 @@ const CHECK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
 const PAUSE = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></svg>';
 const ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg>';
 
-function render() {
+function render(still) {
   const list = $("list");
+  list.classList.toggle("still", !!still);
   const shown = sorted(LISTINGS.filter(matches));
   $("count").innerHTML = `${tr(shown.length === 1 ? "count.one" : "count.many", { n: shown.length })} <small>${tr("count.of", { total: TRI_LIST.length })}</small>`;
   $("savedOnly").textContent = tr("f.saved", { n: saved.size });
@@ -1844,9 +1846,18 @@ function bindStars(root) {
       const id = b.dataset.id;
       const r = b.getBoundingClientRect(), adding = !saved.has(id);
       if (adding) { saved.add(id); toast(tr("toast.saved")); burst(r.left + r.width / 2, r.top + r.height / 2); } else { saved.delete(id); toast(tr("toast.removed")); }
-      persist(); render(); renderBeyond();
-      const nb = [...root.querySelectorAll(".star")].find(x => x.dataset.id === id);
-      if (nb && adding) nb.classList.add("pop");
+      persist();
+      $("savedOnly").textContent = tr("f.saved", { n: saved.size });
+      if (state.savedOnly && !adding) { render(true); return; }   // the card has to leave the list; don't replay the entrance
+      // Otherwise update the star in place, so the page doesn't rebuild and flash
+      document.querySelectorAll(".star").forEach(x => {
+        if (x.dataset.id !== id) return;
+        const title = x.closest(".card").querySelector("h3").textContent;
+        x.setAttribute("aria-pressed", adding);
+        x.setAttribute("aria-label", tr(adding ? "star.remove" : "star.save") + ": " + title);
+        x.classList.remove("pop");
+        if (adding) { void x.offsetWidth; x.classList.add("pop"); }
+      });
     };
   });
 }
